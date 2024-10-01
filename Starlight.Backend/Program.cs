@@ -7,8 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
+
 builder.Services
     .AddRouting()
+    .AddEndpointsApiExplorer()
+    .AddHttpContextAccessor()
+    .AddSwaggerGen()
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>();
 
@@ -21,8 +27,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app
+    .UseHealthChecks("/api/healthcheck")
+    .UseHsts()
+    .UseRouting()
+    .UseHttpsRedirection()
+    .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
+app.MapControllers();
 app.Run();
 
 // for creating test classes.
