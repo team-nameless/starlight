@@ -1,4 +1,4 @@
-namespace Starlight.Backend.Database;
+namespace Starlight.Backend.Database.Game;
 
 /// <summary>
 ///     Represent a score of an user.
@@ -11,10 +11,10 @@ public class Score
     public ulong Id { get; set; }
 
     /// <summary>
-    ///     Associated user with this score.
+    ///     Track associated with this score.
     /// </summary>
-    public User User { get; set; } = null!;
-    
+    public ulong TrackId { get; set; }
+
     /// <summary>
     ///     Total points of this score.
     /// </summary>
@@ -29,4 +29,9 @@ public class Score
     ///     Submission time of this score.
     /// </summary>
     public DateTime SubmissionDate { get; set; }
+
+    /// <summary>
+    ///     Associated user with this score.
+    /// </summary>
+    public User User { get; set; } = null!;
 }

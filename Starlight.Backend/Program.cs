@@ -8,7 +8,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddDbContext<GameDatabaseService>();
+    .AddRouting()
+    .AddDbContext<GameDatabaseService>()
+    .AddDbContext<TrackDatabaseService>();
 
 var app = builder.Build();
 

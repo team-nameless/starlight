@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Starlight.Backend.Migrations
+namespace Starlight.Backend.Migrations.Game
 {
     /// <inheritdoc />
     public partial class InitialDatabase : Migration
@@ -33,10 +33,12 @@ namespace Starlight.Backend.Migrations
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Handle = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     HashedPassword = table.Column<string>(type: "TEXT", maxLength: 16384, nullable: false),
                     LastSeenTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TotalPlayTime = table.Column<ulong>(type: "INTEGER", nullable: false),
                     TotalExp = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    CurrentLevel = table.Column<ulong>(type: "INTEGER", nullable: false),
                     UserId = table.Column<ulong>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -79,10 +81,11 @@ namespace Starlight.Backend.Migrations
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    TrackId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     TotalPoints = table.Column<ulong>(type: "INTEGER", nullable: false),
                     Accuracy = table.Column<double>(type: "REAL", nullable: false),
-                    SubmissionDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    SubmissionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<ulong>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,6 +93,31 @@ namespace Starlight.Backend.Migrations
                     table.ForeignKey(
                         name: "FK_Scores_Users_UserId",
                         column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    KeyCode1 = table.Column<int>(type: "INTEGER", nullable: false),
+                    KeyCode2 = table.Column<int>(type: "INTEGER", nullable: false),
+                    KeyCode3 = table.Column<int>(type: "INTEGER", nullable: false),
+                    KeyCode4 = table.Column<int>(type: "INTEGER", nullable: false),
+                    MasterVolume = table.Column<int>(type: "INTEGER", nullable: false),
+                    MusicVolume = table.Column<int>(type: "INTEGER", nullable: false),
+                    SoundEffectVolume = table.Column<int>(type: "INTEGER", nullable: false),
+                    Offset = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Settings_Users_Id",
+                        column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -119,6 +147,9 @@ namespace Starlight.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Scores");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "Achievements");

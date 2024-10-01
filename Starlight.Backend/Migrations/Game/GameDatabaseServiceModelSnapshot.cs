@@ -7,7 +7,7 @@ using Starlight.Backend.Service;
 
 #nullable disable
 
-namespace Starlight.Backend.Migrations
+namespace Starlight.Backend.Migrations.Game
 {
     [DbContext(typeof(GameDatabaseService))]
     partial class GameDatabaseServiceModelSnapshot : ModelSnapshot
@@ -32,7 +32,7 @@ namespace Starlight.Backend.Migrations
                     b.ToTable("AchievementUser");
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.Achievement", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.Achievement", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace Starlight.Backend.Migrations
                     b.ToTable("Achievements");
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.Score", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.Score", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,6 +73,9 @@ namespace Starlight.Backend.Migrations
                     b.Property<ulong>("TotalPoints")
                         .HasColumnType("INTEGER");
 
+                    b.Property<ulong>("TrackId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<ulong>("UserId")
                         .HasColumnType("INTEGER");
 
@@ -83,11 +86,19 @@ namespace Starlight.Backend.Migrations
                     b.ToTable("Scores");
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.User", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.User", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("CurrentLevel")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Handle")
                         .IsRequired()
@@ -118,24 +129,58 @@ namespace Starlight.Backend.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Starlight.Backend.Database.Game.UserSetting", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("KeyCode1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("KeyCode2")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("KeyCode3")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("KeyCode4")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MasterVolume")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MusicVolume")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Offset")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SoundEffectVolume")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("AchievementUser", b =>
                 {
-                    b.HasOne("Starlight.Backend.Database.Achievement", null)
+                    b.HasOne("Starlight.Backend.Database.Game.Achievement", null)
                         .WithMany()
                         .HasForeignKey("AchievementsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Starlight.Backend.Database.User", null)
+                    b.HasOne("Starlight.Backend.Database.Game.User", null)
                         .WithMany()
                         .HasForeignKey("OwnersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.Score", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.Score", b =>
                 {
-                    b.HasOne("Starlight.Backend.Database.User", "User")
+                    b.HasOne("Starlight.Backend.Database.Game.User", "User")
                         .WithMany("BestScores")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -144,18 +189,31 @@ namespace Starlight.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.User", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.User", b =>
                 {
-                    b.HasOne("Starlight.Backend.Database.User", null)
+                    b.HasOne("Starlight.Backend.Database.Game.User", null)
                         .WithMany("Friends")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("Starlight.Backend.Database.User", b =>
+            modelBuilder.Entity("Starlight.Backend.Database.Game.UserSetting", b =>
+                {
+                    b.HasOne("Starlight.Backend.Database.Game.User", "User")
+                        .WithOne("Setting")
+                        .HasForeignKey("Starlight.Backend.Database.Game.UserSetting", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Starlight.Backend.Database.Game.User", b =>
                 {
                     b.Navigation("BestScores");
 
                     b.Navigation("Friends");
+
+                    b.Navigation("Setting");
                 });
 #pragma warning restore 612, 618
         }

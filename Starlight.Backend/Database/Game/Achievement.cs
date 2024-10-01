@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Starlight.Backend.Database;
+namespace Starlight.Backend.Database.Game;
 
 /// <summary>
 ///     Represent an achievement.
