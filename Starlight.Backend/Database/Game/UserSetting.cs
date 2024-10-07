@@ -59,9 +59,15 @@ public class UserSetting
     /// </summary>
     [Range(-500, 500)]
     public int Offset { get; set; } = 0;
+    
+    /// <summary>
+    ///     Frame rate, in terms of "Frames per second"
+    /// </summary>
+    [Range(0, 999)]
+    public int FrameRate { get; set; } = 60;
 
     /// <summary>
-    ///     User associated with this setting.
+    ///     Player associated with this setting.
     /// </summary>
-    public User User { get; set; } = null!;
+    public Player Player { get; set; } = null!;
 }

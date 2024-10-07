@@ -1,15 +1,16 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Starlight.Backend.Database.Game;
 
 namespace Starlight.Backend.Service;
 
-public class GameDatabaseService : DbContext
+public class GameDatabaseService : IdentityDbContext<Player>
 {
     public DbSet<Score> Scores { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserSetting> Settings { get; set; }
+    public DbSet<LoginTracking> LoginSessions { get; set; }
     
     public GameDatabaseService(DbContextOptions<GameDatabaseService> options) : base(options)
     {
@@ -36,11 +37,13 @@ public class GameDatabaseService : DbContext
         );
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.Entity<User>()
+        base.OnModelCreating(builder);
+        
+        builder.Entity<Player>()
             .HasOne(u => u.Setting)
-            .WithOne(s => s.User)
+            .WithOne(s => s.Player)
             .HasForeignKey<UserSetting>();
     }
 }
