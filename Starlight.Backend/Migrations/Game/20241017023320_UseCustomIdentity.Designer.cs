@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Starlight.Backend.Service;
 
@@ -10,9 +11,11 @@ using Starlight.Backend.Service;
 namespace Starlight.Backend.Migrations.Game
 {
     [DbContext(typeof(GameDatabaseService))]
-    partial class GameDatabaseServiceModelSnapshot : ModelSnapshot
+    [Migration("20241017023320_UseCustomIdentity")]
+    partial class UseCustomIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -255,7 +258,7 @@ namespace Starlight.Backend.Migrations.Game
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("SequenceNumber")
+                    b.Property<ulong>("SequenceNumber")
                         .HasColumnType("INTEGER");
 
                     b.Property<ulong>("TotalExp")
@@ -317,9 +320,6 @@ namespace Starlight.Backend.Migrations.Game
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("FrameRate")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("KeyCode1")

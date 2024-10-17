@@ -39,5 +39,5 @@ public class Achievement
     /// <summary>
     ///     Owners of this achievement.
     /// </summary>
-    public List<User> Owners { get; set; } = [];
+    public List<Player> Owners { get; set; } = [];
 }

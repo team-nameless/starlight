@@ -1,3 +1,7 @@
+*.db
+*.db-shm
+*.db-wal
+
 # Created by https://www.toptal.com/developers/gitignore/api/rider,visualstudio,visualstudiocode,csharp
 # Edit at https://www.toptal.com/developers/gitignore?templates=rider,visualstudio,visualstudiocode,csharp
 

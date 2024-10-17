@@ -1,34 +1,16 @@
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Starlight.Backend.Database.Game;
 
 /// <summary>
-///     Represent a user of the game.
+///     Represent a player of the game.
 /// </summary>
-public class User
+public class Player : IdentityUser
 {
     /// <summary>
-    ///     User unique ID number.
+    ///     This is what Genshin Impact calls "User ID"
     /// </summary>
-    public ulong Id { get; set; }
-    
-    /// <summary>
-    ///     User identifier string.
-    /// </summary>
-    [MaxLength(255)]
-    public required string Handle { get; set; }
-
-    /// <summary>
-    ///     User unique email.
-    /// </summary>
-    [MaxLength(255)]
-    public required string Email { get; set; }
-    
-    /// <summary>
-    ///     User hashed password.
-    /// </summary>
-    [MaxLength(16384)]
-    public required string HashedPassword { get; set; }
+    public long SequenceNumber { get; set; }
     
     /// <summary>
     ///     Time this user last seen on the game session.
@@ -41,12 +23,12 @@ public class User
     public ulong TotalPlayTime { get; set; }
     
     /// <summary>
-    ///     User exp.
+    ///     Player exp.
     /// </summary>
     public ulong TotalExp { get; set; }
 
     /// <summary>
-    ///     User current level.
+    ///     Player current level.
     ///     Could have used prefix-sum, but let's *not* talk about it.
     /// </summary>
     public ulong CurrentLevel { get; set; }
@@ -54,11 +36,13 @@ public class User
     /// <summary>
     ///     Achievements of this user.
     /// </summary>
+    [PersonalData]
     public ICollection<Achievement> Achievements { get; } = new List<Achievement>();
     
     /// <summary>
     ///     BEST score of this user.
     /// </summary>
+    [PersonalData]
     public ICollection<Score> BestScores { get; } = new List<Score>();
     
     /// <summary>
@@ -67,10 +51,12 @@ public class User
     ///     If you don't have any friends, consider rolling
     ///     for [Socialize] banner, it only costs 1 primogem per pull. 
     /// </summary>
-    public ICollection<User> Friends { get; } = new List<User>();
+    [PersonalData]
+    public ICollection<Player> Friends { get; } = new List<Player>();
 
     /// <summary>
-    ///     User preferential setting.
+    ///     Player preferential setting.
     /// </summary>
+    [PersonalData]
     public UserSetting Setting { get; set; }
 }

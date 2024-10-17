@@ -33,5 +33,5 @@ public class Score
     /// <summary>
     ///     Associated user with this score.
     /// </summary>
-    public User User { get; set; } = null!;
+    public Player Player { get; set; } = null!;
 }
