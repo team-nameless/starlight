@@ -20,20 +20,17 @@ public class GameDatabaseService : IdentityDbContext<Player>
     {
         base.OnConfiguring(
             optionsBuilder
-#if DEBUG
                 .EnableDetailedErrors()
+#if DEBUG
                 .EnableSensitiveDataLogging()
+#endif
                 .UseSqlite(
-                    new SqliteConnection("Filename=Starlight.testing.db;"),
+                    new SqliteConnection("Filename=Starlight.db;"),
                     opt =>
                     {
                         opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     }
                 )
-#else
-                // TODO: ASK THE PROJECT MANAGER!!!!!
-                .UseMySql(ServerVersion.AutoDetect(""))
-#endif
         );
     }
 

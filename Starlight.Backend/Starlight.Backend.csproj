@@ -3,8 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
@@ -25,7 +28,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Content Update="Starlight.Backend.xml">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        </Content>
     </ItemGroup>
-
 </Project>

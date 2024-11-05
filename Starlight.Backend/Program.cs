@@ -1,4 +1,6 @@
+using System.Net;
 using System.Reflection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Starlight.Backend.Database.Game;
@@ -51,7 +53,17 @@ builder.Services
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>();
 
+builder.Services.Configure<ForwardedHeadersOptions>(opt =>
+{
+    opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -60,13 +72,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app
     .UseHealthChecks("/api/healthcheck")
     .UseHsts()
     .UseRouting()
     .UseAuthorization()
     .UseAuthentication()
-    .UseHttpsRedirection()
     .UseDeveloperExceptionPage()
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
