@@ -86,6 +86,10 @@ app
     .UseDeveloperExceptionPage()
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
+// well, it could have been worse!
+app.Services.GetRequiredService<GameDatabaseService>().Database.EnsureCreated();
+app.Services.GetRequiredService<TrackDatabaseService>().Database.EnsureCreated();
+    
 app.MapControllers();
 app.Run();
 
