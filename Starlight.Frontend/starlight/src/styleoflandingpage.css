@@ -1,0 +1,37 @@
+@font-face { 
+    font-family: 'Anta';
+    src: url('fonts/anta.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Protest Revolution';
+    src: url('fonts/protestrevolution2.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Adlam Display';
+    src: url('fonts/adlamdisplay.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face { 
+    font-family: 'Inter';
+    src: url('fonts/inter.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Anta, sans-serif; 
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+}
+
+
+
