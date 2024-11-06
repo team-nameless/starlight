@@ -1,6 +1,8 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './LandingPageApp'; 
 import profilePic from './assets/profile.png'; // Profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
@@ -28,6 +30,11 @@ function App() {
   };
 
   return (
+    <Router>
+    <Routes>
+    <Route path="/" element={<LandingPage />} />
+    <Route path="/app" element={<LandingPage />} />
+    </Routes>
     <div className="app">
       {/* Header Navigation Bar */}
       <header className="navbar">
@@ -100,7 +107,7 @@ function App() {
       <div className="content-layer">
         {/* Background Image */}
         <div className="background-image">
-          <img src={dragonImage} alt="Background" />
+          <img src={dragonImage} alt="Backgroundd" />
         </div>
         {/* Content and Buttons */}
         <div className="song-content">
@@ -128,6 +135,7 @@ function App() {
         </div>
       </div>
     </div>
+    </Router>
   );
 }
 

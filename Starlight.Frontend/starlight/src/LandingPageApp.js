@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
-import './style.css'; 
+import './styleoflandingpage.css'; 
+import Background from './assets/background-image/backgroundd.png';
+import ModalBackground from './assets/background-image/pur.png';
+import GirlImage from './assets/modal-image/girlimage.png'; 
+import LogoImage from './assets/background-image/logoo.png';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -28,18 +32,18 @@ const ButtonContainer = styled.div`
   width: 100%; 
 `;
 
-const Background = styled.div`
+const BackgroundLandingPage = styled.div`
+  background-image: url(${Background});
   position: relative;
   height: 100vh; 
   width: 100%; 
-  background-image: url('/background-image/backgroundd.png');
   background-size: cover;
   background-position: center;
   z-index: 0;
 `;
 
-const ModalBackground = styled.div`
-  background-image: url('/background-image/pur.png');
+const ModalBackground2 = styled.div`
+  background-image: url(${ModalBackground});
   background-size: cover; 
   background-repeat: no-repeat;
   position: absolute;
@@ -52,7 +56,7 @@ const ModalBackground = styled.div`
   object-fit: cover; 
 `;
 
-const LogoImage = styled.img`
+const LogoImage2 = styled.img`
   position: absolute;
   top: 316px; 
   right: 335px; 
@@ -62,7 +66,7 @@ const LogoImage = styled.img`
 `;
 
 
-const GirlImage = styled.img`
+const GirlImage2 = styled.img`
   width: auto; 
   height: 100%; 
   object-fit: cover; 
@@ -277,7 +281,7 @@ const Hero = styled.div`
   }
 `;
 
-const App = () => {
+const LandingPageApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -328,7 +332,7 @@ const App = () => {
 
   return (
     <AppContainer>
-      <Background>
+      <BackgroundLandingPage>
         <header>
         <NavButtons>
              <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
@@ -345,15 +349,16 @@ const App = () => {
           </PlayIconContainer>
           Start Game
         </PlayButton>
-      </Background>
+      </BackgroundLandingPage>
 
       {showSignUpModal && (
   <Modal>
     <ModalContent>
-      <ModalBackground />
+      <ModalBackground2 />
       <CloseButton onClick={closeModal}>&times;</CloseButton>
-      <GirlImage src="/modal-image/girlimage.png" alt="Girl" />
-      <LogoImage src="/background-image/logoo.png" alt="Logo" />
+      <GirlImage2 src={GirlImage} alt="Girl" /> 
+      <LogoImage2 src={LogoImage} alt="Logo" />
+
       <ModalTitle>Create Account</ModalTitle>
       
       <FormContainer style={{ flexDirection: 'column', justifyContent: 'space-between', height: '300px' }}>
@@ -391,10 +396,10 @@ const App = () => {
 {showLoginModal && (
   <Modal>
     <ModalContent>
-      <ModalBackground />
+      <ModalBackground2 />
       <CloseButton onClick={closeModal}>&times;</CloseButton>
-      <GirlImage src="/modal-image/girlimage.png" alt="Girl" />
-      <LogoImage src="/background-image/logoo.png" alt="Logo" />
+      <GirlImage2 src={GirlImage} alt="Girl" /> 
+      <LogoImage2 src={LogoImage} alt="Logo" />
       <ModalTitle style={{ marginLeft: '50px' }}>Log In</ModalTitle>
       <FormContainer style={{ flexDirection: 'column', height: '300px' }}>
         <TextFieldContainer>
@@ -427,8 +432,6 @@ const App = () => {
 )}
 
 
-
-
       {showNotificationModal && (
         <Modal>
           <ModalContent>
@@ -441,5 +444,5 @@ const App = () => {
   );
 };
 
-export default App;
+export default LandingPageApp;
 
