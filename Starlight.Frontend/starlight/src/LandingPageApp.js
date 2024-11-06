@@ -19,7 +19,7 @@ const AppContainer = styled.div`
 
 const ModalTitle = styled.h2`
   position: absolute;
-  top: 20px; 
+  top: 40px; 
   left: 230px; 
   text-align: center;
 `;
@@ -361,7 +361,7 @@ const LandingPageApp = () => {
 
       <ModalTitle>Create Account</ModalTitle>
       
-      <FormContainer style={{ flexDirection: 'column', justifyContent: 'space-between', height: '300px' }}>
+      <FormContainer style={{ flexDirection: 'column', justifyContent: 'space-between', height: '535px' }}>
         
         <TextFieldContainer>
           <label htmlFor="playerName">Player Name:</label>
@@ -401,7 +401,7 @@ const LandingPageApp = () => {
       <GirlImage2 src={GirlImage} alt="Girl" /> 
       <LogoImage2 src={LogoImage} alt="Logo" />
       <ModalTitle style={{ marginLeft: '50px' }}>Log In</ModalTitle>
-      <FormContainer style={{ flexDirection: 'column', height: '300px' }}>
+      <FormContainer style={{ flexDirection: 'column', height: '535px' }}>
         <TextFieldContainer>
           <label htmlFor="email">Email:</label>
           <TextField id="email" required />
