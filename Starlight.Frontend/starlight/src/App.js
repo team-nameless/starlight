@@ -1,6 +1,8 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './LandingPageApp'; 
 import profilePic from './assets/profile.png'; // Profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
@@ -9,14 +11,11 @@ import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
 import historyIcon from './assets/Header_Items/history-icon.png'; // History icon
 import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
-import previousArrow from  './assets/previousArrow.png' //previous button arrow
-import nextArrow from  './assets/nextArrow.png' //next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 
 function App() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [currentSong, setCurrentSong] = useState(1);
-  
 
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
@@ -29,18 +28,13 @@ function App() {
   const handlePreviousSong = () => {
     setCurrentSong((prevSong) => Math.max(prevSong - 1, 1)); // Prevent going below 1
   };
-  const handlePlayButtonClick = () => {
-    const songEndpoints = {
-      1: '/game/song1',
-      2: '/game/song2',
-      // Add more song endpoints as needed
-    };
-
-    const songEndpoint = songEndpoints[currentSong] || '/game/default';
-    window.location.href = songEndpoint;
-  };
 
   return (
+    <Router>
+    <Routes>
+    <Route path="/" element={<LandingPage />} />
+    <Route path="/app" element={<LandingPage />} />
+    </Routes>
     <div className="app">
       {/* Header Navigation Bar */}
       <header className="navbar">
@@ -105,7 +99,7 @@ function App() {
         
 
         <div className="leave-button">
-          <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/landing-page'} />
+          <img src={leaveIcon} alt="Leave" className="leave-icon" onClick={() => window.location.href = '/landing-page'} />
         </div>
       </header>
 
@@ -113,64 +107,35 @@ function App() {
       <div className="content-layer">
         {/* Background Image */}
         <div className="background-image">
-          <img src={dragonImage} alt="Background" />
+          <img src={dragonImage} alt="Backgroundd" />
         </div>
         {/* Content and Buttons */}
         <div className="song-content">
-          {/* User Profile */} 
+          {/* User Profile */}
           <div className="user-profile">
-            
-            <table>
-              <tr>
-                <td>
-                  <div className="user-name"></div>
-                  <div className="user-name">
-                    Sanraku
-                  </div>
-                  
-                  <div className="user-id">
-                    ID: #123456
-                  </div>
-                </td>
-                <td>
-                  <img src={profilePic} alt="Profile" className="profile-img" />
-                </td>
-              </tr>
-            </table>
+            <img src={profilePic} alt="Profile" className="profile-img" />
+            <div className="user-id">
+              Sanraku<br />ID: #123456
+            </div>
           </div>
 
           {/* Next/Previous Buttons */}
           <div className="song-navigation">
-            <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
-              <img src={previousArrow} alt="Previous" style={{ width: '21px', height: '21px' }} />
-            </button>
-            <button className="nav-btn next-btn" onClick={handleNextSong}>
-              <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
-            </button>
+            <button className="nav-btn prev-btn" onClick={handlePreviousSong}>←</button>
+            <button className="nav-btn next-btn" onClick={handleNextSong}>→</button>
           </div>
 
           {/* Song Container */}
           <div className="song-container">
-            <dix className="song-identity">
-              <div className="publish-date">31 Oct, 2024 </div>
-              <div className="song-number">01</div>
-            </dix>
-            <div className="song-info">
-              <div className="song-name">Song {currentSong}</div>
-              <div className="artist-name">- Artist {currentSong} -</div>
-              <button className="best-score-btn">Best Score</button>
-            </div>
-            <div className="play-button-container">
-            <button className="play-button" onClick={handlePlayButtonClick}>
-              <div className="play-icon-container">
-                <span className="play-icon">▶</span>
-              </div>
-            </button>
-          </div>
+            <div className="song-name">Song {currentSong}</div>
+            <div className="artist-name">Artist {currentSong}</div>
+            <div className="publish-date">Oct 01, 2024</div>
+            <button className="best-score-btn">Best Score</button>
           </div>
         </div>
       </div>
     </div>
+    </Router>
   );
 }
 
