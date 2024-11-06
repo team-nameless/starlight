@@ -58,5 +58,5 @@ public class Player : IdentityUser
     ///     Player preferential setting.
     /// </summary>
     [PersonalData]
-    public UserSetting Setting { get; set; }
+    public UserSetting Setting { get; set; } = null!;
 }

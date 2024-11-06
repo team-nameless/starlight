@@ -13,10 +13,12 @@ namespace Starlight.Backend.Controller;
 public class IdentityController : ControllerBase
 {
     private GameDatabaseService _gameDatabase;
+    private IdentityEmailService _emailService;
 
-    public IdentityController(GameDatabaseService gameDatabase)
+    public IdentityController(GameDatabaseService gameDatabase, IdentityEmailService emailService)
     {
         _gameDatabase = gameDatabase;
+        _emailService = emailService;
     }
     
     /// <summary>
@@ -105,5 +107,50 @@ public class IdentityController : ControllerBase
         await signInManager.SignOutAsync();
         
         return Redirect("/");
+    }
+
+    /// <summary>
+    ///     Perform a password reset flow.
+    /// </summary>
+    /// <param name="passwordForgot">Request body.</param>
+    [HttpPost("forgotPassword")]
+    public async Task<ActionResult> Recovery(
+        [FromBody] PasswordForgotForm passwordForgot
+    )
+    {
+        var services = HttpContext.RequestServices;
+        var userManager = services.GetRequiredService<UserManager<Player>>();
+        
+        var user = await userManager.FindByEmailAsync(passwordForgot.Email);
+
+        // don't reveal the idiots that the user does not exist.
+        if (user is null) return Ok();
+        
+        var code = await userManager.GeneratePasswordResetTokenAsync(user);
+        await _emailService.SendPasswordResetCodeAsync(user, passwordForgot.Email, code);
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    ///     Perform a password reset.
+    /// </summary>
+    /// <param name="passwordReset">Request body.</param>
+    [HttpPost("resetPassword")]
+    public async Task<ActionResult> ResetPassword(
+        [FromBody] PasswordResetForm passwordReset
+    )
+    {
+        var services = HttpContext.RequestServices;
+        var userManager = services.GetRequiredService<UserManager<Player>>();
+        
+        var user = await userManager.FindByEmailAsync(passwordReset.Email);
+
+        // don't reveal the idiots that the user does not exist.
+        if (user is null) return Ok();
+
+        var result = await userManager.ResetPasswordAsync(user, passwordReset.Code, passwordReset.NewPassword);
+        
+        return result.Succeeded ? Ok() : BadRequest(result.ToString());
     }
 }

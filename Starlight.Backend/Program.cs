@@ -8,6 +8,11 @@ using Starlight.Backend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add configuration file.
+builder.Configuration
+    .AddJsonFile("config.json")
+    .Build();
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -16,74 +21,78 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddIdentity<Player, IdentityRole>(
-        opt =>
-        {
-            opt.Password.RequireDigit = false;
-            opt.Password.RequireLowercase = false;
-            opt.Password.RequireNonAlphanumeric = false;
-            opt.Password.RequireUppercase = false;
-            opt.Password.RequiredLength = 6;
+builder.Services
+    .AddIdentity<Player, IdentityRole>(opt =>
+    {
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireLowercase = false;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequiredLength = 6;
 
-            opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            opt.Lockout.MaxFailedAccessAttempts = 5;
-            opt.Lockout.AllowedForNewUsers = true;
+        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        opt.Lockout.MaxFailedAccessAttempts = 5;
+        opt.Lockout.AllowedForNewUsers = true;
 
-            opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
-            opt.User.RequireUniqueEmail = true;
+        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+        opt.User.RequireUniqueEmail = true;
 
-            opt.SignIn.RequireConfirmedAccount = false;
-            opt.SignIn.RequireConfirmedEmail = false;
-            opt.SignIn.RequireConfirmedPhoneNumber = false;
-        })
+        opt.SignIn.RequireConfirmedAccount = false;
+        opt.SignIn.RequireConfirmedEmail = false;
+        opt.SignIn.RequireConfirmedPhoneNumber = false;
+    })
     .AddEntityFrameworkStores<GameDatabaseService>()
     .AddDefaultTokenProviders();
 
 builder.Services
     .AddRouting()
+    .AddHsts(opt =>
+    {
+        opt.Preload = true;
+        opt.IncludeSubDomains = true;
+        opt.MaxAge = TimeSpan.FromDays(60);
+    })
     .AddEndpointsApiExplorer()
     .AddHttpContextAccessor()
-#if DEBUG
     .AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Starlight API", Version = "v1" });
         c.IncludeXmlComments(Assembly.GetExecutingAssembly());
     })
-#endif
+    .AddHttpsRedirection(opt =>
+    {
+        opt.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
+    })
     .AddDbContext<GameDatabaseService>()
-    .AddDbContext<TrackDatabaseService>();
-
-builder.Services.Configure<ForwardedHeadersOptions>(opt =>
-{
-    opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
-});
+    .AddDbContext<TrackDatabaseService>()
+    .AddSingleton<IdentityEmailService>()
+    .Configure<ForwardedHeadersOptions>(opt =>
+    {
+        opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
+    });
 
 var app = builder.Build();
-
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+    app.UseExceptionHandler("/api/error");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
 app
-    .UseHealthChecks("/api/healthcheck")
+    .UseHttpsRedirection()
+    .UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    })
     .UseHsts()
+    .UseHealthChecks("/api/healthcheck")
     .UseRouting()
     .UseAuthorization()
     .UseAuthentication()
-    .UseDeveloperExceptionPage()
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
     
 app.MapControllers();

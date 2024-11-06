@@ -18,7 +18,7 @@ public class Achievement
     ///     Example: "First Step."
     /// </summary>
     [MaxLength(255)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     /// <summary>
     ///     Achievement detail.
@@ -26,7 +26,7 @@ public class Achievement
     ///     Example: "Play your first game."
     /// </summary>
     [MaxLength(512)]
-    public string Detail { get; set; }
+    public required string Detail { get; set; }
     
     /// <summary>
     ///     Achievement favor text.
@@ -34,7 +34,7 @@ public class Achievement
     ///     Example: "A journey awaits."
     /// </summary>
     [MaxLength(512)]
-    public string FavorText { get; set; }
+    public required string FavorText { get; set; }
     
     /// <summary>
     ///     Owners of this achievement.
