@@ -40,11 +40,11 @@ jobs:
           zip -r linux-arm64.zip build/linux-arm64
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: runnable
           name: Rolling release of the project
           draft: false
+          make_latest: true
           body: |
             # Nothing to look here!
           files: |
