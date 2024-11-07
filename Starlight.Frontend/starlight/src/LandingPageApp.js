@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import './styleoflandingpage.css'; 
+import axios from 'axios';
 import Background from './assets/background-image/backgroundd.png';
 import ModalBackground from './assets/background-image/pur.png';
 import GirlImage from './assets/modal-image/girlimage.png'; 
@@ -20,7 +21,7 @@ const AppContainer = styled.div`
 const ModalTitle = styled.h2`
   position: absolute;
   top: 40px; 
-  left: 230px; 
+  left: 205px; 
   text-align: center;
 `;
 
@@ -149,7 +150,7 @@ const ModalContent = styled.div`
 
 const TextFieldContainer = styled.div`
   margin: 10px 0; 
-  width: 87%; 
+  width: 100%; 
   text-align: left;
   margin-bottom: 61px;
   margin-top: -30px;
@@ -170,13 +171,6 @@ const FormContainer = styled.div`
   margin-left: 20px;
 `;
 
-
-const ImageContainer = styled.div`
-  flex: 1; 
-  position: relative; 
-  overflow: hidden; 
-`;
-
 const CloseButton = styled.span`
   color: #aaa;
   float: right; 
@@ -195,13 +189,13 @@ const SubmitButton = styled.button`
   background-color: #841EFC; 
   color: white; 
   border: none; 
-  padding: 13px 30px; 
+  padding: 13px 190px; 
   border-radius: 5px; 
   cursor: pointer; 
-  margin-top: 375px; 
+  margin-top: -35px; 
   width: 200%;
   display: block;
-  margin-left: -695px;
+  margin-left: 0px;
   align-self: flex-start;
   transition: background-color 0.3s ease; 
 
@@ -282,28 +276,70 @@ const Hero = styled.div`
 `;
 
 const LandingPageApp = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [handle, setHandle] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState(''); 
+  const [loginPassword, setLoginPassword] = useState(''); 
+  const [data, setData] = useState(null);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false); 
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    setIsLoggedIn(true);
-    setShowLoginModal(false);
+  useEffect(() => {
+    if (showSuccessModal) {
+      const timer = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 3000); 
+
+      return () => clearTimeout(timer); 
+    }
+  }, [showSuccessModal]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('https://cluster1.swyrin.id.vn/api/register', { handle, email, password }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      console.log('API response:', response);
+      setData(response.data); 
+      setShowSignUpModal(false); 
+      setShowSuccessModal(true); 
+  
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
+  
 
-  const handleSignUp = (event) => {
-    event.preventDefault();
-    setIsLoggedIn(true);
-    setShowSignUpModal(false);
+  const handleLogin = (e) => {
+    e.preventDefault();
+    axios.post('/api/login', { email: loginEmail, password: loginPassword }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        setData(response.data);
+        setIsLoggedIn(true);
+        setShowLoginModal(false);
+      })
+      .catch(error => console.error('Error logging in:', error));
   };
 
   const handlePlayButtonClick = () => {
     if (!isLoggedIn) {
       setShowNotificationModal(true);
     } else {
-      window.location.href = 'main.html';
+      window.location.href = 'App.js';
     }
   };
 
@@ -311,6 +347,7 @@ const LandingPageApp = () => {
     setShowLoginModal(false);
     setShowSignUpModal(false);
     setShowNotificationModal(false);
+    setShowSuccessModal(false);
   };
 
   const FormWrapper = styled.div`
@@ -334,10 +371,10 @@ const LandingPageApp = () => {
     <AppContainer>
       <BackgroundLandingPage>
         <header>
-        <NavButtons>
-             <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
-             <LoginButton onClick={() => setShowLoginModal(true)}>Log in</LoginButton>
-        </NavButtons>
+          <NavButtons>
+            <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
+            <LoginButton onClick={() => setShowLoginModal(true)}>Log in</LoginButton>
+          </NavButtons>
         </header>
         <Hero>
           <h1>Star</h1>
@@ -350,49 +387,61 @@ const LandingPageApp = () => {
           Start Game
         </PlayButton>
       </BackgroundLandingPage>
-
+  
       {showSignUpModal && (
-  <Modal>
-    <ModalContent>
-      <ModalBackground2 />
-      <CloseButton onClick={closeModal}>&times;</CloseButton>
-      <GirlImage2 src={GirlImage} alt="Girl" /> 
-      <LogoImage2 src={LogoImage} alt="Logo" />
+        <Modal>
+          <ModalContent>
+            <ModalBackground2 />
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <GirlImage2 src={GirlImage} alt="Girl" /> 
+            <LogoImage2 src={LogoImage} alt="Logo" />
+            <ModalTitle>Create Account</ModalTitle>
+            <FormContainer style={{ flexDirection: 'column', justifyContent: 'space-between', height: '535px' }}>
+              <form onSubmit={handleSubmit}>
+                <TextFieldContainer>
+                  <label htmlFor="playerName">Player Name:</label>
+                  <TextField
+                    id="playerName"
+                    value={handle}
+                    onChange={(e) => setHandle(e.target.value)}
+                    required
+                  />
+                </TextFieldContainer>
+                <TextFieldContainer>
+                  <label htmlFor="email">Email:</label>
+                  <TextField
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </TextFieldContainer>
+                <TextFieldContainer>
+                  <label htmlFor="password">Password:</label>
+                  <TextField
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </TextFieldContainer>
+                <FormWrapper>
+                  <ButtonContainer>
+                    <SubmitButton type="submit">Create Account</SubmitButton>
+                  </ButtonContainer>
+                  <div style={{ position: 'relative', right: '0px', marginTop: '10px', textAlign: 'left' }}>
+                    <p style={{ margin: '0', display: 'block', opacity: 0.7 }}>
+                      Already have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToLogin}>Log In</span>.
+                    </p>
+                  </div>
+                </FormWrapper>
+              </form>
+            </FormContainer>
+          </ModalContent>
+        </Modal>
+      )}
 
-      <ModalTitle>Create Account</ModalTitle>
-      
-      <FormContainer style={{ flexDirection: 'column', justifyContent: 'space-between', height: '535px' }}>
-        
-        <TextFieldContainer>
-          <label htmlFor="playerName">Player Name:</label>
-          <TextField id="playerName" required />
-        </TextFieldContainer>
-
-        <TextFieldContainer>
-          <label htmlFor="email">Email:</label>
-          <TextField id="email" required />
-        </TextFieldContainer>
-
-        <TextFieldContainer>
-          <label htmlFor="password">Password:</label>
-          <TextField id="password" required />
-        </TextFieldContainer>
-
-      </FormContainer>
-
-      <FormWrapper>
-  <ButtonContainer>
-      <SubmitButton type="submit">Create Account</SubmitButton>
-  </ButtonContainer>
-  <div style={{ position: 'relative', right: '690px', marginTop: '10px', textAlign: 'left' }}>
-    <p style={{ margin: '0', display: 'block', opacity: 0.7 }}>
-        Already have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToLogin}>Log In</span>.
-    </p>
-</div>
-</FormWrapper>
-    </ModalContent>
-  </Modal>
-)}
 {showLoginModal && (
   <Modal>
     <ModalContent>
@@ -401,45 +450,75 @@ const LandingPageApp = () => {
       <GirlImage2 src={GirlImage} alt="Girl" /> 
       <LogoImage2 src={LogoImage} alt="Logo" />
       <ModalTitle style={{ marginLeft: '50px' }}>Log In</ModalTitle>
-      <FormContainer style={{ flexDirection: 'column', height: '535px' }}>
-        <TextFieldContainer>
-          <label htmlFor="email">Email:</label>
-          <TextField id="email" required />
-        </TextFieldContainer>
+      <form onSubmit={handleLogin}>
+        <FormContainer style={{ flexDirection: 'column', height: '403px', justifyContent: 'space-between' }}>
+          <TextFieldContainer>
+            <label htmlFor="loginEmail">Email:</label>
+            <TextField
+              id="loginEmail"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              required
+            />
+          </TextFieldContainer>
 
-        <TextFieldContainer>
-          <label htmlFor="password">Password:</label>
-          <TextField id="password" required />
-        </TextFieldContainer>
-      </FormContainer>
+          <TextFieldContainer>
+  <label htmlFor="loginPassword" style={{ display: 'block', marginBottom: '12px', fontSize: '16px', width: '471px' }}>
+    Password :</label>
+            <TextField
+              id="loginPassword"
+              type="password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              required
+            />
+          </TextFieldContainer>
+        </FormContainer>
 
-      <FormWrapper>
-        <ButtonContainer>
-          <SubmitButton type="submit" style={{ marginTop: '280px', width: '500px' }}>Log In</SubmitButton>
-        </ButtonContainer>
+        <FormWrapper>
+          <ButtonContainer>
+          <div style={{ marginTop: '-80px', marginBottom: '165px' }}>
+              <SubmitButton type="submit" style={{ width: '470px', marginLeft: '22px' }}>Log In</SubmitButton>
+            </div>
+          </ButtonContainer>
 
-        <div style={{ position: 'relative', right: '695px', marginTop: '10px', textAlign: 'left' }}>
-          <p style={{ margin: '0', display: 'block', opacity: 0.7 }}>
-            Don't have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToSignUp}>Sign Up</span>.
-          </p>
-          <p style={{ margin: '0', display: 'block', opacity: 0.5, marginTop: '-110px', textAlign: 'right', fontStyle: 'italic', marginRight: '-250px' }}>
-            <a href="/forgot-password" style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }}>Forgot your password?</a>
-          </p>
-        </div>
-      </FormWrapper>
+          <div style={{ position: 'relative', right: '-20px', marginTop: '10px', textAlign: 'left' }}>
+            <p style={{ margin: '0', display: 'block', opacity: 0.7, marginTop: '-150px', marginRight:'0px' }}>
+              Don't have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToSignUp}>Sign Up</span>.
+            </p>
+            <p style={{ margin: '0', display: 'block', opacity: 0.5, marginTop: '-125px', textAlign: 'right', fontStyle: 'italic', marginRight: '-220px' }}>
+              <a href="/forgot-password" style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }}>Forgot your password?</a>
+            </p>
+          </div>
+        </FormWrapper>
+      </form>
     </ModalContent>
   </Modal>
 )}
 
-
-      {showNotificationModal && (
+{showSuccessModal && (
         <Modal>
-          <ModalContent>
+          <ModalContent style={{ marginTop: '370px' }}>
             <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <p>You need to log in to play the game.</p>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+            <p>Register successful. Please log in.</p>
+            </div>
           </ModalContent>
         </Modal>
       )}
+
+
+      {showNotificationModal && (
+        <Modal>
+          <ModalContent style={{ marginTop: '370px' }}>
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+            <p>You need to log in to play the game.</p>
+            </div>
+          </ModalContent>
+        </Modal>
+      )}
+      {data && <div>{JSON.stringify(data)}</div>}
     </AppContainer>
   );
 };
