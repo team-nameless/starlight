@@ -14,14 +14,12 @@ builder.Configuration
     .Build();
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
 builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
     .AddIdentity<Player, IdentityRole>(opt =>
     {
         opt.Password.RequireDigit = false;
@@ -52,12 +50,22 @@ builder.Services
         opt.IncludeSubDomains = true;
         opt.MaxAge = TimeSpan.FromDays(60);
     })
+    .AddCors(opt =>
+    {
+        opt.AddDefaultPolicy(conf =>
+        {
+            conf
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    })
     .AddEndpointsApiExplorer()
     .AddHttpContextAccessor()
-    .AddSwaggerGen(c =>
+    .AddSwaggerGen(opt =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Starlight API", Version = "v1" });
-        c.IncludeXmlComments(Assembly.GetExecutingAssembly());
+        opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Starlight API", Version = "v1" });
+        opt.IncludeXmlComments(Assembly.GetExecutingAssembly());
     })
     .AddHttpsRedirection(opt =>
     {
@@ -77,22 +85,23 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseExceptionHandler("/api/error");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app
+    .UseExceptionHandler("/api/error")
+    .UseHsts()
     .UseHttpsRedirection()
+    .UseRouting()
+    .UseCors()
+    .UseAuthorization()
+    .UseAuthentication()
     .UseForwardedHeaders(new ForwardedHeadersOptions
     {
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
     })
-    .UseHsts()
     .UseHealthChecks("/api/healthcheck")
-    .UseRouting()
-    .UseAuthorization()
-    .UseAuthentication()
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
     
 app.MapControllers();

@@ -14,6 +14,7 @@ public class GameDatabaseService : IdentityDbContext<Player>
     
     public GameDatabaseService(DbContextOptions<GameDatabaseService> options) : base(options)
     {
+        // ReSharper disable once VirtualMemberCallInConstructor
         Database.EnsureCreated();
     }
     

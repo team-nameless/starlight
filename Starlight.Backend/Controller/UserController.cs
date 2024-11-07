@@ -45,7 +45,7 @@ public class UserController : ControllerBase
         return Ok(JsonSerializer.Serialize(new
         {
             Id = user.SequenceNumber,
-            Name = user.UserName,
+            Name = user.DisplayName,
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
             PlayTime = user.TotalPlayTime,

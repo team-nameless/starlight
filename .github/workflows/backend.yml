@@ -10,6 +10,9 @@ on:
       - main
     types: [opened, reopened, synchronize, assigned]
 
+permissions: 
+  contents: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -38,13 +41,21 @@ jobs:
           zip -r linux-x64.zip build/linux-x64
           zip -r win-x64.zip build/win-x64
           zip -r linux-arm64.zip build/linux-arm64
+          
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: "runnable" 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: runnable
           name: Rolling release of the project
           draft: false
+          tag_name: "runnable"
+          make_latest: true
           body: |
             # Nothing to look here!
           files: |
