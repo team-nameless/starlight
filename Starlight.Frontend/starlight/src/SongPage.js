@@ -1,47 +1,68 @@
-// App.js
-import React, { useState } from 'react';
-import './App.css';
-import profilePic from './assets/profile.png'; // Profile image
+// SongPage.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Main_Menu_Style.css';
+import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
-import dragonImage from './assets/SongBG/Dragon-image.png'; // Dragon background
 import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
 import historyIcon from './assets/Header_Items/history-icon.png'; // History icon
 import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
-import previousArrow from  './assets/previousArrow.png' //previous button arrow
-import nextArrow from  './assets/nextArrow.png' //next button arrow
+import previousArrow from './assets/previousArrow.png'; // Previous button arrow
+import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
+import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
+import song1bg from './assets/SongBG/Dragon-image.png'; // Song 1 background image
 
-function App() {
+function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
-  const [currentSong, setCurrentSong] = useState(1);
-  
+  const [userProfile, setUserProfile] = useState({});
+  const [songs, setSongs] = useState([]);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+
+  // Fetch user profile and song list data from the backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user profile data
+        const userProfileResponse = await axios.get('/api/user-profile');
+        setUserProfile(userProfileResponse.data);
+
+        // Fetch all songs data
+        const songsResponse = await axios.get('/api/songs');
+        setSongs(songsResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
   };
 
   const handleNextSong = () => {
-    setCurrentSong((prevSong) => prevSong + 1); // Simple increment logic for now
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
   };
 
   const handlePreviousSong = () => {
-    setCurrentSong((prevSong) => Math.max(prevSong - 1, 1)); // Prevent going below 1
+    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
   };
-  const handlePlayButtonClick = () => {
-    const songEndpoints = {
-      1: '/game/song1',
-      2: '/game/song2',
-      // Add more song endpoints as needed
-    };
 
-    const songEndpoint = songEndpoints[currentSong] || '/game/default';
-    window.location.href = songEndpoint;
+  const handlePlayButtonClick = () => {
+    const currentSong = songs[currentSongIndex];
+    if (currentSong) {
+      window.location.href = `/game/${currentSong.endpoint}`;
+    }
   };
+
+  const currentSong = songs[currentSongIndex];
 
   return (
-    <div className="app">
+    <div className="songpage">
       {/* Header Navigation Bar */}
       <header className="navbar">
         <div id="nav-icon1" className={isSongListOpen ? 'open' : ''} onClick={toggleSongList}>
@@ -51,11 +72,11 @@ function App() {
         </div>
         
         <nav className="nav-links left">
-          <a href="#songs">
+          <a href="/SongPage">
             <img src={songsIcon} alt="Songs" className="nav-icon" />
             <span>Songs</span>
           </a>
-          <a href="#history">
+          <a href="/HistoryPage">
             <img src={historyIcon} alt="History" className="nav-icon" />
             <span>History</span>
           </a>
@@ -63,7 +84,7 @@ function App() {
 
         {/* Center Curved Logo */}
         <div className="logo-container">
-          <a href="#current-page" className="logo">
+          <a href="/SongPage" className="logo">
             <span className="star-light">
               <span>STAR</span>         
                 <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: 'middle' }} />
@@ -73,11 +94,11 @@ function App() {
         </div>
 
         <nav className="nav-links right">
-          <a href="#events">
+          <a href="/EventPage.js">
             <img src={eventsIcon} alt="Events" className="nav-icon" />
             <span>Events</span>
           </a>
-          <a href="#store">
+          <a href="/StorePage">
             <img src={storeIcon} alt="Store" className="nav-icon" />
             <span>Store</span>
           </a>
@@ -88,21 +109,20 @@ function App() {
           <div className="sidebar-header">
             Song List
           </div>
-
-            <ul>
-              <li className="song-item">
+          <ul>
+            {songs.map((song, index) => (
+              <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
                 <div className="song-info">
-                  <img src={songsIcon} alt="Song Icon" className="song-icon" />
-                  <span className="song-name">Song name</span>
+                  <img src={songSidebarIcon} alt="Song SIdebar Icon" className="song-sidbar-icon" />
+                  <span className="sidebar-song">{song.name}</span>
                 </div>
-                <div className="song-bg" style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-                  <span className="song-name">Song name</span>
+                <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundImage})` }}>
+                  <span className="sidebar-song"> {song.name} </span>
                 </div>
               </li>
-              {/* Additional song items can be added here */}
-            </ul>
+            ))}
+          </ul>
         </div>
-        
 
         <div className="leave-button">
           <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/landing-page'} />
@@ -110,30 +130,24 @@ function App() {
       </header>
 
       {/* Current Page Content */}
-      <div className="content-layer">
-        {/* Background Image */}
-        <div className="background-image">
-          <img src={dragonImage} alt="Background" />
-        </div>
-        {/* Content and Buttons */}
+        <div className="content-layer">
+          {/* Background Image */}
+          <div className="background-image">
+            <img src={currentSong?.backgroundImage || song1bg} alt="Background" />
+          </div>
+          
+          {/* Content and Buttons */}
         <div className="song-content">
           {/* User Profile */} 
           <div className="user-profile">
-            
             <table>
               <tr>
                 <td>
-                  <div className="user-name"></div>
-                  <div className="user-name">
-                    Sanraku
-                  </div>
-                  
-                  <div className="user-id">
-                    ID: #123456
-                  </div>
+                  <div className="user-name">{userProfile.name || 'Sanraku'}</div>
+                  <div className="user-id">ID: #{userProfile.id || '12345'}</div>
                 </td>
                 <td>
-                  <img src={profilePic} alt="Profile" className="profile-img" />
+                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
                 </td>
               </tr>
             </table>
@@ -151,22 +165,22 @@ function App() {
 
           {/* Song Container */}
           <div className="song-container">
-            <dix className="song-identity">
-              <div className="publish-date">31 Oct, 2024 </div>
-              <div className="song-number">01</div>
-            </dix>
+            <div className="song-identity">
+              <div className="publish-date">{currentSong?.publishDate || 'N/A'}</div>
+              <div className="song-number">{currentSongIndex + 1}</div>
+            </div>
             <div className="song-info">
-              <div className="song-name">Song {currentSong}</div>
-              <div className="artist-name">- Artist {currentSong} -</div>
+              <div className="song-name">{currentSong?.name || 'Song 1'}</div>
+              <div className="artist-name">- {currentSong?.artist || 'Artist'} -</div>
               <button className="best-score-btn">Best Score</button>
             </div>
             <div className="play-button-container">
-            <button className="play-button" onClick={handlePlayButtonClick}>
-              <div className="play-icon-container">
-                <span className="play-icon">▶</span>
-              </div>
-            </button>
-          </div>
+              <button className="play-button" onClick={handlePlayButtonClick}>
+                <div className="play-icon-container">
+                  <span className="play-icon">▶</span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -174,4 +188,4 @@ function App() {
   );
 }
 
-export default App;
+export default SongPage;
