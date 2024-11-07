@@ -45,12 +45,15 @@ public class IdentityController : ControllerBase
         
         var user = new Player
         {
+            DisplayName = registration.Handle,
             CurrentLevel = 1,
             SequenceNumber = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         
-        await userStore.SetUserNameAsync(user, registration.Handle, CancellationToken.None);
+        // why Microsoft have to set the UserName TO. BE. FUCKING. UNIQUE????
+        await userStore.SetUserNameAsync(user, email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+        
         var result = await userManager.CreateAsync(user, registration.Password);
         
         if (!result.Succeeded)
