@@ -2,6 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './LandingPageApp'; 
+import HistoryPage from './HistoryPage';
+import EventPage from './EventPage';
+import StorePage from './StorePage';
 import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
@@ -62,74 +67,75 @@ function SongPage() {
   const currentSong = songs[currentSongIndex];
 
   return (
-    <div className="songpage">
-      {/* Header Navigation Bar */}
-      <header className="navbar">
-        <div id="nav-icon1" className={isSongListOpen ? 'open' : ''} onClick={toggleSongList}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        
-        <nav className="nav-links left">
-          <a href="/SongPage">
-            <img src={songsIcon} alt="Songs" className="nav-icon" />
-            <span>Songs</span>
-          </a>
-          <a href="/HistoryPage">
-            <img src={historyIcon} alt="History" className="nav-icon" />
-            <span>History</span>
-          </a>
-        </nav>
-
-        {/* Center Curved Logo */}
-        <div className="logo-container">
-          <a href="/SongPage" className="logo">
-            <span className="star-light">
-              <span>STAR</span>         
-                <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: 'middle' }} />
-              <span className="light">LIGHT</span>
-            </span>
-          </a>
-        </div>
-
-        <nav className="nav-links right">
-          <a href="/EventPage.js">
-            <img src={eventsIcon} alt="Events" className="nav-icon" />
-            <span>Events</span>
-          </a>
-          <a href="/StorePage">
-            <img src={storeIcon} alt="Store" className="nav-icon" />
-            <span>Store</span>
-          </a>
-        </nav>
-        
-        {/* Song List Sidebar */}
-        <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-          <div className="sidebar-header">
-            Song List
+    <Router>
+      <div className="songpage">
+        {/* Header Navigation Bar */}
+        <header className="navbar">
+          <div id="nav-icon1" className={isSongListOpen ? 'open' : ''} onClick={toggleSongList}>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <ul>
-            {songs.map((song, index) => (
-              <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
-                <div className="song-info">
-                  <img src={songSidebarIcon} alt="Song SIdebar Icon" className="song-sidbar-icon" />
-                  <span className="sidebar-song">{song.name}</span>
-                </div>
-                <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundImage})` }}>
-                  <span className="sidebar-song"> {song.name} </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+          
+          <nav className="nav-links left">
+            <a href="/SongPage">
+              <img src={songsIcon} alt="Songs" className="nav-icon" />
+              <span>Songs</span>
+            </a>
+            <a href="/HistoryPage">
+              <img src={historyIcon} alt="History" className="nav-icon" />
+              <span>History</span>
+            </a>
+          </nav>
 
-        <div className="leave-button">
-          <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/landing-page'} />
-        </div>
-      </header>
+          {/* Center Curved Logo */}
+          <div className="logo-container">
+            <a href="/SongPage" className="logo">
+              <span className="star-light">
+                <span>STAR</span>         
+                  <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: 'middle' }} />
+                <span className="light">LIGHT</span>
+              </span>
+            </a>
+          </div>
 
-      {/* Current Page Content */}
+          <nav className="nav-links right">
+            <a href="/EventPage">
+              <img src={eventsIcon} alt="Events" className="nav-icon" />
+              <span>Events</span>
+            </a>
+            <a href="/StorePage">
+              <img src={storeIcon} alt="Store" className="nav-icon" />
+              <span>Store</span>
+            </a>
+          </nav>
+          
+          {/* Song List Sidebar */}
+          <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
+            <div className="sidebar-header">
+              Song List
+            </div>
+            <ul>
+              {songs.map((song, index) => (
+                <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
+                  <div className="song-info">
+                    <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
+                    <span className="sidebar-song">{song.name}</span>
+                  </div>
+                  <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundImage})` }}>
+                    <span className="sidebar-song"> {song.name} </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="leave-button">
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/landing-page'} />
+          </div>
+        </header>
+
+        {/* Current Page Content */}
         <div className="content-layer">
           {/* Background Image */}
           <div className="background-image">
@@ -137,54 +143,63 @@ function SongPage() {
           </div>
           
           {/* Content and Buttons */}
-        <div className="song-content">
-          {/* User Profile */} 
-          <div className="user-profile">
-            <table>
-              <tr>
-                <td>
-                  <div className="user-name">{userProfile.name || 'Sanraku'}</div>
-                  <div className="user-id">ID: #{userProfile.id || '12345'}</div>
-                </td>
-                <td>
-                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          {/* Next/Previous Buttons */}
-          <div className="song-navigation">
-            <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
-              <img src={previousArrow} alt="Previous" style={{ width: '21px', height: '21px' }} />
-            </button>
-            <button className="nav-btn next-btn" onClick={handleNextSong}>
-              <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
-            </button>
-          </div>
-
-          {/* Song Container */}
-          <div className="song-container">
-            <div className="song-identity">
-              <div className="publish-date">{currentSong?.publishDate || 'N/A'}</div>
-              <div className="song-number">{currentSongIndex + 1}</div>
+          <div className="song-content">
+            {/* User Profile */} 
+            <div className="user-profile">
+              <table>
+                <tr>
+                  <td>
+                    <div className="user-name">{userProfile.name || 'Sanraku'}</div>
+                    <div className="user-id">ID: #{userProfile.id || '12345'}</div>
+                  </td>
+                  <td>
+                    <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
+                  </td>
+                </tr>
+              </table>
             </div>
-            <div className="song-info">
-              <div className="song-name">{currentSong?.name || 'Song 1'}</div>
-              <div className="artist-name">- {currentSong?.artist || 'Artist'} -</div>
-              <button className="best-score-btn">Best Score</button>
-            </div>
-            <div className="play-button-container">
-              <button className="play-button" onClick={handlePlayButtonClick}>
-                <div className="play-icon-container">
-                  <span className="play-icon">▶</span>
-                </div>
+
+            {/* Next/Previous Buttons */}
+            <div className="song-navigation">
+              <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
+                <img src={previousArrow} alt="Previous" style={{ width: '21px', height: '21px' }} />
               </button>
+              <button className="nav-btn next-btn" onClick={handleNextSong}>
+                <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
+              </button>
+            </div>
+
+            {/* Song Container */}
+            <div className="song-container">
+              <div className="song-identity">
+                <div className="publish-date">{currentSong?.publishDate || 'N/A'}</div>
+                <div className="song-number">{currentSongIndex + 1}</div>
+              </div>
+              <div className="song-info">
+                <div className="song-name">{currentSong?.name || 'Song 1'}</div>
+                <div className="artist-name">- {currentSong?.artist || 'Artist'} -</div>
+                <button className="best-score-btn">Best Score</button>
+              </div>
+              <div className="play-button-container">
+                <button className="play-button" onClick={handlePlayButtonClick}>
+                  <div className="play-icon-container">
+                    <span className="play-icon">▶</span>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <Routes>
+        <Route path="/SongPage" element={<SongPage />} />
+        <Route path="/HistoryPage" element={<HistoryPage />} />
+        <Route path="/EventPage" element={<EventPage />} />
+        <Route path="/StorePage" element={<StorePage />} />
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    </Router>
   );
 }
 

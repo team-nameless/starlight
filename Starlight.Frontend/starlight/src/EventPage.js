@@ -1,6 +1,12 @@
-// EventPage.js
+
+// StorePage.js
 import React from 'react';
 import './Main_Menu_Style.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './LandingPageApp'; 
+import HistoryPage from './HistoryPage';
+import StorePage from './StorePage';
+import SongPage from './SongPage';
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
 import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
@@ -9,8 +15,10 @@ import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
 import song1bg from './assets/SongBG/Dragon-image.png'; // Background image
 
-function EventPage() {
+
+function  EventPage() {
   return (
+    <Router>
     <div className="eventpage">
       {/* Header Navigation Bar */}
       <header className="navbar">
@@ -54,19 +62,13 @@ function EventPage() {
         </nav>
 
         <div className="leave-button">
-          <img
-            src={leaveIcon}
-            alt="Leave"
-            className="leave-icon"
-            style={{ width: '26px', height: '26px' }}
-            onClick={() => window.location.href = '/landing-page'}
-          />
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/LandingPageApp'} />
         </div>
       </header>
 
       {/* Background Image */}
       <div className="background-image">
-        <img src={currentSong?.backgroundImage || song1bg} alt="Background" />
+        <img src={song1bg} alt="Background" />
         <div className="overlay-layer"></div>
       </div>
 
@@ -76,7 +78,16 @@ function EventPage() {
       </div>
 
     </div>
-  );
+  
+      <Routes>
+        <Route path="/SongPage" element={<SongPage />} />
+        <Route path="/HistoryPage" element={<HistoryPage />} />
+        <Route path="/EventPage" element={<EventPage />} />
+        <Route path="/StorePage" element={<StorePage />} />
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    </Router>   
+    );
 }
 
 export default EventPage;
