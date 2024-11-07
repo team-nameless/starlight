@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Starlight.Backend.Controller.Request.Session;
+using Starlight.Backend.Controller.Request.Identity;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Service;
 
