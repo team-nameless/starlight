@@ -68,6 +68,13 @@ function SongPage() {
 
   return (
     <Router>
+      <Routes>
+        <Route path="/SongPage" element={<SongPage />} />
+        <Route path="/HistoryPage" element={<HistoryPage />} />
+        <Route path="/EventPage" element={<EventPage />} />
+        <Route path="/StorePage" element={<StorePage />} />
+        <Route path="/Logout" element={<LandingPage />} />
+      </Routes>
       <div className="songpage">
         {/* Header Navigation Bar */}
         <header className="navbar">
@@ -131,7 +138,7 @@ function SongPage() {
           </div>
 
           <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/landing-page'} />
+            <img src={leaveIcon} alt="Leave" className="leave-icon" onClick={() => window.location.href = '/Logout'} />
           </div>
         </header>
 
@@ -144,7 +151,7 @@ function SongPage() {
           
           {/* Content and Buttons */}
           <div className="song-content">
-            {/* User Profile */} 
+            {/* User Profile */}
             <div className="user-profile">
               <table>
                 <tr>
@@ -191,14 +198,6 @@ function SongPage() {
           </div>
         </div>
       </div>
-
-      <Routes>
-        <Route path="/SongPage" element={<SongPage />} />
-        <Route path="/HistoryPage" element={<HistoryPage />} />
-        <Route path="/EventPage" element={<EventPage />} />
-        <Route path="/StorePage" element={<StorePage />} />
-        <Route path="/" element={<LandingPage />} />
-      </Routes>
     </Router>
   );
 }
