@@ -44,6 +44,7 @@ jobs:
         with:
           name: Rolling release of the project
           draft: false
+          tag_name: "runnable"
           make_latest: true
           body: |
             # Nothing to look here!
