@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Button from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import './styleoflandingpage.css'; 
 import axios from 'axios';
@@ -152,7 +151,7 @@ const TextFieldContainer = styled.div`
   margin: 10px 0; 
   width: 100%; 
   text-align: left;
-  margin-bottom: 61px;
+  margin-bottom: 51px;
   margin-top: -30px;
   
   label {
@@ -192,7 +191,7 @@ const SubmitButton = styled.button`
   padding: 13px 190px; 
   border-radius: 5px; 
   cursor: pointer; 
-  margin-top: -35px; 
+  margin-top: -50px; 
   width: 200%;
   display: block;
   margin-left: 0px;
@@ -287,6 +286,9 @@ const LandingPageApp = () => {
   const [showLoginModal, setShowLoginModal] = useState(false); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
+  const [handleError, setHandleError] = useState(''); 
+  const [emailError, setEmailError] = useState(''); 
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     if (showSuccessModal) {
@@ -300,6 +302,34 @@ const LandingPageApp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHandleError('');  
+    setEmailError('');   
+    setPasswordError(''); 
+  
+    let formHasError = false;
+    
+    if (handle.trim() === '') {
+      setHandleError('Player Name is required');
+      formHasError = true;
+    }
+  
+    if (email.trim() === '') {
+      setEmailError('Email is required');
+      formHasError = true;
+    } else if (!/^[\w-]+(\.[\w-]+)*@gmail\.com$/.test(email)) {
+      setEmailError('Please enter a valid Gmail address (e.g. example@gmail.com)');
+      formHasError = true;
+    }
+  
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setPasswordError('Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character (@, !, #, $, %, *)');
+      formHasError = true;
+    }
+  
+    if (formHasError) {
+      return;
+    }
   
     try {
       const response = await axios.post('https://cluster1.swyrin.id.vn/api/register', { handle, email, password }, {
@@ -315,26 +345,50 @@ const LandingPageApp = () => {
   
     } catch (error) {
       console.error('Error fetching data:', error);
-      alert('Registration failed. Please try again.');
+  
+      if (error.response && error.response.status === 400 && error.response.data) {
+        const errorMessage = error.response.data;
+  
+        if (errorMessage.includes('DuplicateEmail')) {
+          setEmailError('Email already exists');  
+        }
+      } else {
+        alert('Registration failed. Please try again.');
+      }
     }
   };
   
-
-  const handleLogin = (e) => {
+  
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios.post('/api/login', { email: loginEmail, password: loginPassword }, {
-      headers: {
-        'Content-Type': 'application/json'
+  
+    setEmailError('');
+    setPasswordError('');
+  
+    try {
+      const response = await axios.post('https://cluster1.swyrin.id.vn/api/login', { email: loginEmail, password: loginPassword }, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      setData(response.data); 
+      setIsLoggedIn(true);
+      setShowLoginModal(false); 
+  
+      console.log('Login successful:', response.data);
+  
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setEmailError('User not found. Please check your email and password.');
+        setPasswordError(''); 
+      } else {
+        console.error('Error logging in:', error);
+        alert('An unexpected error occurred. Please try again later.');
       }
-    })
-      .then(response => {
-        setData(response.data);
-        setIsLoggedIn(true);
-        setShowLoginModal(false);
-      })
-      .catch(error => console.error('Error logging in:', error));
+    }
   };
-
+  
   const handlePlayButtonClick = () => {
     if (!isLoggedIn) {
       setShowNotificationModal(true);
@@ -404,8 +458,11 @@ const LandingPageApp = () => {
                     id="playerName"
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
+                    maxLength={8}
                     required
                   />
+                  {handleError && <span style={{ color: 'red', fontSize: '10px' }}>{handleError}</span>}
+
                 </TextFieldContainer>
                 <TextFieldContainer>
                   <label htmlFor="email">Email:</label>
@@ -415,17 +472,28 @@ const LandingPageApp = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                  {emailError && <span style={{ color: 'red', fontSize: '10px' }}>{emailError}</span>}
                 </TextFieldContainer>
                 <TextFieldContainer>
-                  <label htmlFor="password">Password:</label>
-                  <TextField
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                     <label htmlFor="password">Password:</label>
+                     <TextField
+                         id="password"
+                         type="password"
+                         value={password}
+                         onChange={(e) => setPassword(e.target.value)}
+                      required
+                      />
+                      {passwordError && (
+                      <span style={{ color: 'red', fontSize: '10px' }}>
+                         Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter
+                         <br />
+                         and a special character (@, !, #, $, %, *)
+                      </span>
+                     )}
+
+
                 </TextFieldContainer>
+
                 <FormWrapper>
                   <ButtonContainer>
                     <SubmitButton type="submit">Create Account</SubmitButton>
@@ -460,6 +528,7 @@ const LandingPageApp = () => {
               onChange={(e) => setLoginEmail(e.target.value)}
               required
             />
+            {emailError && <span style={{ color: 'red', fontSize: '10px' }}>{emailError}</span>}
           </TextFieldContainer>
 
           <TextFieldContainer>
@@ -472,6 +541,7 @@ const LandingPageApp = () => {
               onChange={(e) => setLoginPassword(e.target.value)}
               required
             />
+            {passwordError && <span style={{ color: 'red', fontSize: '10px' }}>{passwordError}</span>}
           </TextFieldContainer>
         </FormContainer>
 
