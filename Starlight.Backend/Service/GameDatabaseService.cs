@@ -14,26 +14,25 @@ public class GameDatabaseService : IdentityDbContext<Player>
     
     public GameDatabaseService(DbContextOptions<GameDatabaseService> options) : base(options)
     {
+        // ReSharper disable once VirtualMemberCallInConstructor
+        Database.EnsureCreated();
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(
             optionsBuilder
-#if DEBUG
                 .EnableDetailedErrors()
+#if DEBUG
                 .EnableSensitiveDataLogging()
+#endif
                 .UseSqlite(
-                    new SqliteConnection("Filename=Starlight.testing.db;"),
+                    new SqliteConnection("Filename=Starlight.db;"),
                     opt =>
                     {
                         opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     }
                 )
-#else
-                // TODO: ASK THE PROJECT MANAGER!!!!!
-                .UseMySql(ServerVersion.AutoDetect(""))
-#endif
         );
     }
 

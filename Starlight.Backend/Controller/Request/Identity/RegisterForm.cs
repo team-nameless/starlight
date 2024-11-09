@@ -1,4 +1,4 @@
-namespace Starlight.Backend.Controller.Request.Session;
+namespace Starlight.Backend.Controller.Request.Identity;
 
 public class RegisterForm
 {

@@ -3,12 +3,16 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MailKit" Version="4.8.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
@@ -25,7 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Content Update="Starlight.Backend.xml">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        </Content>
     </ItemGroup>
-
 </Project>

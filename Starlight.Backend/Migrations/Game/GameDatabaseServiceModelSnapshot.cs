@@ -216,6 +216,11 @@ namespace Starlight.Backend.Migrations.Game
                     b.Property<ulong>("CurrentLevel")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");

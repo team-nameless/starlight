@@ -1,17 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import SongPage from './SongPage';
-import StorePage from './StorePage';
-import EventPage from './EventPage';
-import HistoryPage from './HistoryPage';
+import './index.css'; 
+import './styleoflandingpage.css'; 
+import './Main_Menu_Style.css';
+import LandingPageApp from './LandingPageApp'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <SongPage />
-    <StorePage />
-    <EventPage />
-    <HistoryPage />
+    <LandingPageApp /> 
   </React.StrictMode>
 );

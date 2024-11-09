@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Starlight.Backend.Database.Game;
@@ -11,6 +12,12 @@ public class Player : IdentityUser
     ///     This is what Genshin Impact calls "User ID"
     /// </summary>
     public long SequenceNumber { get; set; }
+    
+    /// <summary>
+    ///     Display name of the user.
+    /// </summary>
+    [MaxLength(255)]
+    public required string DisplayName { get; set; }
     
     /// <summary>
     ///     Time this user last seen on the game session.
@@ -58,5 +65,5 @@ public class Player : IdentityUser
     ///     Player preferential setting.
     /// </summary>
     [PersonalData]
-    public UserSetting Setting { get; set; }
+    public UserSetting Setting { get; set; } = null!;
 }
