@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Starlight.Backend.Database.Track;
 using Starlight.Backend.Service;
 
 namespace Starlight.Backend.Controller;
@@ -17,24 +18,14 @@ public class TrackController : ControllerBase
     }
 
     /// <summary>
-    ///     Look up on a particular level set.
+    ///     Get all available tracks.
     /// </summary>
-    /// <param name="setId">Set ID.</param>
-    [HttpGet("set/{setId:int}")]
-    public ActionResult GetTrackSet(ulong setId)
+    /// <returns></returns>
+    [HttpGet("all")]
+    [Produces("application/json")]
+    public ActionResult<IEnumerable<Track>> GetAllTracks()
     {
-        var trackSet = _trackDatabase.TrackSets
-            .Include(set => set.Tracks)
-            .AsNoTracking()
-            .FirstOrDefault(set => set.Id == setId);
-
-        if (trackSet == null) return NotFound("Track set not found");
-        
-        return Ok(JsonSerializer.Serialize(new
-        {
-            SetId = trackSet.Id,
-            Tracks = JsonSerializer.Serialize(trackSet.Tracks)
-        }));
+        return Ok(_trackDatabase.Tracks.AsNoTracking());
     }
 
     /// <summary>
@@ -42,7 +33,8 @@ public class TrackController : ControllerBase
     /// </summary>
     /// <param name="trackId">Level ID.</param>
     [HttpGet("{trackId:int}")]
-    public ActionResult GetTrack(ulong trackId)
+    [Produces("application/json")]
+    public ActionResult<Track> GetTrack(ulong trackId)
     {
         var track = _trackDatabase.Tracks
             .AsNoTracking()
