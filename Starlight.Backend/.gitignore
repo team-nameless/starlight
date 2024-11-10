@@ -1,4 +1,4 @@
-*.db
+Starlight.db
 *.db-shm
 *.db-wal
 config.json
