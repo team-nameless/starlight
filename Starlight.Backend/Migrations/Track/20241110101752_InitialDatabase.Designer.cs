@@ -10,14 +10,14 @@ using Starlight.Backend.Service;
 namespace Starlight.Backend.Migrations.Track
 {
     [DbContext(typeof(TrackDatabaseService))]
-    [Migration("20241001025436_InitialDatabase")]
+    [Migration("20241110101752_InitialDatabase")]
     partial class InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Starlight.Backend.Database.Track.Track", b =>
                 {
@@ -30,8 +30,31 @@ namespace Starlight.Backend.Migrations.Track
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AudioFileLocation")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BackgroundFileLocation")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DataFileLocation")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Difficulty")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("DifficultyFavorText")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<ulong>("Duration")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NoteDesigner")
                         .IsRequired()
@@ -48,41 +71,9 @@ namespace Starlight.Backend.Migrations.Track
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("TrackSetId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TrackSetId");
 
                     b.ToTable("Tracks");
-                });
-
-            modelBuilder.Entity("Starlight.Backend.Database.Track.TrackSet", b =>
-                {
-                    b.Property<ulong>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TrackSets");
-                });
-
-            modelBuilder.Entity("Starlight.Backend.Database.Track.Track", b =>
-                {
-                    b.HasOne("Starlight.Backend.Database.Track.TrackSet", "TrackSet")
-                        .WithMany("Tracks")
-                        .HasForeignKey("TrackSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TrackSet");
-                });
-
-            modelBuilder.Entity("Starlight.Backend.Database.Track.TrackSet", b =>
-                {
-                    b.Navigation("Tracks");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Starlight.Backend.Database.Track;
 
 /// <summary>
-///     Represent a *single* track difficulty.
+///     Represent a single track.
 /// </summary>
 public class Track
 {
@@ -11,12 +11,6 @@ public class Track
     ///     Track ID.
     /// </summary>
     public ulong Id { get; set; }
-
-    /// <summary>
-    ///     Note designer name.
-    /// </summary>
-    [MaxLength(128)]
-    public required string NoteDesigner { get; set; }
 
     /// <summary>
     ///     Track name.
@@ -37,13 +31,43 @@ public class Track
     public required string Source { get; set; }
 
     /// <summary>
-    ///     Difficulty of this track.
+    ///     Note designer name.
     /// </summary>
-    [Range(1, 16)]
-    public double Difficulty { get; set; }
-
+    [MaxLength(128)]
+    public required string NoteDesigner { get; set; }
+    
     /// <summary>
-    ///     The parent set.
+    ///     Difficulty constant of this track.
     /// </summary>
-    public TrackSet TrackSet { get; set; } = null!;
+    [Range(1, 10)]
+    public double Difficulty { get; set; }
+    
+    /// <summary>
+    ///     Difficulty favor text. Use if anyone wants.
+    /// </summary>
+    [MaxLength(255)]
+    public required string DifficultyFavorText { get; set; }
+    
+    /// <summary>
+    ///     Duration, in milisecond.
+    /// </summary>
+    public ulong Duration { get; set; }
+    
+    /// <summary>
+    ///     Data file location.
+    /// </summary>
+    [MaxLength(255)]
+    public required string DataFileLocation { get; set; }
+    
+    /// <summary>
+    ///     Background file location.
+    /// </summary>
+    [MaxLength(255)]
+    public required string BackgroundFileLocation { get; set; }
+    
+    /// <summary>
+    ///     Audio file location.
+    /// </summary>
+    [MaxLength(255)]
+    public required string AudioFileLocation { get; set; }
 }
