@@ -2,6 +2,7 @@ using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Service;
@@ -93,6 +94,11 @@ app
     .UseExceptionHandler("/api/error")
     .UseHsts()
     .UseHttpsRedirection()
+    .UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "data")),
+        RequestPath = "/static"
+    })
     .UseRouting()
     .UseCors()
     .UseAuthorization()
