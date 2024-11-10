@@ -57,7 +57,13 @@ jobs:
           tag_name: "runnable"
           make_latest: true
           body: |
-            # Nothing to look here!
+            # Special delivery here!
+            
+            Before you are fooled by "xx days ago" text in the sidebar, I just want to tell you that,
+            that is not how git `reftag`s works - **the said date is their first creation date!**
+            
+            The commit hash is what matter. I repeat, please **LOOK AT THE COMMIT HASH** before filling a
+            ticket saying "Your delivery files are outdated!" and ruin my day!
           files: |
             linux-x64.zip
             win-x64.zip
