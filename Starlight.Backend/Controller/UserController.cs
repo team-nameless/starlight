@@ -25,6 +25,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userId">Account ID, set 0 for self.</param>
     [HttpGet("{userId:long}")]
+    [Produces("application/json")]
     public async Task<ActionResult> GetUser(long userId)
     {
         var services = HttpContext.RequestServices;
@@ -57,7 +58,7 @@ public class UserController : ControllerBase
     }
     
     /// <summary>
-    ///     Modify profile of current user.
+    ///     Modify profile of current player.
     /// </summary>
     [HttpPatch("profile")]
     public async Task<ActionResult> UpdateProfile([FromBody] ProfileUpdateForm profileUpdate)
@@ -104,7 +105,7 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    ///     Modify settings of current user.
+    ///     Modify settings of current player.
     /// </summary>
     [HttpPatch("settings")]
     public async Task<ActionResult> UpdateSettings([FromBody] SettingUpdateForm settingsUpdate)
@@ -143,6 +144,25 @@ public class UserController : ControllerBase
         }
         
         await _gameDatabase.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    /// <summary>
+    ///     Delete current logged-in player. Use with EXTREME CAUTION. You have been warned.
+    /// </summary>
+    [HttpDelete("delete")]
+    public async Task<ActionResult> DeleteUser()
+    {
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+        var userManager = signInManager.UserManager;
+        
+        var player = await userManager.GetUserAsync(User);
+
+        if (player == null) return BadRequest("Player not found");
+
+        await userManager.DeleteAsync(player);
 
         return Ok();
     }
