@@ -7,6 +7,7 @@ import Background from './assets/background-image/backgroundd.png';
 import ModalBackground from './assets/background-image/pur.png';
 import GirlImage from './assets/modal-image/girlimage.png'; 
 import LogoImage from './assets/background-image/logoo.png';
+import { useNavigate } from 'react-router-dom';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -289,8 +290,11 @@ const LandingPageApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
   const [handleError, setHandleError] = useState(''); 
-  const [emailError, setEmailError] = useState(''); 
-  const [passwordError, setPasswordError] = useState('');
+  const [signUpPasswordError, setSignUpPasswordError] = useState('');
+  const [loginPasswordError, setLoginPasswordError] = useState('');
+  const [signUpEmailError, setSignUpEmailError] = useState(''); 
+  const [loginEmailError, setLoginEmailError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (showSuccessModal) {
@@ -305,8 +309,8 @@ const LandingPageApp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setHandleError('');  
-    setEmailError('');   
-    setPasswordError(''); 
+    setSignUpEmailError('');
+    setSignUpPasswordError('');
   
     let formHasError = false;
     
@@ -316,16 +320,17 @@ const LandingPageApp = () => {
     }
   
     if (email.trim() === '') {
-      setEmailError('Email is required');
+      setSignUpEmailError('Email is required');
       formHasError = true;
     } else if (!/^[\w-]+(\.[\w-]+)*@gmail\.com$/.test(email)) {
-      setEmailError('Please enter a valid Gmail address (e.g. example@gmail.com)');
+      setSignUpEmailError('Please enter a valid Gmail address (e.g. example@gmail.com)');
       formHasError = true;
     }
   
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      setPasswordError('Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character (@, !, #, $, %, *)');
+      setSignUpPasswordError('Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character (@, !, #, $, %, *)');
+
       formHasError = true;
     }
   
@@ -352,7 +357,7 @@ const LandingPageApp = () => {
         const errorMessage = error.response.data;
   
         if (errorMessage.includes('DuplicateEmail')) {
-          setEmailError('Email already exists');  
+          setSignUpEmailError('Email already exists');  
         }
       } else {
         alert('Registration failed. Please try again.');
@@ -364,8 +369,8 @@ const LandingPageApp = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
   
-    setEmailError('');
-    setPasswordError('');
+    setLoginEmailError('');
+    setLoginPasswordError('');
   
     try {
       const response = await axios.post('https://cluster1.swyrin.id.vn/api/login', { email: loginEmail, password: loginPassword }, {
@@ -382,8 +387,8 @@ const LandingPageApp = () => {
   
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setEmailError('User not found. Please check your email and password.');
-        setPasswordError(''); 
+        setLoginEmailError('User not found. Please check your email and password.');
+        setLoginPasswordError(''); 
       } else {
         console.error('Error logging in:', error);
         alert('An unexpected error occurred. Please try again later.');
@@ -395,7 +400,7 @@ const LandingPageApp = () => {
     if (!isLoggedIn) {
       setShowNotificationModal(true);
     } else {
-      window.location.href = 'App.js';
+      navigate('/SongPage'); 
     }
   };
 
@@ -474,7 +479,7 @@ const LandingPageApp = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  {emailError && <span style={{ color: 'red', fontSize: '10px' }}>{emailError}</span>}
+                  {signUpEmailError && <span style={{ color: 'red', fontSize: '10px' }}>{signUpEmailError}</span>}
                 </TextFieldContainer>
                 <TextFieldContainer>
                      <label htmlFor="password">Password:</label>
@@ -485,7 +490,7 @@ const LandingPageApp = () => {
                          onChange={(e) => setPassword(e.target.value)}
                       required
                       />
-                      {passwordError && (
+                      {signUpPasswordError && (
                       <span style={{ color: 'red', fontSize: '10px' }}>
                          Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter
                          <br />
@@ -530,7 +535,7 @@ const LandingPageApp = () => {
               onChange={(e) => setLoginEmail(e.target.value)}
               required
             />
-            {emailError && <span style={{ color: 'red', fontSize: '10px' }}>{emailError}</span>}
+            {loginEmailError && <span style={{ color: 'red', fontSize: '10px' }}>{loginEmailError}</span>}
           </TextFieldContainer>
 
           <TextFieldContainer>
@@ -543,7 +548,7 @@ const LandingPageApp = () => {
               onChange={(e) => setLoginPassword(e.target.value)}
               required
             />
-            {passwordError && <span style={{ color: 'red', fontSize: '10px' }}>{passwordError}</span>}
+            {loginPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{loginPasswordError}</span>}
           </TextFieldContainer>
         </FormContainer>
 

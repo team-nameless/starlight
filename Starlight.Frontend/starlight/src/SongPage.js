@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './LandingPageApp'; 
 import HistoryPage from './HistoryPage';
 import EventPage from './EventPage';
@@ -67,7 +67,7 @@ function SongPage() {
   const currentSong = songs[currentSongIndex];
 
   return (
-    <Router>
+    <div>
       <Routes>
         <Route path="/SongPage" element={<SongPage />} />
         <Route path="/HistoryPage" element={<HistoryPage />} />
@@ -198,7 +198,7 @@ function SongPage() {
           </div>
         </div>
       </div>
-    </Router>
+    </div>
   );
 }
 
