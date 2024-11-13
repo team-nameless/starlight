@@ -56,9 +56,12 @@ builder.Services
         opt.AddDefaultPolicy(conf =>
         {
             conf
-                .AllowAnyOrigin()
+                .SetIsOriginAllowed(_ => true)
+                .SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .WithExposedHeaders("Set-Cookie", ".AspNetCore.Identity.Application", "set-cookie");
         });
     })
     .AddEndpointsApiExplorer()
