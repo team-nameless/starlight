@@ -324,7 +324,7 @@ html, body {
   font-size: 18px;
 }
 
-.publish-date {
+.difficulty {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   color: #000000;
@@ -440,7 +440,7 @@ html, body {
   align-items: flex-start;
 }
 
-.publish-date {
+.difficulty {
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #6C7380;
@@ -467,7 +467,7 @@ html, body {
   font-family: 'Lemon', sans-serif;
   font-weight: 400;
   color: #000000;
-  font-size: 60px;
+  font-size: 30px;
   margin-bottom: 5px; /* Add some space below the song name */
 }
 
