@@ -395,7 +395,7 @@ const LandingPageApp = () => {
     if (!isLoggedIn) {
       setShowNotificationModal(true);
     } else {
-      window.location.href = 'App.js';
+      window.location.href = '/SongPage';
     }
   };
 
