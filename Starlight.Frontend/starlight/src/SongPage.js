@@ -18,7 +18,8 @@ import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
-import song1bg from './assets/SongBG/Dragon-image.png'; // Song 1 background image
+
+const rootUrl = "https://cluster1.swyrin.id.vn";
 
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -35,8 +36,16 @@ function SongPage() {
         setUserProfile(userProfileResponse.data);
 
         // Fetch all songs data
-        const songsResponse = await axios.get('/api/songs');
-        setSongs(songsResponse.data);
+        const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const fetchedSongs = songsResponse.data;
+        setSongs(fetchedSongs);
+        if (fetchedSongs.length > 0) {
+          setCurrentSongIndex(0);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -57,14 +66,39 @@ function SongPage() {
     setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
   };
 
-  const handlePlayButtonClick = () => {
+  const handlePlayButtonClick = async () => {
     const currentSong = songs[currentSongIndex];
     if (currentSong) {
-      window.location.href = `/game/${currentSong.endpoint}`;
+      try {
+        await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
+        window.location.href = `/game/${currentSong.id}`;
+      } catch (error) {
+        console.error('Error starting game:', error);
+      }
     }
   };
 
   const currentSong = songs[currentSongIndex];
+
+  useEffect(() => {
+    let audio;
+    const playAudio = () => {
+      if (currentSong && currentSong.audioFileLocation) {
+        audio = new Audio(`${rootUrl}${currentSong.audioFileLocation}`);
+        audio.play().catch(error => console.error('Error playing audio:', error));
+      }
+    };
+
+    document.addEventListener('click', playAudio, { once: true });
+
+    return () => {
+      document.removeEventListener('click', playAudio);
+      if (audio) {
+        audio.pause();
+        audio = null;
+      }
+    };
+  }, [currentSong]);
 
   return (
     <div>
@@ -127,10 +161,10 @@ function SongPage() {
                 <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
                   <div className="song-info">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
-                    <span className="sidebar-song">{song.name}</span>
+                    <span className="sidebar-song">{song.title}</span>
                   </div>
-                  <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundImage})` }}>
-                    <span className="sidebar-song"> {song.name} </span>
+                  <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}>
+                    <span className="sidebar-song"> {song.title} </span>
                   </div>
                 </li>
               ))}
@@ -138,7 +172,7 @@ function SongPage() {
           </div>
 
           <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" onClick={() => window.location.href = '/Logout'} />
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/Logout'} /> 
           </div>
         </header>
 
@@ -146,7 +180,7 @@ function SongPage() {
         <div className="content-layer">
           {/* Background Image */}
           <div className="background-image">
-            <img src={currentSong?.backgroundImage || song1bg} alt="Background" />
+            <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
           </div>
           
           {/* Content and Buttons */}
@@ -179,12 +213,12 @@ function SongPage() {
             {/* Song Container */}
             <div className="song-container">
               <div className="song-identity">
-                <div className="publish-date">{currentSong?.publishDate || 'N/A'}</div>
+                <div className="difficulty">{currentSong?.difficulty}</div>
                 <div className="song-number">{currentSongIndex + 1}</div>
               </div>
               <div className="song-info">
-                <div className="song-name">{currentSong?.name || 'Song 1'}</div>
-                <div className="artist-name">- {currentSong?.artist || 'Artist'} -</div>
+                <div className="song-name">{currentSong?.title }</div>
+                <div className="artist-name">- {currentSong?.artist } -</div>
                 <button className="best-score-btn">Best Score</button>
               </div>
               <div className="play-button-container">

@@ -54,6 +54,12 @@ html, body {
   width: 50px;
   height: 50px;
   margin: 10px; /* Space between logo and text */
+  transition: transform 0.3s ease;
+}
+
+.star-light:hover ~ .logo-icon,
+.logo-icon:hover {
+  transform: scale(1.2);
 }
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&display=swap');
 
@@ -127,7 +133,28 @@ html, body {
   margin-left: 100px;
   gap: 100px; /* Adjust the spacing as needed */
 }
+.nav-links.left a,
+.nav-links.right a {
+  position: relative;
+}
 
+.nav-links.left a::after,
+.nav-links.right a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Adjust as needed */
+  left: 50%;
+  width: 0;
+  height: 2px; /* Adjust as needed */
+  background-color: white;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-links.left a:hover::after,
+.nav-links.right a:hover::after {
+  width: 100%;
+  left: 0;
+}
 #nav-icon1 {
   width: 30px;
   height: 22.5px;
@@ -187,37 +214,139 @@ html, body {
   z-index: -1; /* Ensure the background is behind other content */
 }
 
+/* Background */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 93.2vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
 .background-image img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   object-position: 100% 50%;
-  object-fit: cover;/* Ensures the image covers the entire container */
 }
 
+/* Content Layer */
 .content-layer {
   position: relative;
-  z-index: 1; /* Ensure content is above the background */
+  z-index: 1;
+  padding: 20px;
 }
-/* User Profile / Leave Icon */
-.user-profile,
-.leave-icon {
+
+/* User Profile */
+.user-profile {
   display: flex;
-  height: 60%;
-  width: 60%;
   align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-family: 'Koho', sans-serif;
+  font-weight: 600;
+  color: #8095FF;
+  font-size: 20px;
+  text-align: right;
+  margin-bottom: 2px; /* Add some space between user-name and user-id */
+}
+.user-id {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #FF9100;
+  font-size: 14px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .profile-img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+/* Navigation Buttons */
+.song-navigation {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.user-id {
-  font-size: 14px;
-  text-align: right;
+.nav-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #8D87FA;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  margin-top: -30px; /* Move up by 10px */
 }
+
+.nav-btn + .nav-btn {
+  margin-left: 280px; /* Distance between buttons */
+}
+.nav-btn:hover {
+  background-color: #4805FF;
+  transition: background-color 0.3s ease;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap');
+.song-name {
+  font-family: 'Lemon', sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 24px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap');
+.artist-name {
+  font-family: 'Artifika', serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 18px;
+}
+
+.difficulty {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+/* Best Score Button */
+@import url('https://fonts.googleapis.com/css2?family=Abyssinica+SIL&family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap');
+.best-score-btn {
+  font-family: 'Abyssinica SIL', sans-serif;
+  font-weight: 400;
+  color: #000000;
+  background-color: #8095FF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
 
 /* Sidebar styles for song list */
 .sidebar {
@@ -244,7 +373,6 @@ html, body {
   background-color: #142048;
   margin-bottom: 20px;
 }
-
 .sidebar.open {
   width: 400px;
   left: 0;
@@ -312,7 +440,7 @@ html, body {
   align-items: flex-start;
 }
 
-.publish-date {
+.difficulty {
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #6C7380;
@@ -339,7 +467,7 @@ html, body {
   font-family: 'Lemon', sans-serif;
   font-weight: 400;
   color: #000000;
-  font-size: 60px;
+  font-size: 30px;
   margin-bottom: 5px; /* Add some space below the song name */
 }
 
