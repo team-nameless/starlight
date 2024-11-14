@@ -1,4 +1,3 @@
-
 /* General styles */
 * {
   margin: 0;
@@ -230,6 +229,15 @@ html, body {
   height: 100%;
   object-fit: cover;
   object-position: 100% 50%;
+  transition: opacity 1s ease-in-out; /* Add transition effect */
+}
+
+.background-image img.morph {
+  transform: scale(1.1); /* Smooth transition for morphing */
+}
+
+.background-image img.fade-out {
+  opacity: 0; /* Smooth transition for fading out */
 }
 
 /* Content Layer */
@@ -359,6 +367,7 @@ html, body {
   color: white;
   padding: 20px;
   transition: 0.3s;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Young+Serif&display=swap');
@@ -389,16 +398,113 @@ html, body {
 .sidebar ul {
   list-style-type: none;
   padding-top: 20px;
+  max-height: calc(100% - 70px); /* Adjust height to fit within the sidebar */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .sidebar ul li {
   padding: 10px 0;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.sidebar ul li a {
-  color: white;
-  text-decoration: none;
+.song-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.song-info-sidebar {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.song-sidebar-icon {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.sidebar-song {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-style: italic;
   font-size: 18px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 250px; /* Set max-width to 250px */
+}
+
+.sidebar-song .scrolling-text {
+  display: inline-block;
+  animation: scroll-text 5s linear infinite; /* Text scroll animation */
+}
+
+.sidebar-song:not(.scrolling-text) {
+  animation: none; /* Disable animation if text does not exceed 250px */
+}
+
+/* Background Image Reveal on Hover */
+.song-bg {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: left 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.song-bg .sidebar-song {
+  color: white;
+  padding-left: 10px;
+}
+
+/* Diagonal Divider */
+.song-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+/* Hover Effects */
+.song-item:hover .song-bg {
+  left: 0;
+}
+
+.song-item:hover .sidebar-song {
+  color: white;
+}
+
+/* Text Scrolling Animation */
+@keyframes scroll-text {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(calc(-100% - 10px)); /* Scrolls text completely to the left */
+  }
+  100% {
+    transform: translateX(0); /* Resets text to start position */
+  }
 }
 
 
@@ -440,7 +546,7 @@ html, body {
   align-items: flex-start;
 }
 
-.difficulty {
+.difficulty-text {
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #6C7380;
@@ -449,7 +555,7 @@ html, body {
   margin-right: 10px;
 }
 
-.song-number {
+.difficulty-value {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;

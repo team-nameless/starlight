@@ -59,11 +59,25 @@ function SongPage() {
   };
 
   const handleNextSong = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+    const imgElement = document.querySelector('.background-image img');
+    if (imgElement) {
+      imgElement.classList.add('fade-out');
+      imgElement.addEventListener('transitionend', () => {
+        setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+        imgElement.classList.remove('fade-out');
+      }, { once: true });
+    }
   };
 
   const handlePreviousSong = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
+    const imgElement = document.querySelector('.background-image img');
+    if (imgElement) {
+      imgElement.classList.add('fade-out');
+      imgElement.addEventListener('transitionend', () => {
+        setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
+        imgElement.classList.remove('fade-out');
+      }, { once: true });
+    }
   };
 
   const handlePlayButtonClick = async () => {
@@ -98,6 +112,15 @@ function SongPage() {
         audio = null;
       }
     };
+  }, [currentSong]);
+
+  useEffect(() => {
+    const imgElement = document.querySelector('.background-image img');
+    if (imgElement) {
+      imgElement.addEventListener('transitionend', () => {
+        imgElement.classList.remove('morph');
+      });
+    }
   }, [currentSong]);
 
   return (
@@ -159,12 +182,16 @@ function SongPage() {
             <ul>
               {songs.map((song, index) => (
                 <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
-                  <div className="song-info">
+                  <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
-                    <span className="sidebar-song">{song.title}</span>
+                    <span className="sidebar-song">
+                      <div className="scrolling-text">{song.title}</div> {/* Auto-loop scrolling text */}
+                    </span>
                   </div>
                   <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}>
-                    <span className="sidebar-song"> {song.title} </span>
+                    <span className="sidebar-song">
+                      <div className="scrolling-text">{song.title}</div>
+                    </span>
                   </div>
                 </li>
               ))}
@@ -213,8 +240,8 @@ function SongPage() {
             {/* Song Container */}
             <div className="song-container">
               <div className="song-identity">
-                <div className="difficulty">{currentSong?.difficulty}</div>
-                <div className="song-number">{currentSongIndex + 1}</div>
+                <div className="difficulty-text">Song level</div>
+                <div className="difficulty-value">{currentSong?.difficulty}</div>
               </div>
               <div className="song-info">
                 <div className="song-name">{currentSong?.title }</div>
