@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import LandingPage from './LandingPageApp'; 
 import HistoryPage from './HistoryPage';
 import EventPage from './EventPage';
@@ -26,6 +26,7 @@ function SongPage() {
   const [userProfile, setUserProfile] = useState({});
   const [songs, setSongs] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
 
   // Fetch user profile and song list data from the backend
   useEffect(() => {
@@ -92,6 +93,18 @@ function SongPage() {
     }
   };
 
+  const handleLeaveClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirmLeave = () => {
+    window.location.href = '/LandingPage';
+  };
+
+  const handleCancelLeave = () => {
+    setShowPopup(false);
+  };
+
   const currentSong = songs[currentSongIndex];
 
   useEffect(() => {
@@ -99,14 +112,14 @@ function SongPage() {
     const playAudio = () => {
       if (currentSong && currentSong.audioFileLocation) {
         audio = new Audio(`${rootUrl}${currentSong.audioFileLocation}`);
+        audio.loop = true; // Set audio to auto-replay
         audio.play().catch(error => console.error('Error playing audio:', error));
       }
     };
 
-    document.addEventListener('click', playAudio, { once: true });
+    playAudio(); // Play audio immediately on page load
 
     return () => {
-      document.removeEventListener('click', playAudio);
       if (audio) {
         audio.pause();
         audio = null;
@@ -142,14 +155,14 @@ function SongPage() {
           </div>
           
           <nav className="nav-links left">
-            <a href="/SongPage">
+            <Link to="/SongPage">
               <img src={songsIcon} alt="Songs" className="nav-icon" />
               <span>Songs</span>
-            </a>
-            <a href="/HistoryPage">
+            </Link>
+            <Link to="/HistoryPage">
               <img src={historyIcon} alt="History" className="nav-icon" />
               <span>History</span>
-            </a>
+            </Link>
           </nav>
 
           {/* Center Curved Logo */}
@@ -164,14 +177,14 @@ function SongPage() {
           </div>
 
           <nav className="nav-links right">
-            <a href="/EventPage">
+            <Link to="/EventPage">
               <img src={eventsIcon} alt="Events" className="nav-icon" />
               <span>Events</span>
-            </a>
-            <a href="/StorePage">
+            </Link>
+            <Link to="/StorePage">
               <img src={storeIcon} alt="Store" className="nav-icon" />
               <span>Store</span>
-            </a>
+            </Link>
           </nav>
           
           {/* Song List Sidebar */}
@@ -199,7 +212,7 @@ function SongPage() {
           </div>
 
           <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/Logout'} /> 
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} /> 
           </div>
         </header>
 
@@ -258,6 +271,16 @@ function SongPage() {
             </div>
           </div>
         </div>
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h2>Confirm Leave</h2>
+              <p>Are you sure you want to leave the game?</p>
+              <button className="stay-button" onClick={handleCancelLeave}>Stay</button>
+              <button className="leave-button" onClick={handleConfirmLeave}>Leave</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

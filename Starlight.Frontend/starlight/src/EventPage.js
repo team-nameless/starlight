@@ -1,8 +1,6 @@
-
-// StorePage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Main_Menu_Style.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import LandingPage from './LandingPageApp'; 
 import HistoryPage from './HistoryPage';
 import StorePage from './StorePage';
@@ -13,10 +11,39 @@ import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
 import historyIcon from './assets/Header_Items/history-icon.png'; // History icon
 import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
-import song1bg from './assets/SongBG/Dragon-image.png'; // Background image
+import axios from 'axios';
 
+const rootUrl = "https://cluster1.swyrin.id.vn";
 
-function  EventPage() {
+function EventPage() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentSong = async () => {
+      try {
+        const response = await axios.get(`${rootUrl}/api/track/current`);
+        setCurrentSong(response.data);
+      } catch (error) {
+        console.error('Error fetching current song:', error);
+      }
+    };
+
+    fetchCurrentSong();
+  }, []);
+
+  const handleLeaveClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirmLeave = () => {
+    window.location.href = '/LandingPageApp';
+  };
+
+  const handleCancelLeave = () => {
+    setShowPopup(false);
+  };
+
   return (
     <Router>
     <div className="eventpage">
@@ -62,13 +89,13 @@ function  EventPage() {
         </nav>
 
         <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={() => window.location.href = '/LandingPageApp'} />
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} />
         </div>
       </header>
 
       {/* Background Image */}
       <div className="background-image">
-        <img src={song1bg} alt="Background" />
+        <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
         <div className="overlay-layer"></div>
       </div>
 
@@ -77,6 +104,16 @@ function  EventPage() {
         Coming soon...
       </div>
 
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Confirm Leave</h2>
+            <p>Are you sure you want to leave the game?</p>
+            <button className="stay-button" onClick={handleCancelLeave}>Stay</button>
+            <button className="leave-button" onClick={handleConfirmLeave}>Leave</button>
+          </div>
+        </div>
+      )}
     </div>
   
       <Routes>
