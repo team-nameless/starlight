@@ -75,6 +75,16 @@ builder.Services
         opt.ExpireTimeSpan = TimeSpan.FromHours(480);
         opt.SlidingExpiration = true;
     })
+    .Configure<CookiePolicyOptions>(opt =>
+    {
+        opt.OnAppendCookie = context =>
+        {
+            if (context.CookieOptions is { Secure: true, SameSite: SameSiteMode.None })
+            {
+                context.CookieOptions.Extensions.Add("Partitioned");
+            }
+        };
+    })
     .Configure<ForwardedHeadersOptions>(opt =>
     {
         opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
@@ -91,8 +101,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app
+    .UseCookiePolicy()
     .UseExceptionHandler("/api/error")
-    .UseHsts()
+    .UseHsts()  
     .UseHttpsRedirection()
     .UseStaticFiles(new StaticFileOptions
     {
