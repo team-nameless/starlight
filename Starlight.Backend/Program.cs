@@ -51,19 +51,7 @@ builder.Services
         opt.IncludeSubDomains = true;
         opt.MaxAge = TimeSpan.FromDays(60);
     })
-    .AddCors(opt =>
-    {
-        opt.AddDefaultPolicy(conf =>
-        {
-            conf
-                .SetIsOriginAllowed(_ => true)
-                .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .AllowAnyHeader()
-                .AllowCredentials()
-                .AllowAnyMethod()
-                .WithExposedHeaders("Set-Cookie", ".AspNetCore.Identity.Application", "set-cookie");
-        });
-    })
+    .AddCors()
     .AddEndpointsApiExplorer()
     .AddHttpContextAccessor()
     .AddSwaggerGen(opt =>
@@ -103,7 +91,24 @@ app
         RequestPath = "/static"
     })
     .UseRouting()
-    .UseCors()
+    .UseCors(policy =>
+    {
+        policy
+            .WithOrigins(
+                // React page
+                "http://localhost:3000",
+                
+                // local API doc - http
+                "http://localhost:5289",
+                
+                // local API doc - https
+                "https://localhost:7224"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .Build();
+    })
     .UseAuthorization()
     .UseAuthentication()
     .UseForwardedHeaders(new ForwardedHeadersOptions

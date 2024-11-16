@@ -9,6 +9,9 @@ import GirlImage from './assets/modal-image/girlimage.png';
 import LogoImage from './assets/background-image/logoo.png';
 import { useNavigate } from 'react-router-dom';
 
+const rootUrl = "https://cluster1.swyrin.id.vn";
+// const rootUrl = "https://localhost:7224";
+
 const AppContainer = styled.div`
   text-align: center;
   padding: 20px;
@@ -340,7 +343,7 @@ const LandingPageApp = () => {
     }
   
     try {
-      const response = await axios.post('https://cluster1.swyrin.id.vn/api/register', { handle, email, password }, {
+      const response = await axios.post(`${rootUrl}/api/register`, { handle, email, password }, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -374,10 +377,11 @@ const LandingPageApp = () => {
     setLoginPasswordError('');
   
     try {
-      const response = await axios.post('https://cluster1.swyrin.id.vn/api/login', { email: loginEmail, password: loginPassword }, {
+      const response = await axios.post(`${rootUrl}/api/login`, { email: loginEmail, password: loginPassword }, {
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        withCredentials: true
       });
   
       setData(response.data); 
