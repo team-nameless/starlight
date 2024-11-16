@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
+import { Unity, useUnityContext } from "react-unity-webgl";
 import LandingPage from './LandingPageApp'; 
 import HistoryPage from './HistoryPage';
 import EventPage from './EventPage';
@@ -26,15 +27,50 @@ function SongPage() {
   const [songs, setSongs] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const navigate = useNavigate();
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [userName, setUserName] = useState();
+  const [score, setScore] = useState();
+
+  const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
+    loaderUrl: "build/myunityapp.loader.js",
+    dataUrl: "build/myunityapp.data",
+    frameworkUrl: "build/myunityapp.framework.js",
+    codeUrl: "build/myunityapp.wasm",
+  });
+
+  const handleGameOver = useCallback((userName, score) => {
+    setIsGameOver(true);
+    setUserName(userName);
+    setScore(score);
+  }, []);
+
+  useEffect(() => {
+    addEventListener("GameOver", handleGameOver);
+    return () => {
+      removeEventListener("GameOver", handleGameOver);
+    };
+  }, [addEventListener, removeEventListener, handleGameOver]);
 
   // Fetch user profile and song list data from the backend
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch user profile data
-        const userProfileResponse = await axios.get('/api/user-profile');
-        setUserProfile(userProfileResponse.data);
+        // Fetch user ID and username
+        const userResponse = await axios.get('/api/user', {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (userResponse.status === 200) {
+          const userData = userResponse.data;
+          setUserProfile({
+            id: userData.id || 123456,
+            name: userData.handle || 'Sanraku',
+            profilePic: userData.profilePic || profilePicPlaceholder
+          });
+        } else {
+          console.error('Error fetching user data:', userResponse.statusText);
+        }
 
         // Fetch all songs data
         const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
@@ -42,10 +78,14 @@ function SongPage() {
             'Content-Type': 'application/json'
           }
         });
-        const fetchedSongs = songsResponse.data;
-        setSongs(fetchedSongs);
-        if (fetchedSongs.length > 0) {
-          setCurrentSongIndex(0);
+        if (songsResponse.status === 200) {
+          const fetchedSongs = songsResponse.data;
+          setSongs(fetchedSongs);
+          if (fetchedSongs.length > 0) {
+            setCurrentSongIndex(0);
+          }
+        } else {
+          console.error('Error fetching songs data:', songsResponse.statusText);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -86,7 +126,7 @@ function SongPage() {
     if (currentSong) {
       try {
         await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
-        window.location.href = `/game/${currentSong.id}`;
+        sendMessage("GameController", "LoadSong", currentSong.id);
       } catch (error) {
         console.error('Error starting game:', error);
       }
@@ -137,7 +177,7 @@ function SongPage() {
   }, [currentSong]);
 
   return (
-    <div>
+    <Fragment>
       <Routes>
         <Route path="/SongPage" element={<SongPage />} />
         <Route path="/HistoryPage" element={<HistoryPage />} />
@@ -229,11 +269,13 @@ function SongPage() {
               <table>
                 <tr>
                   <td>
-                    <div className="user-name">{userProfile.name || 'Sanraku'}</div>
-                    <div className="user-id">ID: #{userProfile.id || '12345'}</div>
+                    <div className="user-name">{userProfile.name }</div>
+                    <div className="user-id">ID: #{userProfile.id }</div>
                   </td>
                   <td>
-                    <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
+                    <Link to="/profilepage">
+                      <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
+                    </Link>
                   </td>
                 </tr>
               </table>
@@ -281,7 +323,11 @@ function SongPage() {
           </div>
         )}
       </div>
-    </div>
+      <Unity unityProvider={unityProvider} />
+      {isGameOver === true && (
+        <p>{`Game Over ${userName}! You've scored ${score} points.`}</p>
+      )}
+    </Fragment>
   );
 }
 

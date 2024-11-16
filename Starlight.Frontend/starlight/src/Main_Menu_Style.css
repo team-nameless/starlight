@@ -103,10 +103,12 @@ html, body {
   align-items: center;
   text-decoration: none;
   font-size: 18px;
+  transition: color 0.3s ease, transform 0.3s ease; /* Add transition for smooth effect */
 }
 
 .nav-links a span {
   margin-left: 8px;
+  transition: color 0.3s ease; /* Add transition for smooth effect */
 }
 
 .nav-icon {
@@ -438,6 +440,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ensures the image fits nicely */
+  width: 80%; 
   z-index: 1;
   clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); /* Initially hidden */
   transition: clip-path 0.3s ease;
