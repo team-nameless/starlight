@@ -1,44 +1,53 @@
-// StorePage.js
 import React, { useState, useEffect } from 'react';
 import './Main_Menu_Style.css';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import LandingPage from './LandingPageApp'; 
-import HistoryPage from './HistoryPage';
-import EventPage from './EventPage';
-import SongPage from './SongPage';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
 import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
 import historyIcon from './assets/Header_Items/history-icon.png'; // History icon
 import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
-import axios from 'axios';
+import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
+import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
+//import axios from 'axios';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
 function StorePage() {
+  const location = useLocation();
+  const currentSongFromLocation = location.state?.currentSong || null;
+  const currentSongIndexFromLocation = location.state?.currentSongIndex || 0;
+  const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
+  const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
+  let audio; // Define audio variable
+  const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [currentSong, setCurrentSong] = useState(null);
+  const [songs, setSongs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCurrentSong = async () => {
-      try {
-        const response = await axios.get(`${rootUrl}/api/track/current`);
-        setCurrentSong(response.data);
-      } catch (error) {
-        console.error('Error fetching current song:', error);
-      }
-    };
+    setCurrentSong(currentSongFromLocation);
+    setCurrentSongIndex(currentSongIndexFromLocation);
+  }, [currentSongFromLocation, currentSongIndexFromLocation]);
 
-    fetchCurrentSong();
-  }, []);
+  useEffect(() => {
+    setCurrentSong(currentSongFromLocation);
+  }, [currentSongFromLocation]);
+
+  const toggleSongList = () => {
+    setIsSongListOpen(!isSongListOpen);
+  };
 
   const handleLeaveClick = () => {
     setShowPopup(true);
   };
 
   const handleConfirmLeave = () => {
-    window.location.href = '/LandingPageApp';
+    if (audio) {
+      audio.pause();
+      audio = null;
+    }
+    window.location.href = '/';
   };
 
   const handleCancelLeave = () => {
@@ -46,51 +55,50 @@ function StorePage() {
   };
 
   return (
-    <Router>
     <div className="storepage">
       {/* Header Navigation Bar */}
       <header className="navbar">
-        <div id="nav-icon1">
+        <div id="nav-icon1" className={isSongListOpen ? 'open' : ''} onClick={toggleSongList}>
           <span></span>
           <span></span>
           <span></span>
         </div>
 
         <nav className="nav-links left">
-          <a href="/SongPage">
+          <Link to="/songpage">
             <img src={songsIcon} alt="Songs" className="nav-icon" />
             <span>Songs</span>
-          </a>
-          <a href="/HistoryPage">
+          </Link>
+          <Link to="/historypage">
             <img src={historyIcon} alt="History" className="nav-icon" />
             <span>History</span>
-          </a>
+          </Link>
         </nav>
 
         {/* Center Curved Logo */}
         <div className="logo-container">
-          <a href="/SongPage" className="logo">
+          <Link to="/songpage" className="logo">
             <span className="star-light">
               <span>STAR</span>
               <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: 'middle' }} />
               <span className="light">LIGHT</span>
             </span>
-          </a>
+          </Link>
         </div>
 
         <nav className="nav-links right">
-          <a href="/EventPage">
+          <Link to="/eventpage">
             <img src={eventsIcon} alt="Events" className="nav-icon" />
             <span>Events</span>
-          </a>
-          <a href="/StorePage">
+          </Link>
+          <Link to="/storepage">
             <img src={storeIcon} alt="Store" className="nav-icon" />
             <span>Store</span>
-          </a>
+          </Link>
         </nav>
 
         <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} />
+          <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} />
         </div>
       </header>
 
@@ -105,6 +113,30 @@ function StorePage() {
         Coming soon...
       </div>
 
+      {/* Song List Sidebar */}
+      <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
+        <div className="sidebar-header">
+          Song List
+        </div>
+        <ul>
+          {songs.map((song, index) => (
+            <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
+              <div className="song-info-sidebar">
+                <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
+                <span className="sidebar-song">
+                  <div className="scrolling-text">{song.title}</div> {/* Auto-loop scrolling text */}
+                </span>
+              </div>
+              <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}>
+                <span className="sidebar-song">
+                  <div className="scrolling-text">{song.title}</div>
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -116,16 +148,7 @@ function StorePage() {
         </div>
       )}
     </div>
-  
-      <Routes>
-        <Route path="/SongPage" element={<SongPage />} />
-        <Route path="/HistoryPage" element={<HistoryPage />} />
-        <Route path="/EventPage" element={<EventPage />} />
-        <Route path="/StorePage" element={<StorePage />} />
-        <Route path="/" element={<LandingPage />} />
-      </Routes>
-    </Router>   
-    );
+  );
 }
 
 export default StorePage;

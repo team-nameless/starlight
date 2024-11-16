@@ -294,6 +294,7 @@ const LandingPageApp = () => {
   const [loginPasswordError, setLoginPasswordError] = useState('');
   const [signUpEmailError, setSignUpEmailError] = useState(''); 
   const [loginEmailError, setLoginEmailError] = useState('');
+  const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -384,6 +385,7 @@ const LandingPageApp = () => {
       setShowLoginModal(false); 
   
       console.log('Login successful:', response.data);
+      setShowLoginSuccessModal(true); // Show login success popup
   
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -409,6 +411,7 @@ const LandingPageApp = () => {
     setShowSignUpModal(false);
     setShowNotificationModal(false);
     setShowSuccessModal(false);
+    setShowLoginSuccessModal(false); // Close login success popup
   };
 
   const FormWrapper = styled.div`
@@ -594,6 +597,15 @@ const LandingPageApp = () => {
             </div>
           </ModalContent>
         </Modal>
+      )}
+      {showLoginSuccessModal && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Login Successful</h2>
+            <p>You have successfully logged in. Please click the "Start Game" button to enter the song page.</p>
+            <button className="stay-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
       )}
       {data && <div>{JSON.stringify(data)}</div>}
     </AppContainer>

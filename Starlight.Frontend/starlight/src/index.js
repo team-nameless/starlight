@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';  
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import './styleoflandingpage.css';
 import './Main_Menu_Style.css';
 import LandingPageApp from './LandingPageApp';
-import SongPage from './SongPage';  
+import SongPage from './SongPage';
 import HistoryPage from './HistoryPage';
 import StorePage from './StorePage';
 import EventPage from './EventPage';

@@ -1,8 +1,7 @@
-// SongPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import LandingPage from './LandingPageApp'; 
 import HistoryPage from './HistoryPage';
 import EventPage from './EventPage';
@@ -27,6 +26,7 @@ function SongPage() {
   const [songs, setSongs] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch user profile and song list data from the backend
   useEffect(() => {
@@ -98,7 +98,7 @@ function SongPage() {
   };
 
   const handleConfirmLeave = () => {
-    window.location.href = '/LandingPage';
+    window.location.href = '/';
   };
 
   const handleCancelLeave = () => {
@@ -159,7 +159,7 @@ function SongPage() {
               <img src={songsIcon} alt="Songs" className="nav-icon" />
               <span>Songs</span>
             </Link>
-            <Link to="/HistoryPage">
+            <Link to="/HistoryPage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
               <img src={historyIcon} alt="History" className="nav-icon" />
               <span>History</span>
             </Link>
@@ -177,11 +177,11 @@ function SongPage() {
           </div>
 
           <nav className="nav-links right">
-            <Link to="/EventPage">
+            <Link to="/EventPage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
               <img src={eventsIcon} alt="Events" className="nav-icon" />
               <span>Events</span>
             </Link>
-            <Link to="/StorePage">
+            <Link to="/StorePage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
               <img src={storeIcon} alt="Store" className="nav-icon" />
               <span>Store</span>
             </Link>
