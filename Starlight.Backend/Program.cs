@@ -99,7 +99,7 @@ app
     .UseHttpsRedirection()
     .UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "data")),
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
         RequestPath = "/static"
     })
     .UseRouting()
