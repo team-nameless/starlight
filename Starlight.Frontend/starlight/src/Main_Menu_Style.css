@@ -305,7 +305,7 @@ html, body {
   margin-left: 280px; /* Distance between buttons */
 }
 .nav-btn:hover {
-  background-color: #4805FF;
+  background-color: #ff8a05;
   transition: background-color 0.3s ease;
 }
 
@@ -360,7 +360,23 @@ html, body {
   padding: 20px;
   transition: 0.3s;
   overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #240b36 #142048; /* Firefox */
 }
+
+.sidebar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #142048; /* Track color */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #240b36; /* Scrollbar color */
+  border-radius: 10px; /* Rounded corners */
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Young+Serif&display=swap');
 
@@ -387,32 +403,91 @@ html, body {
   cursor: pointer;
 }
 
+/* General Styling for Sidebar */
 .sidebar ul {
   list-style-type: none;
   padding-top: 20px;
-  max-height: calc(100% - 70px); /* Adjust height to fit within the sidebar */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: calc(100% - 70px);
+  overflow-y: auto;
 }
 
 .sidebar ul li {
-  padding: 10px 0;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 60px; /* Adjust button height as needed */
   transition: all 0.3s ease;
 }
 
-.song-item {
-  display: flex;
-  align-items: center;
-  position: relative;
+/* Song Icon (Visible Initially) */
+.song-sidebar-icon {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  z-index: 3; /* On top initially */
+  transition: opacity 0.3s ease;
 }
 
+/* Left Split: Image Section (Initially Hidden) */
+.song-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image fits nicely */
+  z-index: 1;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); /* Initially hidden */
+  transition: clip-path 0.3s ease;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Right Split: Song Title Section */
+.sidebar-song-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #2D2020; /* Second split background */
+  z-index: 2; /* Above the image */
+  display: none; /* Initially hidden */
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 50%; /* Adjust padding to make the song title visible */
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 18px;
+  transition: clip-path 0.3s ease, padding-left 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hover Effects */
+.song-item:hover .song-sidebar-icon {
+  opacity: 0; /* Fade out the icon */
+}
+
+.song-item:hover .song-bg {
+  clip-path: polygon(0 0, 70% 0, 45% 100%, 0 100%); /* Reveal the diagonal left split */
+}
+
+.song-item:hover .sidebar-song-title {
+  display: flex; /* Show the title */
+  opacity: 1; /* Ensure smooth appearance */
+  clip-path: polygon(55% 0, 100% 0, 100% 100%, 30% 100%); /* Adjust to create the diagonal right split */
+  padding-left: 50%; /* Adjust padding to make the song title visible */
+}
+
+/* Song Info (Default State) */
 .song-info-sidebar {
   display: flex;
   align-items: center;
   position: relative;
-  z-index: 1;
+  z-index: 3; /* Always above the background layers */
   width: 100%;
   padding-left: 10px;
 }
@@ -431,74 +506,13 @@ html, body {
   color: white;
   white-space: nowrap;
   overflow: hidden;
-  display: inline-block;
-  max-width: 250px; /* Set max-width to 250px */
+  text-overflow: ellipsis;
 }
 
-.sidebar-song .scrolling-text {
-  display: inline-block;
-  animation: scroll-text 5s linear infinite; /* Text scroll animation */
+/* Hide Song Info on Hover */
+.song-item:hover .song-info-sidebar {
+  display: none;
 }
-
-.sidebar-song:not(.scrolling-text) {
-  animation: none; /* Disable animation if text does not exceed 250px */
-}
-
-/* Background Image Reveal on Hover */
-.song-bg {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  transition: left 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 10px;
-}
-
-.song-bg .sidebar-song {
-  color: white;
-  padding-left: 10px;
-}
-
-/* Diagonal Divider */
-.song-bg::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-
-/* Hover Effects */
-.song-item:hover .song-bg {
-  left: 0;
-}
-
-.song-item:hover .sidebar-song {
-  color: white;
-}
-
-/* Text Scrolling Animation */
-@keyframes scroll-text {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(calc(-100% - 10px)); /* Scrolls text completely to the left */
-  }
-  100% {
-    transform: translateX(0); /* Resets text to start position */
-  }
-}
-
 
 /* Song Container */
 .song-container {
@@ -559,6 +573,7 @@ html, body {
 .song-info {
   flex-grow: 1;
   text-align: center;
+  padding-left: 70px;
 }
 
 .song-name {

@@ -198,14 +198,13 @@ function SongPage() {
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                     <span className="sidebar-song">
-                      <div className="scrolling-text">{song.title}</div> {/* Auto-loop scrolling text */}
+                      {song.title}
                     </span>
                   </div>
-                  <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}>
-                    <span className="sidebar-song">
-                      <div className="scrolling-text">{song.title}</div>
-                    </span>
-                  </div>
+                  <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}></div>
+                  <span className="sidebar-song-title">
+                    {song.title}
+                  </span>
                 </li>
               ))}
             </ul>

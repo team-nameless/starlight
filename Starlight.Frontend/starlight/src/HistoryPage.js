@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
@@ -30,6 +31,34 @@ function HistoryPage() {
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
   }, [currentSongFromLocation]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch all songs data
+        const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const fetchedSongs = songsResponse.data;
+        setSongs(fetchedSongs);
+        if (fetchedSongs.length > 0) {
+          setCurrentSongIndex(0);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (currentSongIndex >= songs.length) {
+      setCurrentSongIndex(0);
+    }
+  }, [currentSongIndex, songs.length]);
 
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
@@ -149,14 +178,13 @@ function HistoryPage() {
               <div className="song-info-sidebar">
                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                 <span className="sidebar-song">
-                  <div className="scrolling-text">{song.title}</div> {/* Auto-loop scrolling text */}
+                  {song.title}
                 </span>
               </div>
-              <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}>
-                <span className="sidebar-song">
-                  <div className="scrolling-text">{song.title}</div>
-                </span>
-              </div>
+              <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}></div>
+              <span className="sidebar-song-title">
+                {song.title}
+              </span>
             </li>
           ))}
         </ul>
