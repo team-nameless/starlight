@@ -18,22 +18,22 @@ builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
-builder.Services
+builder.Services    
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddIdentity<Player, IdentityRole>(opt =>
     {
-        opt.Password.RequireDigit = false;
-        opt.Password.RequireLowercase = false;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.Password.RequireUppercase = false;
-        opt.Password.RequiredLength = 6;
-
+        opt.Password.RequiredLength = 8;
+        opt.Password.RequireDigit = true;
+        opt.Password.RequireLowercase = true;
+        opt.Password.RequireUppercase = true;
+        opt.Password.RequireNonAlphanumeric = true;
+        
         opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         opt.Lockout.MaxFailedAccessAttempts = 5;
         opt.Lockout.AllowedForNewUsers = true;
 
-        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!#$%*";
         opt.User.RequireUniqueEmail = true;
 
         opt.SignIn.RequireConfirmedAccount = false;
