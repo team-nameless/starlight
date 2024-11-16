@@ -66,6 +66,15 @@ builder.Services
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>()
     .AddSingleton<IdentityEmailService>()
+    .ConfigureApplicationCookie(opt =>
+    {
+        opt.Cookie.HttpOnly = true;
+        opt.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        opt.Cookie.SameSite = SameSiteMode.None;
+        
+        opt.ExpireTimeSpan = TimeSpan.FromHours(480);
+        opt.SlidingExpiration = true;
+    })
     .Configure<ForwardedHeadersOptions>(opt =>
     {
         opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
