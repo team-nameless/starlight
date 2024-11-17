@@ -19,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
 builder.Services    
+    .AddHttpLogging(_ => { })
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddIdentity<Player, IdentityRole>(opt =>
@@ -94,11 +95,13 @@ builder.Services
 var app = builder.Build();
 
 // Because this app lies behind NGINX,
-// This must be ran first.
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.All
-});
+// This must be run first.
+app
+    .UseHttpLogging()
+    .UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.All
+    });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
