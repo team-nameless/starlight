@@ -144,7 +144,11 @@ app
                 "http://localhost:5289",
                 
                 // local API doc - https
-                "https://localhost:7224"
+                "https://localhost:7224",
+                
+                // Production page
+                "http://starlight.swyrin.id.vn",
+                "https://starlight.swyrin.id.vn"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
