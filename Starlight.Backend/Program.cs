@@ -93,6 +93,13 @@ builder.Services
 
 var app = builder.Build();
 
+// Because this app lies behind NGINX,
+// This must be ran first.
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -101,14 +108,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (app.Environment.IsProduction())
+{
+    app
+        .UseHsts()
+        .UseHttpsRedirection();
+}
+
 app
-    .UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.All
-    })
-    .UseExceptionHandler("/api/error")
-    .UseHsts()  
-    .UseHttpsRedirection()
     .UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
