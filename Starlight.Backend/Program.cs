@@ -33,7 +33,7 @@ builder.Services
         opt.Lockout.MaxFailedAccessAttempts = 5;
         opt.Lockout.AllowedForNewUsers = true;
 
-        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!#$%*";
+        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*.+-_";
         opt.User.RequireUniqueEmail = true;
 
         opt.SignIn.RequireConfirmedAccount = false;
@@ -66,6 +66,7 @@ builder.Services
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>()
     .AddSingleton<IdentityEmailService>()
+    .AddSingleton(builder.Configuration)
     .ConfigureApplicationCookie(opt =>
     {
         opt.Cookie.HttpOnly = true;
@@ -101,7 +102,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app
-    .UseCookiePolicy()
+    .UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.All
+    })
     .UseExceptionHandler("/api/error")
     .UseHsts()  
     .UseHttpsRedirection()
@@ -117,6 +121,9 @@ app
             .WithOrigins(
                 // React page
                 "http://localhost:3000",
+                "http://localhost:3001",
+                "https://localhost:3000",
+                "https://localhost:3001",
                 
                 // local API doc - http
                 "http://localhost:5289",
@@ -129,12 +136,9 @@ app
             .AllowCredentials()
             .Build();
     })
-    .UseAuthorization()
     .UseAuthentication()
-    .UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-    })
+    .UseAuthorization()
+    .UseCookiePolicy()
     .UseHealthChecks("/api/healthcheck")
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
     
