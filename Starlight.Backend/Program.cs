@@ -121,6 +121,11 @@ app
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
         RequestPath = "/static"
     })
+    .UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "avatars")),
+        RequestPath = "/avatars"
+    })
     .UseRouting()
     .UseCors(policy =>
     {
