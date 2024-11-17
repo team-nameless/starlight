@@ -42,7 +42,11 @@ public class GameDatabaseService : IdentityDbContext<Player>
                 )
 #else
                 .UseMySql(
-                    _configuration.GetValue<string>("Database:ConnectionString") ?? "none",
+                    $"Server={_configuration.GetValue<string>("Database:Host")};" +
+                    $"Port={_configuration.GetValue<int>("Database:Port")};" +
+                    $"Database={_configuration.GetValue<string>("Database:Database")};" +
+                    $"User={_configuration.GetValue<string>("Database:User")};" +
+                    $"Password={_configuration.GetValue<string>("Database:Password")};",
                     MySqlServerVersion.LatestSupportedServerVersion,
                     opt =>
                     {
