@@ -252,7 +252,7 @@ function SongPage() {
           </div>
 
           <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} /> 
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26p</button>x', height: '26px' }} onClick={handleLeaveClick} /> 
           </div>
         </header>
 
