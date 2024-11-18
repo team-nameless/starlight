@@ -3,6 +3,10 @@ Starlight.db
 *.db-wal
 config.json
 
+# We blacklist all files but the placeholder file.
+avatars/**
+!avatars/.i.stand.strong.against.gitignore
+
 # Created by https://www.toptal.com/developers/gitignore/api/rider,visualstudio,visualstudiocode,csharp
 # Edit at https://www.toptal.com/developers/gitignore?templates=rider,visualstudio,visualstudiocode,csharp
 

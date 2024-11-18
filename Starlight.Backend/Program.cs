@@ -19,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
 builder.Services    
+    .AddHttpLogging(_ => { })
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddIdentity<Player, IdentityRole>(opt =>
@@ -33,7 +34,7 @@ builder.Services
         opt.Lockout.MaxFailedAccessAttempts = 5;
         opt.Lockout.AllowedForNewUsers = true;
 
-        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!#$%*";
+        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*.+-_";
         opt.User.RequireUniqueEmail = true;
 
         opt.SignIn.RequireConfirmedAccount = false;
@@ -66,6 +67,7 @@ builder.Services
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>()
     .AddSingleton<IdentityEmailService>()
+    .AddSingleton(builder.Configuration)
     .ConfigureApplicationCookie(opt =>
     {
         opt.Cookie.HttpOnly = true;
@@ -92,6 +94,15 @@ builder.Services
 
 var app = builder.Build();
 
+// Because this app lies behind NGINX,
+// This must be run first.
+app
+    .UseHttpLogging()
+    .UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.All
+    });
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -100,15 +111,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (app.Environment.IsProduction())
+{
+    app
+        .UseHsts()
+        .UseHttpsRedirection();
+}
+
 app
-    .UseCookiePolicy()
-    .UseExceptionHandler("/api/error")
-    .UseHsts()  
-    .UseHttpsRedirection()
     .UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
         RequestPath = "/static"
+    })
+    .UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "avatars")),
+        RequestPath = "/avatars"
     })
     .UseRouting()
     .UseCors(policy =>
@@ -117,24 +136,28 @@ app
             .WithOrigins(
                 // React page
                 "http://localhost:3000",
+                "http://localhost:3001",
+                "https://localhost:3000",
+                "https://localhost:3001",
                 
                 // local API doc - http
                 "http://localhost:5289",
                 
                 // local API doc - https
-                "https://localhost:7224"
+                "https://localhost:7224",
+                
+                // Production page
+                "http://starlight.swyrin.id.vn",
+                "https://starlight.swyrin.id.vn"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials()
             .Build();
     })
-    .UseAuthorization()
     .UseAuthentication()
-    .UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-    })
+    .UseAuthorization()
+    .UseCookiePolicy()
     .UseHealthChecks("/api/healthcheck")
     .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
     

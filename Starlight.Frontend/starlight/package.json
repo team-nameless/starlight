@@ -43,7 +43,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://cluster1.swyrin.id.vn",
+  
+  "proxy": "https://localhost:7224",
   "devServer": {
     "allowedHosts": [
       "localhost"

@@ -20,6 +20,7 @@ import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sideb
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
+//  const rootUrl = "https://localhost:7224";
 
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -56,17 +57,18 @@ function SongPage() {
     const fetchData = async () => {
       try {
         // Fetch user ID and username
-        const userResponse = await axios.get('/api/user', {
+        const userResponse = await axios.get(`${rootUrl}/api/user`, {
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          withCredentials: true
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
           setUserProfile({
             id: userData.id || 123456,
-            name: userData.handle || 'Sanraku',
-            profilePic: userData.profilePic || profilePicPlaceholder
+            name: userData.name || 'Sanraku',
+            profilePic: userData.avatar || profilePicPlaceholder
           });
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
@@ -150,8 +152,8 @@ function SongPage() {
   useEffect(() => {
     let audio;
     const playAudio = () => {
-      if (currentSong && currentSong.audioFileLocation) {
-        audio = new Audio(`${rootUrl}${currentSong.audioFileLocation}`);
+      if (currentSong && currentSong.audioUrl) {
+        audio = new Audio(currentSong.audioUrl);
         audio.loop = true; // Set audio to auto-replay
         audio.play().catch(error => console.error('Error playing audio:', error));
       }
@@ -241,7 +243,7 @@ function SongPage() {
                       {song.title}
                     </span>
                   </div>
-                  <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}></div>
+                  <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
                   <span className="sidebar-song-title">
                     {song.title}
                   </span>
@@ -259,7 +261,7 @@ function SongPage() {
         <div className="content-layer">
           {/* Background Image */}
           <div className="background-image">
-            <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
+            <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
           </div>
           
           {/* Content and Buttons */}
@@ -270,10 +272,10 @@ function SongPage() {
                 <tr>
                   <td>
                     <div className="user-name">{userProfile.name }</div>
-                    <div className="user-id">ID: #{userProfile.id }</div>
+                    <div className="user-id">ID: {userProfile.id }</div>
                   </td>
                   <td>
-                    <Link to="/profilepage">
+                    <Link to="/ProfilePage">
                       <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
                     </Link>
                   </td>

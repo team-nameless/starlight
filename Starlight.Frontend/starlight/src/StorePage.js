@@ -13,6 +13,7 @@ import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; 
 //import axios from 'axios';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
+// const rootUrl = "https://localhost:7224";
 
 function StorePage() {
   const location = useLocation();

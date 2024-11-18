@@ -1,8 +1,8 @@
-using System.Text.Json;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Starlight.Backend.Controller.Request;
 using Starlight.Backend.Controller.Request.User;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Service;
@@ -23,11 +23,15 @@ public class UserController : ControllerBase
     /// <summary>
     ///     Look up a particular player account.
     /// </summary>
-    /// <param name="userId">Account ID, set 0 for self.</param>
-    [HttpGet("{userId:long}")]
+    /// <param name="userId">Account ID, default to self if provided nothing.</param>
+    [HttpGet]
+    [Authorize]
     [Produces("application/json")]
-    public async Task<ActionResult> GetUser(long userId)
+    public async Task<ActionResult> GetUser(long? userId = null)
     {
+        // default to self.
+        userId ??= 0;
+        
         var services = HttpContext.RequestServices;
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
         var userManager = signInManager.UserManager;
@@ -43,10 +47,14 @@ public class UserController : ControllerBase
 
         if (user == null) return NotFound("Player not found");
 
-        return Ok(JsonSerializer.Serialize(new
+        var scheme = HttpContext.Request.Scheme;
+        var authorityUrl = HttpContext.Request.Host.Value;
+
+        return Ok(new
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
+            Avatar = $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
             PlayTime = user.TotalPlayTime,
@@ -54,13 +62,14 @@ public class UserController : ControllerBase
             TopScores = user.BestScores,
             FriendList = user.Friends,
             AchievementList = user.Achievements,
-        }));
+        });
     }
     
     /// <summary>
     ///     Modify profile of current player.
     /// </summary>
     [HttpPatch("profile")]
+    [Authorize]
     public async Task<ActionResult> UpdateProfile([FromBody] ProfileUpdateForm profileUpdate)
     {
         var services = HttpContext.RequestServices;
@@ -103,11 +112,50 @@ public class UserController : ControllerBase
 
         return Ok();
     }
+    
+    /// <summary>
+    ///     Set profile image of current player.
+    /// </summary>
+    /// <param name="file">File object.</param>
+    [HttpPut("profile/image")]
+    [Authorize]
+    public async Task<ActionResult> UpdateProfileImage(
+        [Required] IFormFile file
+    )
+    {
+        // 10 MB
+        const int maxImageSize = 10 * 1024 * 1024;
+        string[] allowedExtensions = [".png", ".jpg", "jpeg "];
+        
+        if (string.IsNullOrEmpty(file.FileName)) return BadRequest("How did we get here?");
+        if (file.Length == 0) return BadRequest("File is empty");
+        if (file.Length > maxImageSize) return BadRequest("File is too big");
+
+        var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        
+        if (string.IsNullOrEmpty(fileExtension)) return BadRequest("File has no valid extension");
+        if (!allowedExtensions.Contains(fileExtension)) return BadRequest("Invalid file extension");
+        
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+        var userManager = signInManager.UserManager;
+
+        var user = await userManager.GetUserAsync(User);
+        var savePath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user!.SequenceNumber}.jpeg");
+
+        await using (var stream = new FileStream(savePath, FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            await file.CopyToAsync(stream);    
+        }
+        
+        return Ok();
+    }
 
     /// <summary>
     ///     Modify settings of current player.
     /// </summary>
     [HttpPatch("settings")]
+    [Authorize]
     public async Task<ActionResult> UpdateSettings([FromBody] SettingUpdateForm settingsUpdate)
     {
         var services = HttpContext.RequestServices;
@@ -152,6 +200,7 @@ public class UserController : ControllerBase
     ///     Delete current logged-in player. Use with EXTREME CAUTION. You have been warned.
     /// </summary>
     [HttpDelete("delete")]
+    [Authorize]
     public async Task<ActionResult> DeleteUser()
     {
         var services = HttpContext.RequestServices;

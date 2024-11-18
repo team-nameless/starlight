@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+// ReSharper disable once RedundantUsingDirective
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Starlight.Backend.Database.Game;
@@ -12,8 +13,13 @@ public class GameDatabaseService : IdentityDbContext<Player>
     public DbSet<UserSetting> Settings { get; set; }
     public DbSet<LoginTracking> LoginSessions { get; set; }
     
-    public GameDatabaseService(DbContextOptions<GameDatabaseService> options) : base(options)
+    // ReSharper disable once NotAccessedField.Local
+    private readonly IConfiguration _configuration;
+    
+    public GameDatabaseService(IConfiguration configuration)
     {
+        _configuration = configuration;
+        
         // ReSharper disable once VirtualMemberCallInConstructor
         Database.EnsureCreated();
     }
@@ -26,6 +32,7 @@ public class GameDatabaseService : IdentityDbContext<Player>
 #if DEBUG
                 .EnableSensitiveDataLogging()
 #endif
+#if DEBUG
                 .UseSqlite(
                     new SqliteConnection("Filename=Starlight.db;"),
                     opt =>
@@ -33,6 +40,20 @@ public class GameDatabaseService : IdentityDbContext<Player>
                         opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     }
                 )
+#else
+                .UseMySql(
+                    $"Server={_configuration.GetValue<string>("Database:Host")};" +
+                    $"Port={_configuration.GetValue<int>("Database:Port")};" +
+                    $"Database={_configuration.GetValue<string>("Database:Database")};" +
+                    $"User={_configuration.GetValue<string>("Database:User")};" +
+                    $"Password={_configuration.GetValue<string>("Database:Password")};",
+                    MySqlServerVersion.LatestSupportedServerVersion,
+                    opt =>
+                    {
+                        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    }
+                )
+#endif
         );
     }
 
