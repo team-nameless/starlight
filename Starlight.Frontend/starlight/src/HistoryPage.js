@@ -14,8 +14,8 @@ import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
 //import axios from 'axios';
 
-//const rootUrl = "https://cluster1.swyrin.id.vn";
-const rootUrl = "https://localhost:7224";
+const rootUrl = "https://cluster1.swyrin.id.vn";
+// const rootUrl = "https://localhost:7224";
 
 function HistoryPage() {
   const location = useLocation();

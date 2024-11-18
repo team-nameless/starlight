@@ -19,8 +19,8 @@ import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 
-//const rootUrl = "https://cluster1.swyrin.id.vn";
-const rootUrl = "https://localhost:7224";
+const rootUrl = "https://cluster1.swyrin.id.vn";
+//  const rootUrl = "https://localhost:7224";
 
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -57,17 +57,18 @@ function SongPage() {
     const fetchData = async () => {
       try {
         // Fetch user ID and username
-        const userResponse = await axios.get('/api/user', {
+        const userResponse = await axios.get(`${rootUrl}/api/user`, {
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          withCredentials: true
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
           setUserProfile({
             id: userData.id || 123456,
-            name: userData.handle || 'Sanraku',
-            profilePic: userData.profilePic || profilePicPlaceholder
+            name: userData.name || 'Sanraku',
+            profilePic: userData.avatar || profilePicPlaceholder
           });
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
@@ -271,10 +272,10 @@ function SongPage() {
                 <tr>
                   <td>
                     <div className="user-name">{userProfile.name }</div>
-                    <div className="user-id">ID: #{userProfile.id }</div>
+                    <div className="user-id">ID: {userProfile.id }</div>
                   </td>
                   <td>
-                    <Link to="/profilepage">
+                    <Link to="/ProfilePage">
                       <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
                     </Link>
                   </td>

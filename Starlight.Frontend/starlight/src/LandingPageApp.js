@@ -9,8 +9,8 @@ import GirlImage from './assets/modal-image/girlimage.png';
 import LogoImage from './assets/background-image/logoo.png';
 import { useNavigate } from 'react-router-dom';
 
-//const rootUrl = "https://cluster1.swyrin.id.vn";
-const rootUrl = "https://localhost:7224";
+const rootUrl = "https://cluster1.swyrin.id.vn";
+// const rootUrl = "https://localhost:7224";
 
 const AppContainer = styled.div`
   text-align: center;

@@ -12,8 +12,8 @@ import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sideb
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 //import axios from 'axios';
 
-//const rootUrl = "https://cluster1.swyrin.id.vn";
-const rootUrl = "https://localhost:7224";
+const rootUrl = "https://cluster1.swyrin.id.vn";
+// const rootUrl = "https://localhost:7224";
 
 function EventPage() {
   const location = useLocation();
