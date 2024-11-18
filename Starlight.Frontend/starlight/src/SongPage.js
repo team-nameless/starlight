@@ -22,6 +22,21 @@ import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 //  const rootUrl = "https://localhost:7224";
 
+function requestFullScreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+    }
+}
+
+window.addEventListener('load', requestFullScreen);
+
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [userProfile, setUserProfile] = useState({});
