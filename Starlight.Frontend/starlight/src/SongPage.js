@@ -150,8 +150,8 @@ function SongPage() {
   useEffect(() => {
     let audio;
     const playAudio = () => {
-      if (currentSong && currentSong.audioFileLocation) {
-        audio = new Audio(`${rootUrl}${currentSong.audioFileLocation}`);
+      if (currentSong && currentSong.audioUrl) {
+        audio = new Audio(currentSong.audioUrl);
         audio.loop = true; // Set audio to auto-replay
         audio.play().catch(error => console.error('Error playing audio:', error));
       }
@@ -241,7 +241,7 @@ function SongPage() {
                       {song.title}
                     </span>
                   </div>
-                  <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}></div>
+                  <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
                   <span className="sidebar-song-title">
                     {song.title}
                   </span>
@@ -259,7 +259,7 @@ function SongPage() {
         <div className="content-layer">
           {/* Background Image */}
           <div className="background-image">
-            <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
+            <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
           </div>
           
           {/* Content and Buttons */}
