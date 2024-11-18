@@ -10,21 +10,6 @@ import HistoryPage from './HistoryPage';
 import StorePage from './StorePage';
 import EventPage from './EventPage';
 
-function requestFullScreen() {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { // Firefox
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // IE/Edge
-        elem.msRequestFullscreen();
-    }
-}
-
-window.addEventListener('load', requestFullScreen);
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -40,5 +25,3 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
-
-
