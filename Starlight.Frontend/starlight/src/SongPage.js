@@ -19,7 +19,8 @@ import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 
-const rootUrl = "https://cluster1.swyrin.id.vn";
+//const rootUrl = "https://cluster1.swyrin.id.vn";
+const rootUrl = "https://localhost:7224";
 
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
