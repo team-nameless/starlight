@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import './styleoflandingpage.css';
 import './Main_Menu_Style.css';
+import './ProfilePageStyle.css';
 import LandingPageApp from './LandingPageApp';
 import SongPage from './SongPage';
 import HistoryPage from './HistoryPage';
