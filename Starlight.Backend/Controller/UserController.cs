@@ -50,11 +50,14 @@ public class UserController : ControllerBase
         var scheme = HttpContext.Request.Scheme;
         var authorityUrl = HttpContext.Request.Host.Value;
 
+        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user.SequenceNumber}.jpeg");
+        var isAvatarAvailable = System.IO.File.Exists(avatarsPath);
+
         return Ok(new
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
-            Avatar = $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg",
+            Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
             PlayTime = user.TotalPlayTime,
