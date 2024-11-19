@@ -164,6 +164,28 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
+    ///     Reset profile image. Discord has it, why can't I?
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete("profile/image")]
+    [Authorize]
+    public async Task<ActionResult> ResetProfileImage()
+    {
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+        var userManager = signInManager.UserManager;
+        
+        var user = await userManager.GetUserAsync(User);
+        
+        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user!.SequenceNumber}.jpeg");
+
+        if (!System.IO.File.Exists(avatarsPath)) return NoContent();
+        
+        System.IO.File.Delete(avatarsPath);
+        return Ok();
+    }
+
+    /// <summary>
     ///     Get settings of current player.
     /// </summary>
     /// <returns></returns>
