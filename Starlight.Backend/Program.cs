@@ -22,7 +22,7 @@ builder.Services
     .AddHttpLogging(_ => { })
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddIdentity<Player, IdentityRole>(opt =>
+    .AddIdentity<Player, Role>(opt =>
     {
         opt.Password.RequiredLength = 8;
         opt.Password.RequireDigit = true;

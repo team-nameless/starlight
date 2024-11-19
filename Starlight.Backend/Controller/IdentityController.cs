@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Starlight.Backend.Controller.Request.Identity;
 using Starlight.Backend.Database.Game;
+using Starlight.Backend.Enum;
 using Starlight.Backend.Service;
 
 namespace Starlight.Backend.Controller;
@@ -26,6 +27,7 @@ public class IdentityController : ControllerBase
     ///     Perform an account registration.
     /// </summary>
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult> Register(
         [FromBody] RegisterForm registration
     )
@@ -43,12 +45,25 @@ public class IdentityController : ControllerBase
         {
             return BadRequest("Email validation failed.");
         }
-        
+
         var user = new Player
         {
             DisplayName = registration.Handle,
             CurrentLevel = 1,
-            SequenceNumber = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            TotalExp = 0,
+            SequenceNumber = (ulong) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+            Setting = new Setting
+            {
+                Offset = 0,
+                FrameRate = 120,
+                KeyCode1 = (int) KeyCode.KeyA,
+                KeyCode2 = (int) KeyCode.KeyS,
+                KeyCode3 = (int) KeyCode.KeySemicolon,
+                KeyCode4 = (int) KeyCode.KeyQuote,
+                MasterVolume = 80,
+                MusicVolume = 100,
+                SoundEffectVolume = 100
+            }
         };
         
         // why Microsoft have to set the UserName TO. BE. FUCKING. UNIQUE????
@@ -69,6 +84,7 @@ public class IdentityController : ControllerBase
     ///     Perform an account login.
     /// </summary>
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult> Login(
         [FromBody] LoginForm login
     )
@@ -83,6 +99,7 @@ public class IdentityController : ControllerBase
             return Unauthorized("User not found.");
         }
         
+        signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
         var result = await signInManager.PasswordSignInAsync(
             attemptedUser,
             login.Password,
@@ -119,6 +136,7 @@ public class IdentityController : ControllerBase
     /// </summary>
     /// <param name="passwordForgot">Request body.</param>
     [HttpPost("forgotPassword")]
+    [AllowAnonymous]
     public async Task<ActionResult> Recovery(
         [FromBody] PasswordForgotForm passwordForgot
     )
@@ -142,6 +160,7 @@ public class IdentityController : ControllerBase
     /// </summary>
     /// <param name="passwordReset">Request body.</param>
     [HttpPost("resetPassword")]
+    [AllowAnonymous]
     public async Task<ActionResult> ResetPassword(
         [FromBody] PasswordResetForm passwordReset
     )

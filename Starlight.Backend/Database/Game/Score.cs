@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Starlight.Backend.Database.Game;
 
 /// <summary>
@@ -33,5 +35,6 @@ public class Score
     /// <summary>
     ///     Associated user with this score.
     /// </summary>
+    [JsonIgnore]
     public Player Player { get; set; } = null!;
 }
