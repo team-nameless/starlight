@@ -9,6 +9,7 @@ import SongPage from './SongPage';
 import HistoryPage from './HistoryPage';
 import StorePage from './StorePage';
 import EventPage from './EventPage';
+import ProfilePage from './ProfilePage';
 
 function requestFullScreen() {
     const elem = document.documentElement;
@@ -36,6 +37,7 @@ root.render(
         <Route path="/historypage" element={<HistoryPage />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/eventpage" element={<EventPage />} />
+        <Route path="/ProfilePage" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

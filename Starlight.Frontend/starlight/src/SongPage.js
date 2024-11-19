@@ -18,6 +18,7 @@ import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
+import ProfilePage from './ProfilePage';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 //  const rootUrl = "https://localhost:7224";
@@ -201,6 +202,7 @@ function SongPage() {
         <Route path="/EventPage" element={<EventPage />} />
         <Route path="/StorePage" element={<StorePage />} />
         <Route path="/Logout" element={<LandingPage />} />
+        <Route path="/ProfilePage" element={<ProfilePage />} />
       </Routes>
       <div className="songpage">
         {/* Header Navigation Bar */}

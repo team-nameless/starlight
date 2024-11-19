@@ -43,7 +43,6 @@
       "last 1 safari version"
     ]
   },
-  
   "proxy": "https://localhost:7224",
   "devServer": {
     "allowedHosts": [

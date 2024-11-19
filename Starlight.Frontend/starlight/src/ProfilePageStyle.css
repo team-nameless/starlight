@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Protest+Revolution&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -8,15 +10,15 @@
     height: 100%;
   }
   
-  .profilepage {
+  .profile-page {
     background-color: #451666;  
     height: 100vh;               
     position: relative;          
     z-index: 1;  
   }
 
-  .container1 {
-    width: 71.5%;
+  .profile-container {
+    width: 72%;
     height: 90%;
     background-color: #10171B;
     position: relative; 
@@ -30,32 +32,150 @@
     border-radius: 20px;
   }
   
-  .containeravt {
+  .profile-avatar-container {
     width: 90%;
-    height: 25%;
+    height: 28%;
     background-color: #1D2E38;
-    margin-bottom: -10px; 
-    opacity: 0.5;
-    margin-top: 120px;
-    border-radius: 20px;
-  }
-  
-  .containerinfo {
-    width: 90%;
-    height: 50%;
-    background-color: #1D2E38;
+    margin-bottom: 15px;  
     opacity: 0.5;
     margin-top: 50px;
     border-radius: 20px;
+    display: flex;
+    flex-direction: row; 
+    align-items: flex-start;
+    padding: 20px;
+    position: relative;
+    border-right: none; 
+    padding-right: 15px; 
+  }
+
+  .profile-avatar-section {
+    flex: 3; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid #FF9C33; 
+    padding-right: 15px; 
+  }
+
+  .profile-tabs-section {
+    flex: 8; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid #303030; 
+    padding-right: 15px; 
+  }
+
+  .profile-playtime-section {
+    flex: 2; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 15px; 
+    color: #B9B4B4; 
+    border-left: 2px solid #303030; 
+  }
+
+  .profile-tabs {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 110px;
+  }
+
+  .profile-tab {
+    cursor: pointer;
+    padding: 10px;
+    font-family: 'KoHo', sans-serif;
+    font-weight: 600;
+    color: #B9B4B4; 
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+
+  .profile-tab.active {
+    border-bottom: 2px solid #FF9100;
+  }
+
+  .profile-img-avatar {
+    width: 85px; 
+    height: 85px; 
+    margin-left: 20px;
+    border-radius: 50%; 
+    z-index: 2; 
+    margin-bottom: 5px; 
+    position: absolute;
+    top: -35px; 
+    object-fit: cover; 
+    object-position: center; 
+    font-family: 'KoHo', sans-serif;
+  }
+
+  .profile-username-avatar {
+    font-family: 'Koho', sans-serif;
+    font-weight: 600;
+    color: #FFF5F5; 
+    margin-top: 45px;
+    margin-left: 5px;
+    margin-bottom: 5px; 
+    font-size: 17px;
+  }
+
+  .profile-userid-avatar {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: #FF9100;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-left: 30px;
+    margin-bottom: 5px; 
+  }
+  
+  .profile-info-container {
+    width: 90%;
+    height: 65%;
+    background-color: #1D2E38;
+    opacity: 0.5;
+    margin-top: 0; 
+    border-radius: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-left: none; 
+    padding-left: 15px; 
+  }
+
+  .profile-score-record {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: #9A9393; 
+    margin-top: -55px;
+    margin-bottom: 220px; 
+    border-left: 2px solid #303030; 
+    padding-left: 15px; 
+    font-size: 11px;
+  }
+
+  .profile-achievements, .profile-account-setting {
+    margin-top: -5px; 
+    border-left: 2px solid #303030; 
+    padding-left: 15px; 
+    font-size: 20px;
   }
   
   .chat-container {
-    width: 24%;
+    width: 23%;
     height: 95%;
     background-color: #10171B;
     position: absolute; 
-    top: 65px; /* Duy trì vị trí cách trên 60px */
-    right: 0px; /* Căn phần tử cách bên phải 10px */
+    top: 65px; 
+    right: 0px; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -64,7 +184,7 @@
     border-radius: 20px 0px 0px 0px;
 }
 
-.navbar {
+.nav3h {
   position: relative;
   display: flex;
   align-items: center;
@@ -73,7 +193,7 @@
   height: 50px;
   padding: 0 20px;
   color: white;
-  overflow: visible; /* Allow overflow for the curved effect */
+  overflow: visible; 
   z-index: 2;
 }
   
@@ -98,11 +218,10 @@
   align-items: center;
 }
 
-/* Adjust the logo and text in a single row */
 .logo-icon {
-  width: 50px;
-  height: 50px;
-  margin: 10px; /* Space between logo and text */
+  width: 40px; 
+  height: 40px; 
+  margin: 10px;
   transition: transform 0.3s ease;
 }
 
@@ -114,7 +233,7 @@
 
 .star-light {
   font-family: 'Karla', sans-serif;
-  font-weight: 600; /* Semibold */
+  font-weight: 600; 
   text-align: center;
   font-size: 24px;
   color: #03dac5;
@@ -124,7 +243,7 @@
   color: #ff6f00;
 }
   
-  .navbar::before {
+  .nav3h::before {
     content: '';
     position: absolute;
     top: 0;
@@ -139,49 +258,50 @@
   
   @import url('https://fonts.googleapis.com/css2?family=Keania+One&display=swap');
   
-  .nav-links {
+  .nav3 {
     display: flex;
     gap: 30px;
     z-index: 1; 
   }
   
-  .nav-links a {
+  .nav3 a {
     color: white;
     display: flex;
     align-items: center;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 12px;
     transition: color 0.3s ease, transform 0.3s ease; 
+    margin-left: -30px; 
   }
   
-  .nav-links a span {
-    margin-left: 8px;
+  .nav3 a span {
+    margin-left: 4px; 
     transition: color 0.3s ease; 
   }
   
-  .nav-icon {
-    width: 30px;
-    height: 30px;
-    margin-top: 10px
+  .nav-iconh {
+    width: 27px;
+    height: 27px;
+    margin-top: 10px;
+    margin-right: 5px;
   }
   
-  .nav-links,
-  .nav-links.left {
+  .nav3 {
     font-family: 'Keania One', sans-serif;
   }
-  .nav-links.left {
+  .nav3 {
     display: flex;
     margin-top: 100px;
     align-items: center;
-margin-left: 70px;
-    gap: 100px;
+    margin-left: 70px;
+    gap: 80px;
   }
 
-  .nav-links.left a {
+  .nav3 a {
     position: relative;
   }
   
-  .nav-links.left a::after {
+  .nav3 a::after {
     content: '';
     position: absolute;
     bottom: -5px; 
@@ -192,13 +312,13 @@ margin-left: 70px;
     transition: width 0.3s ease, left 0.3s ease;
   }
   
-  .nav-links.left a:hover::after {
+  .nav3 a:hover::after {
     width: 100%;
     left: 0;
   }
-  #nav-icon1 {
-    width: 30px;
-    height: 22.5px;
+  #nav-iconh {
+    width: 50px;
+    height: 55px;
     position: relative;
     margin: 0;
     transform: rotate(0deg);
@@ -206,7 +326,7 @@ margin-left: 70px;
     cursor: pointer;
   }
   
-  #nav-icon1 span {
+  #nav-iconh span {
     display: block;
     position: absolute;
     height: 4.5px;
@@ -219,70 +339,63 @@ margin-left: 70px;
     transition: 0.25s ease-in-out;
   }
   
-  #nav-icon1 span:nth-child(1) {
+  #nav-iconh span:nth-child(1) {
     top: 0px;
   }
   
-  #nav-icon1 span:nth-child(2) {
+  #nav-iconh span:nth-child(2) {
     top: 9px;
   }
   
-  #nav-icon1 span:nth-child(3) {
+  #nav-iconh span:nth-child(3) {
     top: 18px;
   }
   
-  #nav-icon1.open span:nth-child(1) {
+  #nav-iconh.open span:nth-child(1) {
     top: 9px;
     transform: rotate(135deg);
   }
   
-  #nav-icon1.open span:nth-child(2) {
+  #nav-iconh.open span:nth-child(2) {
     opacity: 0;
     left: -30px;
   }
   
-  #nav-icon1.open span:nth-child(3) {
+  #nav-iconh.open span:nth-child(3) {
     top: 9px;
     transform: rotate(-135deg);
   }
   
-  .user-profile {
+  .userprofile {
     position: absolute;     
-    top: 9%;               
-    left: 50%;              
-    transform: translate(-10%, -50%);  
+    top: 11%;               
+    left: 61%; 
+    transform: translate(30%, -50%); 
     flex-direction: column; 
     align-items: center;    
   }
   
-  
-  .user-name {
+  .username {
     font-family: 'Koho', sans-serif;
     font-weight: 600;
     color: #8095FF;
-    font-size: 20px;
-    text-align: right;
-    margin-bottom: 2px; 
+    font-size: 14px;
+    margin-bottom: 5px;
   }
-  .user-id {
+  .userid {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: #FF9100;
-    font-size: 14px;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    font-size: 10px;
   }
   
-  .profile-img {
-    width: 40px;
-    height: 40px;
+  .profileimg {
+    width: auto;
+    height: 46px;
     border-radius: 50%;
-    margin-left: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
+    z-index: 2; 
+    margin-bottom: 3px;
+    font-family: 'KoHo', sans-serif;
   }
   
   .popup-overlay {
@@ -336,53 +449,59 @@ margin-left: 70px;
   
   .chat-body {
     max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 10px;
+    overflow-y: hidden; 
+    overflow-x: hidden; 
+    margin-bottom: 5px;
   }
 
   .chat-message {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 5px;
     border-radius: 5px;
     background-color: #2e333d;
+    width: auto; 
   }
-  
-  .chat-message.green {
-    border-left: 4px solid green;
+
+  .chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
   }
-  
-  .chat-message.red {
-    border-left: 4px solid red;
-  }
-  
-  .chat-message.orange {
-    border-left: 4px solid orange;
-  }
-  
-  .chat-message.blue {
-    border-left: 4px solid blue;
+
+  .chat-message-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   
   .message-sender {
     font-weight: bold;
+    color: #747777; 
+    font-size: 9px; 
   }
   
   .message-content {
     flex: 1;
-    margin-left: 10px;
+    margin-top: 5px; 
+    font-size: 10px; 
   }
   
   .message-time {
-    font-size: 12px;
+    font-size: 8px;
     color: #aaa;
   }
   
   .chat-footer {
     display: flex;
     gap: 10px;
+    position: absolute;
+    bottom: 55px; 
+    width: calc(100% - 40px); 
+    background-color: #13171B; 
   }
   
   .chat-footer input {
@@ -390,6 +509,12 @@ margin-left: 70px;
     padding: 8px;
     border: none;
     border-radius: 5px;
+    background-color: #13171B; 
+    color: #353F45; 
+  }
+  
+  .chat-footer input::placeholder {
+    color: #353F45; 
   }
   
   .chat-footer button {
@@ -408,15 +533,15 @@ margin-left: 70px;
   .chatimage {
     width: 5%;
     height: 2%;
-    margin-right: 400px;
+    margin-right:250px; 
   }
 
   h3 {
-    color: #ffffff;
-    font-size: 12px;
+    color: #8E8F90;
+    font-size: 9px;
     font-family: 'Inter', sans-serif;
     margin-bottom: 50px;
-    margin-top: -17px;
-    margin-right: 260px;
+    margin-top: -12px;
+    margin-right: 150px; 
     font-weight: 100;
   }

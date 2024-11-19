@@ -7,14 +7,15 @@ import HistoryPage from './HistoryPage';
 import SongPage from './SongPage';
 import EventPage from './EventPage';
 import StorePage from './StorePage';
-import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
-import logoIcon from './assets/Starlight-logo.png'; // Logo image
-import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
-import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
-import historyIcon from './assets/Header_Items/history-icon.png'; // History icon
-import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
-import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
-import chatimage from './assets/modal-image/chat.png'; // Chat icon
+import profilePicPlaceholder from './assets/profile.png'; 
+import logoIcon from './assets/Starlight-logo.png'; 
+import leaveIcon from './assets/Header_Items/Leave-icon.png'; 
+import songsIcon from './assets/Header_Items/songs-icon.png'; 
+import historyIcon from './assets/Header_Items/history-icon.png'; 
+import eventsIcon from './assets/Header_Items/events-icon.png'; 
+import storeIcon from './assets/Header_Items/store-icon.png'; 
+import chatimage from './assets/modal-image/chat.png'; 
+import girlImage from './assets/modal-image/girlimage.png'; 
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -23,19 +24,33 @@ function ProfilePage() {
   const [showPopup, setShowPopup] = useState(false);
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { id: 1, sender: "Eleanor", message: "Hello there!", color: "green", time: "15:30" },
-    { id: 2, sender: "Doctor", message: "How's it going?", color: "red", time: "15:35" },
-    { id: 3, sender: "Alex", message: "Let's play together!", color: "orange", time: "15:40" },
-  ]); // Mẫu danh sách tin nhắn
-  const [newMessage, setNewMessage] = useState(""); // Tin nhắn mới nhập vào
+    { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02", avatar: girlImage },
+    { id: 2, sender: "Xích", message: "Meo meo", color: "red", time: "15:35", avatar: girlImage },
+    { id: 3, sender: "Lan", message: "Cậu ăn cơm chưa", color: "orange", time: "20:07", avatar: girlImage },
+  ]); 
+  const [newMessage, setNewMessage] = useState(""); 
+  const [activeTab, setActiveTab] = useState('scoreRecord');
   const navigate = useNavigate();
 
-  // Fetch user profile data from the backend
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userProfileResponse = await axios.get('/api/user-profile');
-        setUserProfile(userProfileResponse.data);
+        const userResponse = await axios.get(`${rootUrl}/api/user`, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        });
+        if (userResponse.status === 200) {
+          const userData = userResponse.data;
+          setUserProfile({
+            id: userData.id || 123456,
+            name: userData.name || 'Sanraku',
+            profilePic: userData.avatar || profilePicPlaceholder
+          });
+        } else {
+          console.error('Error fetching user data:', userResponse.statusText);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -56,24 +71,27 @@ function ProfilePage() {
     setShowPopup(false);
   };
 
-  // Toggle the sidebar visibility
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
   };
 
-  // Handle sending a new chat message
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
       const newChatMessage = {
         id: chatMessages.length + 1,
         sender: "You",
         message: newMessage,
-        color: "blue", // Tin nhắn của bạn có khung màu xanh dương
+        color: "blue", 
         time: new Date().toLocaleTimeString(),
+        avatar: userProfile.profilePic || profilePicPlaceholder
       };
       setChatMessages([...chatMessages, newChatMessage]);
-      setNewMessage(""); // Reset ô nhập tin nhắn
+      setNewMessage(""); 
     }
+  };
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
   };
 
   return (
@@ -85,24 +103,23 @@ function ProfilePage() {
         <Route path="/StorePage" element={<StorePage />} />
         <Route path="/Logout" element={<LandingPage />} />
       </Routes>
-      <div className="profilepage">
-        {/* Header Navigation Bar */}
-        <header className="navbar">
-          <nav className="nav-links left">
+      <div className="profile-page">
+        <header className="nav3h">
+          <nav className="nav3">
             <Link to="/SongPage">
-              <img src={songsIcon} alt="Songs" className="nav-icon" />
+              <img src={songsIcon} alt="Songs" className="nav-iconh" />
               <span>Songs</span>
             </Link>
             <Link to="/HistoryPage">
-              <img src={historyIcon} alt="History" className="nav-icon" />
+              <img src={historyIcon} alt="History" className="nav-iconh" />
               <span>History</span>
             </Link>
             <Link to="/EventPage">
-              <img src={eventsIcon} alt="Events" className="nav-icon" />
+              <img src={eventsIcon} alt="Events" className="nav-iconh" />
               <span>Events</span>
             </Link>
             <Link to="/StorePage">
-              <img src={storeIcon} alt="Store" className="nav-icon" />
+              <img src={storeIcon} alt="Store" className="nav-iconh" />
               <span>Store</span>
             </Link>
           </nav>
@@ -121,37 +138,79 @@ function ProfilePage() {
         </div>
         </header>
 
-        <div className="container1">
-            <div className="containeravt"></div>
-            <div className="containerinfo"></div>
+        <div className="profile-container">
+          <div className="profile-avatar-container">
+            <div className="profile-avatar-section">
+              <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-avatar" />
+              <div className="profile-username-avatar">{userProfile.name || 'Sanraku'}</div>
+              <div className="profile-userid-avatar">ID: #{userProfile.id || '12345'}</div>
+            </div>
+            <div className="profile-tabs-section">
+              <div className="profile-tabs">
+                <span className={`profile-tab ${activeTab === 'scoreRecord' ? 'active' : ''}`} onClick={() => handleTabClick('scoreRecord')}>Score Record</span>
+                <span className={`profile-tab ${activeTab === 'achievements' ? 'active' : ''}`} onClick={() => handleTabClick('achievements')}>Achievements</span>
+                <span className={`profile-tab ${activeTab === 'accountSetting' ? 'active' : ''}`} onClick={() => handleTabClick('accountSetting')}>Account Setting</span>
+              </div>
+            </div>
+            <div className="profile-playtime-section">
+              <div>Play time:</div>
+              <div>Last Played:</div>
+            </div>
+          </div>
+            <div className="profile-info-container">
+              {activeTab === 'scoreRecord' && (
+                <div className="profile-score-record">
+                  <div>No</div>
+                  <div>Song Name</div>
+                  <div>Record</div>
+                  <div>Accuracy</div>
+                  <div>Max Combo</div>
+                  <div>CP</div>
+                  <div>P</div>
+                  <div>G</div>
+                  <div>B</div>
+                  <div>M</div>
+                  <div>Tier</div>
+                </div>
+              )}
+              {activeTab === 'achievements' && (
+                <div className="profile-achievements">
+                </div>
+              )}
+              {activeTab === 'accountSetting' && (
+                <div className="profile-account-setting">
+                </div>
+              )}
+            </div>
        </div>
 
-        {/* User Profile Section */}
-        <div className="user-profile">
+        <div className="userprofile">
           <table>
             <tbody>
               <tr>
                 <td>
-                  <div className="user-name">{userProfile.name || 'Sanraku'}</div>
-                  <div className="user-id">ID: #{userProfile.id || '12345'}</div>
+                  <div className="username">{userProfile.name || 'Sanraku'}</div>
+                  <div className="userid">ID: #{userProfile.id || '12345'}</div>
                 </td>
                 <td>
-                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
+                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profileimg" />
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        {/* Chat Section */}
         <div className="chat-container">
         <img src={chatimage} alt="Chat" className="chatimage"/>
         <h3>Online Chat</h3>
           <div className="chat-body">
             {chatMessages.map((msg) => (
               <div key={msg.id} className={`chat-message ${msg.color}`}>
-                <div className="message-sender">{msg.sender}</div>
-                <div className="message-content">{msg.message}</div>
+                <img src={msg.avatar} alt="Avatar" className="chat-avatar" />
+                <div className="chat-message-content">
+                  <div className="message-sender">{msg.sender}</div>
+                  <div className="message-content">{msg.message}</div>
+                </div>
                 <div className="message-time">{msg.time}</div>
               </div>
             ))}
