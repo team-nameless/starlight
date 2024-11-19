@@ -35,21 +35,21 @@ jobs:
           dotnet publish Starlight.Backend /p:EnvironmentName=Development -r linux-arm64 -o build/linux-arm64
           dotnet publish Starlight.Backend /p:EnvironmentName=Development -r win-x64 -o build/win-x64
           
-      - name: Create backend package
+      - name: Create backend package.
         run: |
-          sudo apt-get install zip
+          sudo apt-get install zip -y
           zip -r linux-x64.zip build/linux-x64
           zip -r win-x64.zip build/win-x64
           zip -r linux-arm64.zip build/linux-arm64
           
-      - name: Tag latest commit as releasable
+      - name: Tag latest commit as releasable.
         uses: richardsimko/update-tag@v1
         with:
           tag_name: "runnable" 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Release backend package.
+      - name: Release backend package for self-hosting.
         uses: softprops/action-gh-release@v2
         with:
           name: Rolling release of the project
@@ -73,3 +73,8 @@ jobs:
             linux-x64.zip
             win-x64.zip
             linux-arm64.zip
+
+      - name: Auto deploy to backend server
+        run: |
+          sudo apt-get install sshpass -y
+          sshpass -p ${{ secrets.SSH_PASS }} ssh -o StrictHostKeyChecking=no root@clusterfuck.swyrin.id.vn "pm2 stop Starlight && sudo apt install wget unzip -y && wget -O linux-x64.zip https://github.com/team-nameless/starlight/releases/download/runnable/linux-x64.zip && unzip -o linux-x64.zip && pm2 restart Starlight"

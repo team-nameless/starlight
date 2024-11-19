@@ -27,7 +27,7 @@ public class UserController : ControllerBase
     [HttpGet]
     [Authorize]
     [Produces("application/json")]
-    public async Task<ActionResult> GetUser(long? userId = null)
+    public async Task<ActionResult> GetUser(ulong? userId = null)
     {
         // default to self.
         userId ??= 0;
@@ -50,11 +50,14 @@ public class UserController : ControllerBase
         var scheme = HttpContext.Request.Scheme;
         var authorityUrl = HttpContext.Request.Host.Value;
 
+        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user.SequenceNumber}.jpeg");
+        var isAvatarAvailable = System.IO.File.Exists(avatarsPath);
+
         return Ok(new
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
-            Avatar = $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg",
+            Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
             PlayTime = user.TotalPlayTime,
@@ -63,6 +66,17 @@ public class UserController : ControllerBase
             FriendList = user.Friends,
             AchievementList = user.Achievements,
         });
+    }
+
+    /// <summary>
+    ///     "Update" the score of a song.
+    /// </summary>
+    /// <param name="songId">Song ID</param>
+    [HttpPut("score/{songId:long}")]
+    [Authorize]
+    public async Task<ActionResult> SubmitScore(long songId)
+    {
+        return Ok();
     }
     
     /// <summary>
@@ -77,8 +91,6 @@ public class UserController : ControllerBase
         var userManager = signInManager.UserManager;
         
         var player = await userManager.GetUserAsync(User);
-
-        if (player == null) return BadRequest("Player not found");
         
         IdentityResult? nameChangeResult = null;
         IdentityResult? emailChangeResult = null;
@@ -86,18 +98,18 @@ public class UserController : ControllerBase
 
         if (!string.IsNullOrEmpty(profileUpdate.Handle))
         {
-            nameChangeResult = await userManager.SetUserNameAsync(player, profileUpdate.Handle);
+            nameChangeResult = await userManager.SetUserNameAsync(player!, profileUpdate.Handle);
         }
 
         if (!string.IsNullOrEmpty(profileUpdate.Email))
         { 
-            emailChangeResult = await userManager.SetEmailAsync(player, profileUpdate.Email);
+            emailChangeResult = await userManager.SetEmailAsync(player!, profileUpdate.Email);
         }
 
         if (!string.IsNullOrEmpty(profileUpdate.Password) && !string.IsNullOrEmpty(profileUpdate.NewPassword))
         {
             passwordChangeResult = await userManager.ChangePasswordAsync(
-                player,
+                player!,
                 profileUpdate.Password,
                 profileUpdate.NewPassword
             );
@@ -107,7 +119,7 @@ public class UserController : ControllerBase
         if (emailChangeResult is { Succeeded: false }) return BadRequest(emailChangeResult.ToString());
         if (passwordChangeResult is { Succeeded: false }) return BadRequest(passwordChangeResult.ToString());
 
-        await userManager.UpdateAsync(player);
+        await userManager.UpdateAsync(player!);
         await _gameDatabase.SaveChangesAsync();
 
         return Ok();
@@ -152,6 +164,48 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
+    ///     Reset profile image. Discord has it, why can't I?
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete("profile/image")]
+    [Authorize]
+    public async Task<ActionResult> ResetProfileImage()
+    {
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+        var userManager = signInManager.UserManager;
+        
+        var user = await userManager.GetUserAsync(User);
+        
+        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user!.SequenceNumber}.jpeg");
+
+        if (!System.IO.File.Exists(avatarsPath)) return NoContent();
+        
+        System.IO.File.Delete(avatarsPath);
+        return Ok();
+    }
+
+    /// <summary>
+    ///     Get settings of current player.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("settings")]
+    [Authorize]
+    public async Task<ActionResult> GetSettings()
+    {
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+        var userManager = signInManager.UserManager;
+        var player = await userManager.GetUserAsync(User);
+
+        var setting = _gameDatabase.Settings
+            .AsNoTracking()
+            .First(setting => setting.Player.Id == player!.Id);
+
+        return Ok(setting);
+    }
+    
+    /// <summary>
     ///     Modify settings of current player.
     /// </summary>
     [HttpPatch("settings")]
@@ -163,32 +217,34 @@ public class UserController : ControllerBase
         var userManager = signInManager.UserManager;
         
         var player = await userManager.GetUserAsync(User);
-
-        if (player == null) return BadRequest("Player not found");
-
+        
+        var user = _gameDatabase.Users
+            .Include(u => u.Setting)
+            .First(u => u.Id == player!.Id);
+        
         if (settingsUpdate.KeyCode != null)
         {
-            player.Setting.KeyCode1 = settingsUpdate.KeyCode[0];
-            player.Setting.KeyCode2 = settingsUpdate.KeyCode[1];
-            player.Setting.KeyCode3 = settingsUpdate.KeyCode[2];
-            player.Setting.KeyCode4 = settingsUpdate.KeyCode[3];
+            user.Setting!.KeyCode1 = settingsUpdate.KeyCode[0];
+            user.Setting!.KeyCode2 = settingsUpdate.KeyCode[1];
+            user.Setting!.KeyCode3 = settingsUpdate.KeyCode[2];
+            user.Setting!.KeyCode4 = settingsUpdate.KeyCode[3];
         }
 
         if (settingsUpdate.Latency.HasValue)
         {
-            player.Setting.Offset = settingsUpdate.Latency.Value;
+            user.Setting!.Offset = settingsUpdate.Latency.Value;
         }
 
         if (settingsUpdate.SoundSetting != null)
         {
-            player.Setting.MasterVolume = settingsUpdate.SoundSetting[0];
-            player.Setting.MusicVolume = settingsUpdate.SoundSetting[1];
-            player.Setting.SoundEffectVolume = settingsUpdate.SoundSetting[2];
+            user.Setting!.MasterVolume = settingsUpdate.SoundSetting[0];
+            user.Setting!.MusicVolume = settingsUpdate.SoundSetting[1];
+            user.Setting!.SoundEffectVolume = settingsUpdate.SoundSetting[2];
         }
 
         if (settingsUpdate.FrameRate.HasValue)
         {
-            player.Setting.FrameRate = settingsUpdate.FrameRate.Value;
+            user.Setting!.FrameRate = settingsUpdate.FrameRate.Value;
         }
         
         await _gameDatabase.SaveChangesAsync();
@@ -209,10 +265,9 @@ public class UserController : ControllerBase
         
         var player = await userManager.GetUserAsync(User);
 
-        if (player == null) return BadRequest("Player not found");
+        await signInManager.SignOutAsync();
+        await userManager.DeleteAsync(player!);
 
-        await userManager.DeleteAsync(player);
-
-        return Ok();
+        return Ok("LoggedOutAndDeleted");
     }
 }

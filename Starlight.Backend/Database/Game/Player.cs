@@ -6,12 +6,12 @@ namespace Starlight.Backend.Database.Game;
 /// <summary>
 ///     Represent a player of the game.
 /// </summary>
-public class Player : IdentityUser
+public class Player : IdentityUser<Guid>
 {
     /// <summary>
     ///     This is what Genshin Impact calls "User ID"
     /// </summary>
-    public long SequenceNumber { get; set; }
+    public ulong SequenceNumber { get; set; }
     
     /// <summary>
     ///     Display name of the user.
@@ -65,5 +65,5 @@ public class Player : IdentityUser
     ///     Player preferential setting.
     /// </summary>
     [PersonalData]
-    public UserSetting Setting { get; set; } = null!;
+    public Setting? Setting { get; set; }
 }

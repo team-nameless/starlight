@@ -1,17 +1,15 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-// ReSharper disable once RedundantUsingDirective
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Starlight.Backend.Database.Game;
 
 namespace Starlight.Backend.Service;
 
-public class GameDatabaseService : IdentityDbContext<Player>
+public class GameDatabaseService : IdentityDbContext<Player, Role, Guid>
 {
     public DbSet<Score> Scores { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
-    public DbSet<UserSetting> Settings { get; set; }
-    public DbSet<LoginTracking> LoginSessions { get; set; }
+    public DbSet<Setting> Settings { get; set; }
     
     // ReSharper disable once NotAccessedField.Local
     private readonly IConfiguration _configuration;
@@ -21,49 +19,56 @@ public class GameDatabaseService : IdentityDbContext<Player>
         _configuration = configuration;
         
         // ReSharper disable once VirtualMemberCallInConstructor
+        // The database will be created eventually, just don't do manual migration.
+        // https://github.com/dotnet/efcore/issues/10346#issuecomment-345543264
         Database.EnsureCreated();
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        var server = _configuration.GetValue<string>("Database:Host") ?? "localhost";
+        var port = _configuration.GetValue<int>("Database:Port");
+        var user = _configuration.GetValue<string>("Database:User") ?? "root";
+        var password = _configuration.GetValue<string>("Database:Password") ?? "root";
+        var database = _configuration.GetValue<string>("Database:Database") ?? "sys";
+        
         base.OnConfiguring(
             optionsBuilder
                 .EnableDetailedErrors()
 #if DEBUG
                 .EnableSensitiveDataLogging()
 #endif
-#if DEBUG
-                .UseSqlite(
-                    new SqliteConnection("Filename=Starlight.db;"),
-                    opt =>
-                    {
-                        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    }
-                )
-#else
                 .UseMySql(
-                    $"Server={_configuration.GetValue<string>("Database:Host")};" +
-                    $"Port={_configuration.GetValue<int>("Database:Port")};" +
-                    $"Database={_configuration.GetValue<string>("Database:Database")};" +
-                    $"User={_configuration.GetValue<string>("Database:User")};" +
-                    $"Password={_configuration.GetValue<string>("Database:Password")};",
-                    MySqlServerVersion.LatestSupportedServerVersion,
-                    opt =>
-                    {
-                        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    }
+                    $"Server={server}; Port={port}; Database={database}; User={user}; Password={password};",
+                    MySqlServerVersion.LatestSupportedServerVersion
                 )
-#endif
         );
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
-        builder.Entity<Player>()
-            .HasOne(u => u.Setting)
-            .WithOne(s => s.Player)
-            .HasForeignKey<UserSetting>();
+
+        builder.Entity<Player>(entity =>
+        {
+            entity.ToTable("Players");
+            
+            entity
+                .HasOne(p => p.Setting)
+                .WithOne(s => s.Player)
+                .HasForeignKey<Setting>();
+
+            entity
+                .HasMany(p => p.Friends)
+                .WithMany()
+                .UsingEntity(e => e.ToTable("Friendship"));
+        });
+
+        builder.Entity<Role>(entity => { entity.ToTable("Roles"); });
+        builder.Entity<IdentityUserRole<Guid>>(entity => { entity.ToTable("PlayerRoles"); });
+        builder.Entity<IdentityUserClaim<Guid>>(entity => { entity.ToTable("PlayerClaims"); });
+        builder.Entity<IdentityUserLogin<Guid>>(entity => { entity.ToTable("PlayerLogins"); });
+        builder.Entity<IdentityRoleClaim<Guid>>(entity => { entity.ToTable("RoleClaims"); });
+        builder.Entity<IdentityUserToken<Guid>>(entity => { entity.ToTable("PlayerTokens"); });
     }
 }

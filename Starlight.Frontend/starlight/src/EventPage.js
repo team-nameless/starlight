@@ -117,11 +117,11 @@ function EventPage() {
         </div>
 
         <nav className="nav-links right">
-          <Link to="/eventpage">
+          <Link to="/eventpage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
             <img src={eventsIcon} alt="Events" className="nav-icon" />
             <span>Events</span>
           </Link>
-          <Link to="/storepage">
+          <Link to="/storepage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
             <img src={storeIcon} alt="Store" className="nav-icon" />
             <span>Store</span>
           </Link>
@@ -132,15 +132,20 @@ function EventPage() {
         </div>
       </header>
 
-      {/* Background Image */}
-      <div className="background-image">
-        <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
-        <div className="overlay-layer"></div>
-      </div>
+      {/* Current Page Content */}
+      <div className="content-layer">
+        {/* Background Image */}
+        <div className="background-image">
+          <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
+        </div>
 
-      {/* Coming Soon Text */}
-      <div className="coming-soon-text">
-        Coming soon...
+        {/* Overlay Layer */}
+        <div className="overlay-layer" style={{ height: '1000px' }}></div>
+
+        {/* Coming Soon Text */}
+        <div className="coming-soon-text">
+          Coming soon...
+        </div>
       </div>
 
       {/* Song List Sidebar */}

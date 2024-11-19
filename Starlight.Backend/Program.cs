@@ -22,7 +22,7 @@ builder.Services
     .AddHttpLogging(_ => { })
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddIdentity<Player, IdentityRole>(opt =>
+    .AddIdentity<Player, Role>(opt =>
     {
         opt.Password.RequiredLength = 8;
         opt.Password.RequireDigit = true;
@@ -122,12 +122,26 @@ app
     .UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
-        RequestPath = "/static"
+        RequestPath = "/static",
+        // https://stackoverflow.com/questions/61152499/dotnet-core-3-1-cors-issue-when-serving-static-image-files
+        OnPrepareResponse = context =>
+        {
+            context.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+            context.Context.Response.Headers.Append("Access-Control-Allow-Methods", "*");
+            context.Context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+        }
     })
     .UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "avatars")),
-        RequestPath = "/avatars"
+        RequestPath = "/avatars",
+        // https://stackoverflow.com/questions/61152499/dotnet-core-3-1-cors-issue-when-serving-static-image-files
+        OnPrepareResponse = context =>
+        {
+            context.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+            context.Context.Response.Headers.Append("Access-Control-Allow-Methods", "*");
+            context.Context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+        }
     })
     .UseRouting()
     .UseCors(policy =>

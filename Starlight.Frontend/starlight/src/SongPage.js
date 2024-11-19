@@ -21,22 +21,6 @@ import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; 
 import ProfilePage from './ProfilePage';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
-//  const rootUrl = "https://localhost:7224";
-
-function requestFullScreen() {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { // Firefox
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // IE/Edge
-        elem.msRequestFullscreen();
-    }
-}
-
-window.addEventListener('load', requestFullScreen);
 
 function SongPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -270,7 +254,7 @@ function SongPage() {
           </div>
 
           <div className="leave-button">
-            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} /> 
+            <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26p</button>x', height: '26px' }} onClick={handleLeaveClick} /> 
           </div>
         </header>
 

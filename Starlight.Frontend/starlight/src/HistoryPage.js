@@ -23,7 +23,6 @@ function HistoryPage() {
   const currentSongIndexFromLocation = location.state?.currentSongIndex || 0;
   const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
   const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
-  let audio; // Define audio variable
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
@@ -31,7 +30,8 @@ function HistoryPage() {
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
-  }, [currentSongFromLocation]);
+    setCurrentSongIndex(currentSongIndexFromLocation);
+  }, [currentSongFromLocation, currentSongIndexFromLocation]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,22 +87,46 @@ function HistoryPage() {
     }
   };
 
-
   const handleLeaveClick = () => {
     setShowPopup(true);
   };
 
   const handleConfirmLeave = () => {
-    if (audio) {
-      audio.pause();
-      audio = null;
-    }
     window.location.href = '/';
   };
 
   const handleCancelLeave = () => {
     setShowPopup(false);
   };
+
+  useEffect(() => {
+    let audio;
+    const playAudio = () => {
+      if (currentSong && currentSong.audioUrl) {
+        audio = new Audio(currentSong.audioUrl);
+        audio.loop = true; // Set audio to auto-replay
+        audio.play().catch(error => console.error('Error playing audio:', error));
+      }
+    };
+
+    playAudio(); // Play audio immediately on page load
+
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio = null;
+      }
+    };
+  }, [currentSong]);
+
+  useEffect(() => {
+    const imgElement = document.querySelector('.background-image img');
+    if (imgElement) {
+      imgElement.addEventListener('transitionend', () => {
+        imgElement.classList.remove('morph');
+      });
+    }
+  }, [currentSong]);
 
   return (
     <div className="historypage">
@@ -137,11 +161,11 @@ function HistoryPage() {
         </div>
 
         <nav className="nav-links right">
-          <Link to="/eventpage">
+          <Link to="/eventpage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
             <img src={eventsIcon} alt="Events" className="nav-icon" />
             <span>Events</span>
           </Link>
-          <Link to="/storepage">
+          <Link to="/storepage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
             <img src={storeIcon} alt="Store" className="nav-icon" />
             <span>Store</span>
           </Link>
@@ -152,20 +176,25 @@ function HistoryPage() {
         </div>
       </header>
 
-      {/* Background Image */}
-      <div className="background-image">
-        <img src={currentSong && currentSong.backgroundFileLocation ? `${rootUrl}${currentSong.backgroundFileLocation}` : ''} alt="Background" />
-        <div className="overlay-layer"></div>
-      </div>
+      {/* Current Page Content */}
+      <div className="content-layer">
+        {/* Background Image */}
+        <div className="background-image">
+          <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
+        </div>
 
-      {/* Next/Previous Buttons */}
-      <div className="song-navigation" style={{ paddingTop: '20px' }}>
-        <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
-          <img src={previousArrow} alt="Previous" style={{ width: '21px', height: '21px' }} />
-        </button>
-        <button className="nav-btn next-btn" onClick={handleNextSong}>
-          <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
-        </button>
+        {/* Overlay Layer */}
+        <div className="overlay-layer" style={{ height: '1000px' }}></div>
+
+        {/* Next/Previous Buttons */}
+        <div className="song-navigation">
+          <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
+            <img src={previousArrow} alt="Previous" style={{ width: '21px', height: '21px' }} />
+          </button>
+          <button className="nav-btn next-btn" onClick={handleNextSong}>
+            <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
+          </button>
+        </div>
       </div>
 
       {/* Song List Sidebar */}
@@ -182,7 +211,7 @@ function HistoryPage() {
                   {song.title}
                 </span>
               </div>
-              <div className="song-bg" style={{ backgroundImage: `url(${rootUrl}${song.backgroundFileLocation})` }}></div>
+              <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
               <span className="sidebar-song-title">
                 {song.title}
               </span>
