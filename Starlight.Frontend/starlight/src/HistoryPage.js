@@ -12,10 +12,11 @@ import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sideb
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
-//import axios from 'axios';
+import CalHeatmap from "cal-heatmap";
+import "cal-heatmap/cal-heatmap.css";
+import './Heatmap_Style.css'; // Custom styles for the heatmap
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
-// const rootUrl = "https://localhost:7224";
 
 function HistoryPage() {
   const location = useLocation();
@@ -26,7 +27,8 @@ function HistoryPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
-  //const navigate = useNavigate();
+  const [heatmapLatestData, setHeatmapLatestData] = useState([]);
+  const [heatmapBestData, setHeatmapBestData] = useState([]);
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
@@ -128,6 +130,138 @@ function HistoryPage() {
     }
   }, [currentSong]);
 
+  const generateRandomData = () => {
+    const judgements = ["CP", "P", "G", "B", "M"];
+    const segments = 30;
+    const data = [];
+    for (let segment = 0; segment < segments; segment++) {
+      judgements.forEach((judgement, rowIndex) => {
+        const totalBeats = Math.floor(Math.random() * 100) + 1;
+        const hits = Math.floor(Math.random() * totalBeats);
+        const percentage = Math.round((hits / totalBeats) * 100);
+        data.push({
+          x: segment,
+          y: rowIndex,
+          value: percentage,
+          hits,
+          totalBeats,
+        });
+      });
+    }
+    return data;
+  };
+
+  const fetchHeatmapData = async (url) => {
+    try {
+      const response = await axios.get(`${rootUrl}${url}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching heatmap data:', error);
+      return generateRandomData(); // Fallback to random data for testing
+    }
+  };
+
+  const renderHeatmap = (data, selector) => {
+    const container = document.querySelector(selector);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const cal = new CalHeatmap();
+    const dataMap = {};
+
+    data.forEach((d) => {
+      const timestamp = `${d.x}-${d.y}`;
+      dataMap[timestamp] = d.value;
+    });
+
+    cal.paint({
+      data: { source: dataMap },
+      range: 30,
+      domain: {
+        type: "column",
+        label: { text: "Segments", textAlign: "center", position: "top" },
+      },
+      subDomain: {
+        type: "row",
+        label: { text: "Accuracy", textAlign: "start", position: "start" },
+        width: 20,
+        height: 20,
+        gutter: 5,
+      },
+      scale: {
+        color: {
+          type: "threshold",
+          range: ["#14432a", "#166b34", "#37a446", "#4dd05a"],
+          domain: [25, 50, 75, 100],
+        },
+      },
+      itemSelector: selector,
+      legend: {
+        show: true,
+        position: "bottom",
+      },
+      tooltip: {
+        enabled: true,
+        html: (timestamp) => {
+          const cellData = data.find((d) => `${d.x}-${d.y}` === timestamp);
+          if (cellData) {
+            return `Hits: ${cellData.hits}/${cellData.totalBeats} (${cellData.value}%)`;
+          }
+          return "No data";
+        },
+      },
+      verticalOrientation: true, // Ensure vertical orientation
+    });
+  };
+
+  useEffect(() => {
+    const fetchAndSetHeatmapData = async () => {
+      const latestData = await fetchHeatmapData('/api/user/score/recent');
+      const bestData = await fetchHeatmapData('/api/user/score/all');
+      setHeatmapLatestData(latestData.length ? latestData : generateRandomData());
+      setHeatmapBestData(bestData.length ? bestData : generateRandomData());
+    };
+
+    fetchAndSetHeatmapData();
+  }, []);
+
+  useEffect(() => {
+    renderHeatmap(heatmapLatestData, "#heatmap-latest-container");
+    renderHeatmap(heatmapBestData, "#heatmap-best-container");
+  }, [heatmapLatestData, heatmapBestData]);
+
+  const renderHeatmapContainer = (title, heatmapId) => (
+    <div className="heatmap-container">
+      <h3>{title}</h3>
+      <div className="heatmap-details">
+        <div className="judgement-column">
+          <div className="judgement-title">Combo</div>
+          <div>CP: {Math.floor(Math.random() * 100)}</div>
+          <div>P: {Math.floor(Math.random() * 100)}</div>
+          <div>G: {Math.floor(Math.random() * 100)}</div>
+          <div>B: {Math.floor(Math.random() * 100)}</div>
+          <div>M: {Math.floor(Math.random() * 100)}</div>
+        </div>
+        <div className="heatmap-column">
+          <div className="overall-score">
+            ✨{Math.floor(Math.random() * 100000)}✨
+          </div>
+          <div id={heatmapId}></div>
+          <div className="segment-times">
+            {Array.from({ length: 30 }, (_, i) => (
+              <div key={i} className="segment-time">{i + 1}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="historypage">
       {/* Header Navigation Bar */}
@@ -183,9 +317,6 @@ function HistoryPage() {
           <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
         </div>
 
-        {/* Overlay Layer */}
-        <div className="overlay-layer" style={{ height: '1000px' }}></div>
-
         {/* Next/Previous Buttons */}
         <div className="song-navigation">
           <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
@@ -195,6 +326,9 @@ function HistoryPage() {
             <img src={nextArrow} alt="Next" style={{ width: '21px', height: '21px' }} />
           </button>
         </div>
+
+        {renderHeatmapContainer("Latest Play", "heatmap-latest-container")}
+        {renderHeatmapContainer("Best Score", "heatmap-best-container")}
       </div>
 
       {/* Song List Sidebar */}
