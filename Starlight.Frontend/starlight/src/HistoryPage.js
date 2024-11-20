@@ -168,17 +168,17 @@ function HistoryPage() {
   const renderHeatmap = (data, selector) => {
     const container = document.querySelector(selector);
     if (!container) return;
-
+  
     container.innerHTML = "";
-
+  
     const cal = new CalHeatmap();
     const dataMap = {};
-
+  
     data.forEach((d) => {
       const timestamp = `${d.x}-${d.y}`;
       dataMap[timestamp] = d.value;
     });
-
+  
     cal.paint({
       data: { source: dataMap },
       range: 30,
@@ -218,23 +218,7 @@ function HistoryPage() {
       verticalOrientation: true, // Ensure vertical orientation
     });
   };
-
-  useEffect(() => {
-    const fetchAndSetHeatmapData = async () => {
-      const latestData = await fetchHeatmapData('/api/user/score/recent');
-      const bestData = await fetchHeatmapData('/api/user/score/all');
-      setHeatmapLatestData(latestData.length ? latestData : generateRandomData());
-      setHeatmapBestData(bestData.length ? bestData : generateRandomData());
-    };
-
-    fetchAndSetHeatmapData();
-  }, []);
-
-  useEffect(() => {
-    renderHeatmap(heatmapLatestData, "#heatmap-latest-container");
-    renderHeatmap(heatmapBestData, "#heatmap-best-container");
-  }, [heatmapLatestData, heatmapBestData]);
-
+  
   const renderHeatmapContainer = (title, heatmapId) => (
     <div className="heatmap-container">
       <h3>{title}</h3>
@@ -261,6 +245,26 @@ function HistoryPage() {
       </div>
     </div>
   );
+  
+  useEffect(() => {
+    const fetchAndSetHeatmapData = async () => {
+      const latestData = await fetchHeatmapData('/api/user/score/recent');
+      const bestData = await fetchHeatmapData('/api/user/score/all');
+      setHeatmapLatestData(latestData.length ? latestData : generateRandomData());
+      setHeatmapBestData(bestData.length ? bestData : generateRandomData());
+    };
+  
+    fetchAndSetHeatmapData();
+  }, []);
+  
+  useEffect(() => {
+    renderHeatmap(heatmapLatestData, "#heatmap-latest-container");
+  }, [heatmapLatestData]);
+  
+  useEffect(() => {
+    renderHeatmap(heatmapBestData, "#heatmap-best-container");
+  }, [heatmapBestData]);
+  
 
   return (
     <div className="historypage">
@@ -360,7 +364,6 @@ function HistoryPage() {
             <h2>Confirm Leave</h2>
             <p>Are you sure you want to leave the game?</p>
             <button className="stay-button" onClick={handleCancelLeave}>Stay</button>
-            <button className="leave-button" onClick={handleConfirmLeave}>Leave</button>
           </div>
         </div>
       )}

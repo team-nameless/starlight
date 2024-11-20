@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Abyssinica+SIL&family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Kaushan+Script&family=Keania+One&family=Kotta+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap');
+
 .heatmap-section {
   background: rgba(34, 39, 45, 0.8);
   padding: 20px;
@@ -10,11 +12,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
   position: relative;
   width: 100%;
-  height: 300px; /* Ensure the container has a fixed height */
+  height: 170px; 
 }
+
 
 /* Tooltip styling */
 .cal-heatmap-tooltip {
@@ -60,7 +62,20 @@
   padding: 20px;
   border-radius: 8px;
   color: white;
-  margin: 20px 0;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin: 40px 150px 0px 150px;
+}
+
+.heatmap-container h3 {
+  font-family: 'Kaushan Script', cursive;
+  font-weight: 400;
+  color:#FE364F;
+  margin-right: -12px;
+  margin-bottom: 0px;
+  font-size: 40px;
+  position: relative;
+  top: -60px;
 }
 
 .heatmap-details {
@@ -75,24 +90,27 @@
 }
 
 .judgement-title {
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-family: 'Keania One', sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  color: #F38BA8;
 }
 
 .judgement-column div {
   font-size: 14px;
   margin-bottom: 5px;
+  width: 80px;
 }
 
 .heatmap-column {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 1500px;
 }
 
 .overall-score {
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 34px;
 }
 
 .segment-times {
