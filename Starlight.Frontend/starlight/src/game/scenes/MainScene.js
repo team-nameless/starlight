@@ -22,10 +22,16 @@ class MainScene extends Phaser.Scene {
     noteOuter2PositionX = this.notePositionBase + this.notePositionGaps * 3;
 
     // gameplay elements
+    judgementPrintX = 1500;
+    judgementPrintY = 500;
+    errorPrintX = 1500;
+    errorPrintY = 600;
     gameStartTime;
     scoreText;
     comboText;
     accuracyText;
+    judgementText;
+    errorText;
 
     // buttons
     noteOuter1Key;
@@ -39,7 +45,13 @@ class MainScene extends Phaser.Scene {
     accuracy;
 
     // stuffs
+    totalNotes;
+    totalCrit;
+    totalPerf;
+    totalGood;
+    totalBad;
     totalMiss;
+    inGameTimeInMs;
 
     constructor() {
         super("MainScene");
@@ -48,6 +60,12 @@ class MainScene extends Phaser.Scene {
     init(data) {
         this.combo = 0;
         this.score = 0;
+        this.totalCrit = 0;
+        this.totalPerf = 0;
+        this.totalGood = 0;
+        this.totalBad = 0;
+        this.totalMiss = 0;
+        this.inGameTimeInMs = 0;
         this.accuracy = 100;
         this.gameData = data.gameData;
         this.rawNoteList = this.gameData.notes;
@@ -88,7 +106,7 @@ class MainScene extends Phaser.Scene {
             fontSize: "80px"
         }).setOrigin(0, 0);
 
-        this.comboText = this.add.text(200, 900, "100x", {
+        this.comboText = this.add.text(200, 900, "0x", {
             fontFamily: "sans-serif",
             color: "#ffffff",
             fontSize: "60px"
@@ -99,6 +117,20 @@ class MainScene extends Phaser.Scene {
             color: "#ffffff",
             fontSize: "60px"
         }).setOrigin(0, 0);
+
+        this.judgementText = this.add.text(this.judgementPrintX, this.judgementPrintY, ".", {
+            fontFamily: "sans-serif",
+            color: "#ffffff",
+            fontSize: "60px"
+        }).setOrigin(0, 0);
+
+        this.errorText = this.add.text(this.errorPrintX, this.errorPrintY, ".", {
+            fontFamily: "sans-serif",
+            color: "#ffffff",
+            fontSize: "60px"
+        }).setOrigin(0, 0);
+
+        this.totalNotes = this.rawNoteList.length;
 
         this.rawNoteList.forEach((note) => {
             const screenHeight = 845;
@@ -138,7 +170,7 @@ class MainScene extends Phaser.Scene {
     }
 
     handleInput(keyPosition) {
-        const now = this.time.now;
+        const now = this.inGameTimeInMs;
 
         // I sleep again.
         keyPosition -= 1;
@@ -186,24 +218,63 @@ class MainScene extends Phaser.Scene {
 
         const noteObj = theChosenOne;
 
-        // https://www.google.com/search?q=average+human+reaction+time+in+ms
-        const thresholdMs = 80;
-        const humanError = 270;
-        const acceptance = thresholdMs + humanError;
-
-        const hitTime = now - this.gameStartTime.getMilliseconds();
+        const hitTime = now;
         const expectedTime = noteObj.getData("time");
 
         noteObj.destroy();
         ++this.combo;
-        this.score += 300;
+
+        const phaserError = 30;
+        const offset = Math.abs(hitTime - expectedTime - phaserError);
+        const isEarly = hitTime < expectedTime;
+        const isLate = hitTime > expectedTime;
+
+        console.log(`Current time: ${now}, Hit time: ${hitTime}, Expected: ${expectedTime}`);
+        console.log(offset);
+
+        let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
+
+        if (offset <= 10) {
+            ++this.totalCrit;
+            this.judgementText.setText("Nice!");
+            this.errorText.setText("");
+        }
+        else if (10 < offset && offset <= 25) {
+            ++this.totalPerf;
+            this.judgementText.setText("Perfect");
+            this.errorText.setText(errTxt);
+        }
+        else if (25 < offset && offset <= 50) {
+            ++this.totalGood;
+            this.judgementText.setText("Fine");
+            this.errorText.setText(errTxt);
+        }
+        else if (50 < offset && offset <= 80) {
+            ++this.totalBad;
+            this.judgementText.setText("Meh.");
+            this.errorText.setText(errTxt);
+        } else {
+            this.judgementText.setText("Missed");
+            this.errorText.setText("");
+        }
     }
 
-    update() {
+    update(time, delta) {
+        this.inGameTimeInMs += delta;
+
         if (this.noteOuter1Key.isDown) this.handleInput(1);
         if (this.noteInner1Key.isDown) this.handleInput(2);
         if (this.noteInner2Key.isDown) this.handleInput(3);
         if (this.noteOuter2Key.isDown) this.handleInput(4);
+
+        // noinspection PointlessArithmeticExpressionJS
+        this.accuracy = (
+                350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
+                // 300 * this.totalPerf +
+                200 * this.totalGood +
+                 50 * this.totalBad  +
+                  0 * this.totalMiss
+            ) / (350.00 * this.totalNotes) * 100.0;
 
         this.comboText.setText(`${this.combo}x`);
         this.scoreText.setText(`${this.score}`.padStart(7, "0"));
