@@ -11,6 +11,7 @@ import HistoryPage from './HistoryPage';
 import StorePage from './StorePage';
 import EventPage from './EventPage';
 import ProfilePage from './ProfilePage';
+import GameApp from "./game/GameApp";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -24,6 +25,7 @@ root.render(
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/eventpage" element={<EventPage />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
+        <Route path="/TestGame" element={<GameApp />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

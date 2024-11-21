@@ -11,6 +11,7 @@
     "axios": "^1.7.7",
     "cal-heatmap": "^4.2.4",
     "npm-check-updates": "^17.1.11",
+    "phaser": "^3.87.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
