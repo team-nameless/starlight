@@ -48,6 +48,7 @@ function HistoryPage() {
         setSongs(fetchedSongs);
         if (fetchedSongs.length > 0) {
           setCurrentSongIndex(0);
+          setCurrentSong(fetchedSongs[0]);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -72,7 +73,11 @@ function HistoryPage() {
     if (imgElement) {
       imgElement.classList.add('fade-out');
       imgElement.addEventListener('transitionend', () => {
-        setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+        setCurrentSongIndex((prevIndex) => {
+          const newIndex = (prevIndex + 1) % songs.length;
+          setCurrentSong(songs[newIndex]);
+          return newIndex;
+        });
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
@@ -83,7 +88,11 @@ function HistoryPage() {
     if (imgElement) {
       imgElement.classList.add('fade-out');
       imgElement.addEventListener('transitionend', () => {
-        setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
+        setCurrentSongIndex((prevIndex) => {
+          const newIndex = (prevIndex - 1 + songs.length) % songs.length;
+          setCurrentSong(songs[newIndex]);
+          return newIndex;
+        });
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
@@ -130,27 +139,6 @@ function HistoryPage() {
     }
   }, [currentSong]);
 
-  const generateRandomData = () => {
-    const judgements = ["CP", "P", "G", "B", "M"];
-    const segments = 30;
-    const data = [];
-    for (let segment = 0; segment < segments; segment++) {
-      judgements.forEach((judgement, rowIndex) => {
-        const totalBeats = Math.floor(Math.random() * 100) + 1;
-        const hits = Math.floor(Math.random() * totalBeats);
-        const percentage = Math.round((hits / totalBeats) * 100);
-        data.push({
-          x: segment,
-          y: rowIndex,
-          value: percentage,
-          hits,
-          totalBeats,
-        });
-      });
-    }
-    return data;
-  };
-
   const fetchHeatmapData = async (url) => {
     try {
       const response = await axios.get(`${rootUrl}${url}`, {
@@ -161,7 +149,7 @@ function HistoryPage() {
       return response.data;
     } catch (error) {
       console.error('Error fetching heatmap data:', error);
-      return generateRandomData(); // Fallback to random data for testing
+      return []; // Return empty array on error
     }
   };
 
@@ -216,6 +204,7 @@ function HistoryPage() {
         },
       },
       verticalOrientation: true, // Ensure vertical orientation
+      itemName: ["beat", "beats"], // Add itemName to properly render data cells
     });
   };
   
@@ -250,8 +239,8 @@ function HistoryPage() {
     const fetchAndSetHeatmapData = async () => {
       const latestData = await fetchHeatmapData('/api/user/score/recent');
       const bestData = await fetchHeatmapData('/api/user/score/all');
-      setHeatmapLatestData(latestData.length ? latestData : generateRandomData());
-      setHeatmapBestData(bestData.length ? bestData : generateRandomData());
+      setHeatmapLatestData(latestData);
+      setHeatmapBestData(bestData);
     };
   
     fetchAndSetHeatmapData();
@@ -309,6 +298,29 @@ function HistoryPage() {
           </Link>
         </nav>
 
+        {/* Song List Sidebar */}
+        <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
+          <div className="sidebar-header">
+            Song List
+          </div>
+          <ul>
+            {songs.map((song, index) => (
+              <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
+                <div className="song-info-sidebar">
+                  <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
+                  <span className="sidebar-song">
+                    {song.title}
+                  </span>
+                </div>
+                <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
+                <span className="sidebar-song-title">
+                  {song.title}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
         <div className="leave-button">
           <img src={leaveIcon} alt="Leave" className="leave-icon" style={{ width: '26px', height: '26px' }} onClick={handleLeaveClick} />
         </div>
@@ -335,28 +347,7 @@ function HistoryPage() {
         {renderHeatmapContainer("Best Score", "heatmap-best-container")}
       </div>
 
-      {/* Song List Sidebar */}
-      <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-        <div className="sidebar-header">
-          Song List
-        </div>
-        <ul>
-          {songs.map((song, index) => (
-            <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
-              <div className="song-info-sidebar">
-                <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
-                <span className="sidebar-song">
-                  {song.title}
-                </span>
-              </div>
-              <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
-              <span className="sidebar-song-title">
-                {song.title}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      
 
       {showPopup && (
         <div className="popup-overlay">
@@ -364,6 +355,7 @@ function HistoryPage() {
             <h2>Confirm Leave</h2>
             <p>Are you sure you want to leave the game?</p>
             <button className="stay-button" onClick={handleCancelLeave}>Stay</button>
+            <button className="leave-button" onClick={handleConfirmLeave}>Leave</button>
           </div>
         </div>
       )}
