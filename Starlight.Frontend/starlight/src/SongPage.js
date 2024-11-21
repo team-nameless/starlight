@@ -1,12 +1,8 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useState, useEffect, useCallback, Fragment, lazy, Suspense } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Unity, useUnityContext } from "react-unity-webgl";
-import LandingPage from './LandingPageApp'; 
-import HistoryPage from './HistoryPage';
-import EventPage from './EventPage';
-import StorePage from './StorePage';
 import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
@@ -18,7 +14,13 @@ import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
-import ProfilePage from './ProfilePage';
+
+const LandingPage = lazy(() => import('./LandingPageApp'));
+const HistoryPage = lazy(() => import('./HistoryPage'));
+const EventPage = lazy(() => import('./EventPage'));
+const StorePage = lazy(() => import('./StorePage'));
+const ProfilePage = lazy(() => import('./ProfilePage'));
+const GameApp = lazy(() => import('./game/GameApp'));
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -31,6 +33,7 @@ function SongPage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [userName, setUserName] = useState();
   const [score, setScore] = useState();
+  const [usePhaser, setUsePhaser] = useState(false); // State to toggle between Unity and Phaser
 
   const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: "build/myunityapp.loader.js",
@@ -128,7 +131,11 @@ function SongPage() {
     if (currentSong) {
       try {
         await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
-        sendMessage("GameController", "LoadSong", currentSong.id);
+        if (usePhaser) {
+          window.location.href = `/game/${currentSong.id}`;
+        } else {
+          sendMessage("GameController", "LoadSong", currentSong.id);
+        }
       } catch (error) {
         console.error('Error starting game:', error);
       }
@@ -180,14 +187,17 @@ function SongPage() {
 
   return (
     <Fragment>
-      <Routes>
-        <Route path="/SongPage" element={<SongPage />} />
-        <Route path="/HistoryPage" element={<HistoryPage />} />
-        <Route path="/EventPage" element={<EventPage />} />
-        <Route path="/StorePage" element={<StorePage />} />
-        <Route path="/Logout" element={<LandingPage />} />
-        <Route path="/ProfilePage" element={<ProfilePage />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/SongPage" element={<SongPage />} />
+          <Route path="/HistoryPage" element={<HistoryPage />} />
+          <Route path="/EventPage" element={<EventPage />} />
+          <Route path="/StorePage" element={<StorePage />} />
+          <Route path="/Logout" element={<LandingPage />} />
+          <Route path="/ProfilePage" element={<ProfilePage />} />
+          <Route path="/game/:songId" element={<GameApp />} /> {/* Add route for Phaser game */}
+        </Routes>
+      </Suspense>
       <div className="songpage">
         {/* Header Navigation Bar */}
         <header className="navbar">
