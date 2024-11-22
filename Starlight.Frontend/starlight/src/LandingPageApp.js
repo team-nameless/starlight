@@ -454,8 +454,12 @@ const LandingPageApp = () => {
       <BackgroundLandingPage>
         <header>
           <NavButtons>
-            <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
-            <LoginButton onClick={() => setShowLoginModal(true)}>Log in</LoginButton>
+            {!isLoggedIn && (
+              <>
+                <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
+                <LoginButton onClick={() => setShowLoginModal(true)}>Log in</LoginButton>
+              </>
+            )}
           </NavButtons>
         </header>
         <Hero>

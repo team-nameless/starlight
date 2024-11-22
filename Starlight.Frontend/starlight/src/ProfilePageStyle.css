@@ -54,6 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-right: 2px solid #FF9C33; 
     padding-right: 15px; 
   }
@@ -81,7 +82,7 @@
     display: flex;
     justify-content: space-around;
     width: 100%;
-    margin-top: 110px;
+    margin-top: 145px;
   }
 
   .profile-tab {
@@ -98,11 +99,11 @@
   }
 
   .profile-img-avatar {
-    width: 85px; 
-    height: 85px; 
-    margin-left: 20px;
+    width: 110px; 
+    height: 110px; 
+    margin-left: 5px;
     border-radius: 50%; 
-    z-index: 2; 
+    z-index: 3; 
     margin-bottom: 5px; 
     position: absolute;
     top: -35px; 
@@ -115,10 +116,10 @@
     font-family: 'Koho', sans-serif;
     font-weight: 600;
     color: #FFF5F5; 
-    margin-top: 45px;
-    margin-left: 5px;
+    margin-top: 70px; 
     margin-bottom: 5px; 
     font-size: 17px;
+    text-align: center; 
   }
 
   .profile-userid-avatar {
@@ -126,9 +127,9 @@
     font-weight: 600;
     color: #FF9100;
     font-size: 12px;
-    margin-top: 5px;
-    margin-left: 30px;
+    margin-top: 10px;
     margin-bottom: 5px; 
+    text-align: center; 
   }
   
   .profile-info-container {
@@ -155,8 +156,8 @@
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: #9A9393; 
-    margin-top: -55px;
-    margin-bottom: 220px; 
+    margin-top: -35px;
+    margin-bottom: 320px; 
     border-left: 2px solid #303030; 
     padding-left: 15px; 
     font-size: 11px;
@@ -170,7 +171,7 @@
   }
   
   .chat-container {
-    width: 23%;
+    width: 23%; 
     height: 95%;
     background-color: #10171B;
     position: absolute; 
@@ -182,6 +183,7 @@
     align-items: center;
     padding: 20px;
     border-radius: 20px 0px 0px 0px;
+    overflow: hidden; 
 }
 
 .nav3h {
@@ -271,11 +273,10 @@
     text-decoration: none;
     font-size: 12px;
     transition: color 0.3s ease, transform 0.3s ease; 
-    margin-left: -30px; 
   }
   
   .nav3 a span {
-    margin-left: 4px; 
+    margin-left: 34px; 
     transition: color 0.3s ease; 
   }
   
@@ -283,7 +284,7 @@
     width: 27px;
     height: 27px;
     margin-top: 10px;
-    margin-right: 5px;
+    margin-right: -25px;
   }
   
   .nav3 {
@@ -368,7 +369,7 @@
   
   .userprofile {
     position: absolute;     
-    top: 11%;               
+    top: 10%;               
     left: 61%; 
     transform: translate(30%, -50%); 
     flex-direction: column; 
@@ -380,13 +381,14 @@
     font-weight: 600;
     color: #8095FF;
     font-size: 14px;
-    margin-bottom: 5px;
+    margin-bottom: 9px;
   }
   .userid {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: #FF9100;
     font-size: 10px;
+    margin-bottom: 5px;
   }
   
   .profileimg {
@@ -394,7 +396,7 @@
     height: 46px;
     border-radius: 50%;
     z-index: 2; 
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     font-family: 'KoHo', sans-serif;
   }
   
@@ -448,8 +450,9 @@
   }
   
   .chat-body {
-    max-height: 300px;
-    overflow-y: hidden; 
+    height: 500px; 
+    width: 95%; 
+    overflow-y: auto; 
     overflow-x: hidden; 
     margin-bottom: 5px;
   }
@@ -462,7 +465,8 @@
     margin-bottom: 5px;
     border-radius: 5px;
     background-color: #2e333d;
-    width: auto; 
+    width: 200%; 
+    height: auto;
   }
 
   .chat-avatar {
@@ -480,7 +484,7 @@
   
   .message-sender {
     font-weight: bold;
-    color: #747777; 
+    color: #ffffff; 
     font-size: 9px; 
   }
   
@@ -533,7 +537,7 @@
   .chatimage {
     width: 5%;
     height: 2%;
-    margin-right:250px; 
+    margin-right:290px; 
   }
 
   h3 {
@@ -541,7 +545,7 @@
     font-size: 9px;
     font-family: 'Inter', sans-serif;
     margin-bottom: 50px;
-    margin-top: -12px;
-    margin-right: 150px; 
+    margin-top: -14px;
+    margin-right: 190px; 
     font-weight: 100;
   }

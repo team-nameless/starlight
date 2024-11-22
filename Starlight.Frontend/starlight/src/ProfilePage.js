@@ -24,12 +24,13 @@ function ProfilePage() {
   const [showPopup, setShowPopup] = useState(false);
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02", avatar: girlImage },
-    { id: 2, sender: "Xích", message: "Meo meo", color: "red", time: "15:35", avatar: girlImage },
-    { id: 3, sender: "Lan", message: "Cậu ăn cơm chưa", color: "orange", time: "20:07", avatar: girlImage },
+    { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02:34 PM", avatar: girlImage },
+    { id: 2, sender: "Xích", message: "Meo meo", color: "red", time: "3:35:13 AM", avatar: girlImage },
+    { id: 3, sender: "Lan", message: "Cậu ăn cơm chưa", color: "orange", time: "08:07:23 AM", avatar: girlImage },
   ]); 
   const [newMessage, setNewMessage] = useState(""); 
   const [activeTab, setActiveTab] = useState('scoreRecord');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,7 @@ function ProfilePage() {
             name: userData.name || 'Sanraku',
             profilePic: userData.avatar || profilePicPlaceholder
           });
+          setIsLoggedIn(true); // Set logged in state to true
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
         }
