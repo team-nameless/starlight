@@ -64,6 +64,20 @@ function StorePage() {
     }
   }, [currentSongIndex, songs.length]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 27) { // Esc key
+        event.preventDefault(); // Prevent exiting fullscreen
+        handleLeaveClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
   };

@@ -312,6 +312,11 @@ html, body {
   transition: background-color 0.3s ease;
 }
 
+.nav-btn.hover {
+  background-color: #ff8a05;
+  transition: background-color 0.3s ease;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap');
 .song-name {
   font-family: 'Lemon', sans-serif;

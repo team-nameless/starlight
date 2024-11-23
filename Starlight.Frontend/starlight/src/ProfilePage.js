@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ProfilePageStyle.css';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import LandingPage from './LandingPageApp';
 import HistoryPage from './HistoryPage';
 import SongPage from './SongPage';
@@ -30,7 +30,6 @@ function ProfilePage() {
   ]); 
   const [newMessage, setNewMessage] = useState(""); 
   const [activeTab, setActiveTab] = useState('scoreRecord');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,10 +68,6 @@ function ProfilePage() {
 
   const handleCancelLeave = () => {
     setShowPopup(false);
-  };
-
-  const toggleSongList = () => {
-    setIsSongListOpen(!isSongListOpen);
   };
 
   const handleSendMessage = () => {

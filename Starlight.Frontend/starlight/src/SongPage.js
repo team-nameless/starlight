@@ -106,7 +106,7 @@ function SongPage() {
     setIsSongListOpen(!isSongListOpen);
   };
 
-  const handleNextSong = () => {
+  const handleNextSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -115,9 +115,9 @@ function SongPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
-  const handlePreviousSong = () => {
+  const handlePreviousSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -126,7 +126,7 @@ function SongPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
   const handlePlayButtonClick = async () => {
     const currentSong = songs[currentSongIndex];
@@ -182,6 +182,47 @@ function SongPage() {
       });
     }
   }, [currentSong]);
+
+  const triggerButtonHoverEffect = (buttonClass) => {
+    const button = document.querySelector(buttonClass);
+    if (button) {
+      button.classList.add('hover');
+      setTimeout(() => {
+        button.classList.remove('hover');
+      }, 300); // Duration of the hover effect
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 39) { // Right arrow key
+        handleNextSong();
+        triggerButtonHoverEffect('.next-btn');
+      } else if (event.keyCode === 37) { // Left arrow key
+        handlePreviousSong();
+        triggerButtonHoverEffect('.prev-btn');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleNextSong, handlePreviousSong]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 27) { // Esc key
+        event.preventDefault(); // Prevent exiting fullscreen
+        handleLeaveClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Fragment>

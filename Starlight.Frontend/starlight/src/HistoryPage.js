@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Link, useLocation } from 'react-router-dom';
@@ -73,7 +73,7 @@ function HistoryPage() {
     setIsSongListOpen(!isSongListOpen);
   };
 
-  const handleNextSong = () => {
+  const handleNextSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -86,9 +86,9 @@ function HistoryPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
-  const handlePreviousSong = () => {
+  const handlePreviousSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -101,7 +101,7 @@ function HistoryPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
   const handleLeaveClick = () => {
     setShowPopup(true);
@@ -144,6 +144,47 @@ function HistoryPage() {
     }
   }, [currentSong]);
 
+  const triggerButtonHoverEffect = (buttonClass) => {
+    const button = document.querySelector(buttonClass);
+    if (button) {
+      button.classList.add('hover');
+      setTimeout(() => {
+        button.classList.remove('hover');
+      }, 300); // Duration of the hover effect
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 39) { // Right arrow key
+        handleNextSong();
+        triggerButtonHoverEffect('.next-btn');
+      } else if (event.keyCode === 37) { // Left arrow key
+        handlePreviousSong();
+        triggerButtonHoverEffect('.prev-btn');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleNextSong, handlePreviousSong]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 27) { // Esc key
+        event.preventDefault(); // Prevent exiting fullscreen
+        handleLeaveClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const fetchHeatmapData = async (url, dataType) => {
     try {
       const response = await axios.get(`${rootUrl}${url}`, {
@@ -158,7 +199,7 @@ function HistoryPage() {
     }
   };
 
-  const renderHeatmap = async (url, selector, dataType = "json") => {
+  const renderHeatmap = useCallback(async (url, selector, dataType = "json") => {
     const container = document.querySelector(selector);
     if (!container) return;
 
@@ -208,9 +249,9 @@ function HistoryPage() {
     });
 
     return cal;
-  };
+  }, []);
 
-  const renderHeatmapContainer = async (title, heatmapId, url, dataType = "json") => {
+  const renderHeatmapContainer = useCallback(async (title, heatmapId, url, dataType = "json") => {
     const data = await fetchHeatmapData(url, dataType);
     const judgmentData = data.judgment || {};
     const overallScore = data.overallScore || 0;
@@ -236,7 +277,7 @@ function HistoryPage() {
         </div>
       </div>
     );
-  };
+  }, []);
 
   useEffect(() => {
     const renderLatestHeatmap = async () => {
@@ -249,7 +290,7 @@ function HistoryPage() {
       }, 60000); // Update every 60 seconds
     };
     renderLatestHeatmap();
-  }, []);
+  }, [renderHeatmap, renderHeatmapContainer]);
 
   useEffect(() => {
     const renderBestHeatmap = async () => {
@@ -262,7 +303,7 @@ function HistoryPage() {
       }, 60000); // Update every 60 seconds
     };
     renderBestHeatmap();
-  }, []);
+  }, [renderHeatmap, renderHeatmapContainer]);
 
   return (
     <div className="historypage">
