@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Link, useLocation } from 'react-router-dom';
@@ -15,6 +15,8 @@ import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import CalHeatmap from "cal-heatmap";
 import "cal-heatmap/cal-heatmap.css";
 import './Heatmap_Style.css'; // Custom styles for the heatmap
+import Fuse from 'fuse.js';
+import { FaSearch } from 'react-icons/fa';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -32,8 +34,20 @@ function HistoryPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
-  const [heatmapLatestData, setHeatmapLatestData] = useState([]);
-  const [heatmapBestData, setHeatmapBestData] = useState([]);
+  const [latestHeatmap, setLatestHeatmap] = useState(null);
+  const [bestHeatmap, setBestHeatmap] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
+
+  const filteredSongs = searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs;
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
@@ -73,7 +87,7 @@ function HistoryPage() {
     setIsSongListOpen(!isSongListOpen);
   };
 
-  const handleNextSong = () => {
+  const handleNextSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -86,9 +100,9 @@ function HistoryPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
-  const handlePreviousSong = () => {
+  const handlePreviousSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -101,7 +115,7 @@ function HistoryPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
   const handleLeaveClick = () => {
     setShowPopup(true);
@@ -144,40 +158,86 @@ function HistoryPage() {
     }
   }, [currentSong]);
 
-  const fetchHeatmapData = async (url) => {
+  const triggerButtonHoverEffect = (buttonClass) => {
+    const button = document.querySelector(buttonClass);
+    if (button) {
+      button.classList.add('hover');
+      setTimeout(() => {
+        button.classList.remove('hover');
+      }, 300); // Duration of the hover effect
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 39) { // Right arrow key
+        handleNextSong();
+        triggerButtonHoverEffect('.next-btn');
+      } else if (event.keyCode === 37) { // Left arrow key
+        handlePreviousSong();
+        triggerButtonHoverEffect('.prev-btn');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleNextSong, handlePreviousSong]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 27) { // Esc key
+        event.preventDefault(); // Prevent exiting fullscreen
+        handleLeaveClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const fetchHeatmapData = async (url, dataType) => {
     try {
       const response = await axios.get(`${rootUrl}${url}`, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': dataType === 'csv' ? 'json' : 'application/json'
         }
       });
-      return response.data;
+      return dataType === 'csv' ? response.data : response.data;
     } catch (error) {
       console.error('Error fetching heatmap data:', error);
       return []; // Return empty array on error
     }
   };
 
-  const renderHeatmap = (data, selector) => {
+  const renderHeatmap = useCallback(async (url, selector, dataType = "json") => {
     const container = document.querySelector(selector);
     if (!container) return;
-  
+
     container.innerHTML = "";
-  
+
+    const data = await fetchHeatmapData(url, dataType);
+
     const cal = new CalHeatmap();
-    const dataMap = {};
-  
-    data.forEach((d) => {
-      const timestamp = `${d.x}-${d.y}`;
-      dataMap[timestamp] = d.value;
-    });
-  
     cal.paint({
-      data: { source: dataMap },
+      data: {
+        source: data,
+        type: dataType,
+        x: "x",
+        y: "y",
+        value: "value"
+      },
       range: 30,
       domain: {
         type: "column",
-        label: { text: "Segments", textAlign: "center", position: "top" },
+        label: {
+          text: (timestamp) => `${Math.floor(timestamp / 1000)}s`,
+          textAlign: "center",
+          position: "top"
+        },
       },
       subDomain: {
         type: "row",
@@ -198,67 +258,66 @@ function HistoryPage() {
         show: true,
         position: "bottom",
       },
-      tooltip: {
-        enabled: true,
-        html: (timestamp) => {
-          const cellData = data.find((d) => `${d.x}-${d.y}` === timestamp);
-          if (cellData) {
-            return `Hits: ${cellData.hits}/${cellData.totalBeats} (${cellData.value}%)`;
-          }
-          return "No data";
-        },
-      },
-      verticalOrientation: true, // Ensure vertical orientation
-      itemName: ["beat", "beats"], // Add itemName to properly render data cells
+      verticalOrientation: true,
+      itemName: ["beat", "beats"],
     });
-  };
-  
-  const renderHeatmapContainer = (title, heatmapId) => (
-    <div className="heatmap-container">
-      <h3>{title}</h3>
-      <div className="heatmap-details">
-        <div className="judgement-column">
-          <div className="judgement-title">Combo</div>
-          <div>CP: {Math.floor(Math.random() * 100)}</div>
-          <div>P: {Math.floor(Math.random() * 100)}</div>
-          <div>G: {Math.floor(Math.random() * 100)}</div>
-          <div>B: {Math.floor(Math.random() * 100)}</div>
-          <div>M: {Math.floor(Math.random() * 100)}</div>
-        </div>
-        <div className="heatmap-column">
-          <div className="overall-score">
-            ✨{Math.floor(Math.random() * 100000)}✨
+
+    return cal;
+  }, []);
+
+  const renderHeatmapContainer = useCallback(async (title, heatmapId, url, dataType = "json") => {
+    const data = await fetchHeatmapData(url, dataType);
+    const judgmentData = data.judgment || {};
+    const overallScore = data.overallScore || 0;
+
+    return (
+      <div className="heatmap-container">
+        <h3>{title}</h3>
+        <div className="heatmap-details">
+          <div className="judgement-column">
+            <div className="judgement-title">Combo</div>
+            <div>CP: {judgmentData.cp || 1000}</div>
+            <div>P: {judgmentData.p || 1000}</div>
+            <div>G: {judgmentData.g || 1000}</div>
+            <div>B: {judgmentData.b || 1000}</div>
+            <div>M: {judgmentData.m || 1000}</div>
           </div>
-          <div id={heatmapId}></div>
-          <div className="segment-times">
-            {Array.from({ length: 30 }, (_, i) => (
-              <div key={i} className="segment-time">{i + 1}</div>
-            ))}
+          <div className="heatmap-column">
+            <div className="overall-score">
+              ✨{overallScore || 100000}✨
+            </div>
+            <div id={heatmapId}></div>
           </div>
         </div>
       </div>
-    </div>
-  );
-  
-  useEffect(() => {
-    const fetchAndSetHeatmapData = async () => {
-      const latestData = await fetchHeatmapData('/api/user/score/recent');
-      const bestData = await fetchHeatmapData('/api/user/score/all');
-      setHeatmapLatestData(latestData);
-      setHeatmapBestData(bestData);
-    };
-  
-    fetchAndSetHeatmapData();
+    );
   }, []);
-  
+
   useEffect(() => {
-    renderHeatmap(heatmapLatestData, "#heatmap-latest-container");
-  }, [heatmapLatestData]);
-  
+    const renderLatestHeatmap = async () => {
+      const cal = await renderHeatmap('/api/user/score/recent', "#heatmap-latest-container", "json");
+      const heatmapContainer = await renderHeatmapContainer("Latest Play", "heatmap-latest-container", "/api/user/score/recent", "json");
+      setLatestHeatmap(heatmapContainer);
+      setInterval(async () => {
+        const data = await fetchHeatmapData('/api/user/score/recent', "json");
+        cal.fill({ source: data });
+      }, 60000); // Update every 60 seconds
+    };
+    renderLatestHeatmap();
+  }, [renderHeatmap, renderHeatmapContainer]);
+
   useEffect(() => {
-    renderHeatmap(heatmapBestData, "#heatmap-best-container");
-  }, [heatmapBestData]);
-  
+    const renderBestHeatmap = async () => {
+      const cal = await renderHeatmap('/api/user/score/all', "#heatmap-best-container", "json");
+      const heatmapContainer = await renderHeatmapContainer("Best Score", "heatmap-best-container", "/api/user/score/all", "json");
+      setBestHeatmap(heatmapContainer);
+      setInterval(async () => {
+        const data = await fetchHeatmapData('/api/user/score/all', "json");
+        cal.fill({ source: data });
+      }, 60000); // Update every 60 seconds
+    };
+    renderBestHeatmap();
+  }, [renderHeatmap, renderHeatmapContainer]);
 
   return (
     <div className="historypage">
@@ -306,11 +365,24 @@ function HistoryPage() {
 
           {/* Song List Sidebar */}
           <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-            <div className="sidebar-header">
-              Song List
+            <div className="search-bar-container">
+              <form className="search-form" onSubmit={handleSearchSubmit}>
+                <label htmlFor="search" className="screen-reader-text">Search</label>
+                <input
+                  type="search"
+                  id="search"
+                  placeholder="Search songs..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="search-field"
+                />
+                <button type="submit" className="search-submit">
+                  <FaSearch className="search-bar-icon" />
+                </button>
+              </form>
             </div>
             <ul>
-              {songs.map((song, index) => (
+              {filteredSongs.map((song, index) => (
                 <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
@@ -349,8 +421,9 @@ function HistoryPage() {
             </button>
           </div>
 
-          {renderHeatmapContainer("Latest Play", "heatmap-latest-container")}
-          {renderHeatmapContainer("Best Score", "heatmap-best-container")}
+          {/* Render Heatmaps */}
+          {latestHeatmap}
+          {bestHeatmap}
         </div>
 
         

@@ -420,7 +420,7 @@ const LandingPageApp = () => {
       setShowNotificationModal(true);
     } else {
       requestFullScreen();
-      navigate('/SongPage');
+      navigate('/songpage'); // Ensure the path is lowercase
     }
   }
 
@@ -598,28 +598,26 @@ const LandingPageApp = () => {
   </Modal>
 )}
 
-{showSuccessModal && (
-        <Modal>
-          <ModalContent style={{ marginTop: '370px' }}>
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-            <p>Register successful. Please log in.</p>
-            </div>
-          </ModalContent>
-        </Modal>
+      {showSuccessModal && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Register successful</h2>
+            <p>Please log in to play the game.</p>
+            <button className="stay-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
       )}
-
 
       {showNotificationModal && (
-        <Modal>
-          <ModalContent style={{ marginTop: '370px' }}>
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Warning</h2>
             <p>You need to log in to play the game.</p>
-            </div>
-          </ModalContent>
-        </Modal>
+            <button className="stay-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
       )}
+
       {showLoginSuccessModal && (
         <div className="popup-overlay">
           <div className="popup-content">

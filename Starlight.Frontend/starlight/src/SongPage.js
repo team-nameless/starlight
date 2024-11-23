@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, Fragment, lazy, Suspense } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
@@ -14,6 +14,8 @@ import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
+import Fuse from 'fuse.js';
+import { FaSearch } from 'react-icons/fa';
 
 const LandingPage = lazy(() => import('./LandingPageApp'));
 const HistoryPage = lazy(() => import('./HistoryPage'));
@@ -33,7 +35,19 @@ function SongPage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [userName, setUserName] = useState();
   const [score, setScore] = useState();
-  const [usePhaser, setUsePhaser] = useState(false); // State to toggle between Unity and Phaser
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
+
+  const filteredSongs = searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs;
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+  };
 
   const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: "build/myunityapp.loader.js",
@@ -41,6 +55,8 @@ function SongPage() {
     frameworkUrl: "build/myunityapp.framework.js",
     codeUrl: "build/myunityapp.wasm",
   });
+
+  const navigate = useNavigate();
 
   const handleGameOver = useCallback((userName, score) => {
     setIsGameOver(true);
@@ -104,7 +120,7 @@ function SongPage() {
     setIsSongListOpen(!isSongListOpen);
   };
 
-  const handleNextSong = () => {
+  const handleNextSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -113,9 +129,9 @@ function SongPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
-  const handlePreviousSong = () => {
+  const handlePreviousSong = useCallback(() => {
     const imgElement = document.querySelector('.background-image img');
     if (imgElement) {
       imgElement.classList.add('fade-out');
@@ -124,18 +140,14 @@ function SongPage() {
         imgElement.classList.remove('fade-out');
       }, { once: true });
     }
-  };
+  }, [songs]);
 
   const handlePlayButtonClick = async () => {
     const currentSong = songs[currentSongIndex];
     if (currentSong) {
       try {
         await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
-        if (usePhaser) {
-          window.location.href = `/game/${currentSong.id}`;
-        } else {
-          sendMessage("GameController", "LoadSong", currentSong.id);
-        }
+        navigate(`/TestGame`, { state: { songId: currentSong.id } });
       } catch (error) {
         console.error('Error starting game:', error);
       }
@@ -185,6 +197,47 @@ function SongPage() {
     }
   }, [currentSong]);
 
+  const triggerButtonHoverEffect = (buttonClass) => {
+    const button = document.querySelector(buttonClass);
+    if (button) {
+      button.classList.add('hover');
+      setTimeout(() => {
+        button.classList.remove('hover');
+      }, 300); // Duration of the hover effect
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 39) { // Right arrow key
+        handleNextSong();
+        triggerButtonHoverEffect('.next-btn');
+      } else if (event.keyCode === 37) { // Left arrow key
+        handlePreviousSong();
+        triggerButtonHoverEffect('.prev-btn');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleNextSong, handlePreviousSong]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.keyCode === 27) { // Esc key
+        event.preventDefault(); // Prevent exiting fullscreen
+        handleLeaveClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <Fragment>
       <Suspense fallback={<div>Loading...</div>}>
@@ -195,7 +248,7 @@ function SongPage() {
           <Route path="/StorePage" element={<StorePage />} />
           <Route path="/Logout" element={<LandingPage />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/game/:songId" element={<GameApp />} /> {/* Add route for Phaser game */}
+          <Route path="/TestGame" element={<GameApp songId={currentSong?.id} />} />
         </Routes>
       </Suspense>
       <div className="songpage">
@@ -242,11 +295,24 @@ function SongPage() {
           
           {/* Song List Sidebar */}
           <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-            <div className="sidebar-header">
-              Song List
+            <div className="search-bar-container">
+              <form className="search-form" onSubmit={handleSearchSubmit}>
+                <label htmlFor="search" className="screen-reader-text">Search</label>
+                <input
+                  type="search"
+                  id="search"
+                  placeholder="Search songs..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="search-field"
+                />
+                <button type="submit" className="search-submit">
+                  <FaSearch className="search-bar-icon" />
+                </button>
+              </form>
             </div>
             <ul>
-              {songs.map((song, index) => (
+              {filteredSongs.map((song, index) => (
                 <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
