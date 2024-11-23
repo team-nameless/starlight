@@ -12,11 +12,11 @@ import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sideb
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 import previousArrow from './assets/previousArrow.png'; // Previous button arrow
 import nextArrow from './assets/nextArrow.png'; // Next button arrow
-import CalHeatmap from "cal-heatmap";
-import "cal-heatmap/cal-heatmap.css";
 import './Heatmap_Style.css'; // Custom styles for the heatmap
 import Fuse from 'fuse.js';
 import { FaSearch } from 'react-icons/fa';
+import * as d3 from 'd3';
+import 'd3-scale-chromatic';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -199,77 +199,165 @@ function HistoryPage() {
     };
   }, []);
 
-  const fetchHeatmapData = async (url, dataType) => {
+  const fetchHeatmapData = async (url) => {
     try {
-      const response = await axios.get(`${rootUrl}${url}`, {
-        headers: {
-          'Content-Type': dataType === 'csv' ? 'json' : 'application/json'
-        }
-      });
-      return dataType === 'csv' ? response.data : response.data;
+      const response = await axios.get(`${rootUrl}${url}`);
+      const data = response.data;
+  
+      // Validate the response and structure (adjust this as per your API's response format)
+      if (Array.isArray(data)) {
+        return { data, isRandom: false };
+      } else {
+        throw new Error('Invalid API response');
+      }
     } catch (error) {
       console.error('Error fetching heatmap data:', error);
-      return []; // Return empty array on error
+  
+      // Generate random fallback data
+      const randomData = [];
+      const groups = ['A', 'B', 'C', 'D', 'E'];
+      const variables = ['1', '2', '3', '4', '5'];
+  
+      for (let i = 0; i < groups.length; i++) {
+        for (let j = 0; j < variables.length; j++) {
+          randomData.push({
+            group: groups[i],
+            variable: variables[j],
+            value: Math.floor(Math.random() * 100),
+          });
+        }
+      }
+  
+      return { data: randomData, isRandom: true };
     }
   };
-
-  const renderHeatmap = useCallback(async (url, selector, dataType = "json") => {
+  
+  const renderHeatmap = useCallback(async (url, selector) => {
     const container = document.querySelector(selector);
-    if (!container) return;
-
+    if (!container) {
+      console.error(`Container with selector "${selector}" not found.`);
+      return;
+    }
+  
+    // Clear existing content
     container.innerHTML = "";
-
-    const data = await fetchHeatmapData(url, dataType);
-
-    const cal = new CalHeatmap();
-    cal.paint({
-      data: {
-        source: data,
-        type: dataType,
-        x: "x",
-        y: "y",
-        value: "value"
-      },
-      range: 30,
-      domain: {
-        type: "column",
-        label: {
-          text: (timestamp) => `${Math.floor(timestamp / 1000)}s`,
-          textAlign: "center",
-          position: "top"
-        },
-      },
-      subDomain: {
-        type: "row",
-        label: { text: "Accuracy", textAlign: "start", position: "start" },
-        width: 20,
-        height: 20,
-        gutter: 5,
-      },
-      scale: {
-        color: {
-          type: "threshold",
-          range: ["#14432a", "#166b34", "#37a446", "#4dd05a"],
-          domain: [25, 50, 75, 100],
-        },
-      },
-      itemSelector: selector,
-      legend: {
-        show: true,
-        position: "bottom",
-      },
-      verticalOrientation: true,
-      itemName: ["beat", "beats"],
-    });
-
-    return cal;
+  
+    // Fetch data for the heatmap
+    const { data, isRandom } = await fetchHeatmapData(url);
+  
+    // Dimensions and margins
+    const margin = { top: 80, right: 25, bottom: 30, left: 40 };
+    const width = 450 - margin.left - margin.right;
+    const height = 450 - margin.top - margin.bottom;
+  
+    // Append the SVG
+    const svg = d3
+      .select(container)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+  
+    // Scales
+    const myGroups = Array.from(new Set(data.map((d) => d.group)));
+    const myVars = Array.from(new Set(data.map((d) => d.variable)));
+  
+    const x = d3.scaleBand().range([0, width]).domain(myGroups).padding(0.05);
+    const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
+  
+    const myColor = d3.scaleSequential().interpolator(d3.interpolateInferno).domain([0, 100]);
+  
+    // Add axes
+    svg
+      .append("g")
+      .style("font-size", 15)
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x).tickSize(0))
+      .select(".domain")
+      .remove();
+  
+    svg
+      .append("g")
+      .style("font-size", 15)
+      .call(d3.axisLeft(y).tickSize(0))
+      .select(".domain")
+      .remove();
+  
+    // Tooltip
+    const tooltip = d3
+      .select(container)
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px");
+  
+    const mouseover = function (event, d) {
+      tooltip.style("opacity", 1);
+      d3.select(this).style("stroke", "black").style("opacity", 1);
+    };
+  
+    const mousemove = function (event, d) {
+      tooltip
+        .html(`Beat Accuracy: ${d.value || 0}%`)
+        .style("left", `${event.pageX + 20}px`)
+        .style("top", `${event.pageY - 20}px`);
+    };
+  
+    const mouseleave = function () {
+      tooltip.style("opacity", 0);
+      d3.select(this).style("stroke", "none").style("opacity", 0.8);
+    };
+  
+    // Draw rectangles
+    svg
+      .selectAll()
+      .data(data, (d) => `${d.group}:${d.variable}`)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => x(d.group))
+      .attr("y", (d) => y(d.variable))
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .attr("width", x.bandwidth())
+      .attr("height", y.bandwidth())
+      .style("fill", (d) => myColor(d.value || 0))
+      .style("stroke-width", 4)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave);
+  
+    // Add titles
+    svg
+      .append("text")
+      .attr("x", 0)
+      .attr("y", -50)
+      .attr("text-anchor", "left")
+      .style("font-size", "22px")
+      .text("A d3.js heatmap");
+  
+    svg
+      .append("text")
+      .attr("x", 0)
+      .attr("y", -20)
+      .attr("text-anchor", "left")
+      .style("font-size", "14px")
+      .style("fill", "grey")
+      .style("max-width", 400)
+      .text(isRandom ? "Randomized data due to fetch error." : "Data fetched successfully.");
   }, []);
-
-  const renderHeatmapContainer = useCallback(async (title, heatmapId, url, dataType = "json") => {
-    const data = await fetchHeatmapData(url, dataType);
+  
+  const renderHeatmapContainer = useCallback(async (title, heatmapId, url) => {
+    const data = await fetchHeatmapData(url);
     const judgmentData = data.judgment || {};
     const overallScore = data.overallScore || 0;
-
+  
     return (
       <div className="heatmap-container">
         <h3>{title}</h3>
@@ -292,32 +380,25 @@ function HistoryPage() {
       </div>
     );
   }, []);
-
+  
   useEffect(() => {
     const renderLatestHeatmap = async () => {
-      const cal = await renderHeatmap('/api/user/score/recent', "#heatmap-latest-container", "json");
-      const heatmapContainer = await renderHeatmapContainer("Latest Play", "heatmap-latest-container", "/api/user/score/recent", "json");
+      const heatmapContainer = await renderHeatmapContainer("Latest Play", "heatmap-latest-container", "/api/score/recent");
       setLatestHeatmap(heatmapContainer);
-      setInterval(async () => {
-        const data = await fetchHeatmapData('/api/user/score/recent', "json");
-        cal.fill({ source: data });
-      }, 60000); // Update every 60 seconds
+      await renderHeatmap('/api/score/recent', "#heatmap-latest-container");
     };
     renderLatestHeatmap();
   }, [renderHeatmap, renderHeatmapContainer]);
-
+  
   useEffect(() => {
     const renderBestHeatmap = async () => {
-      const cal = await renderHeatmap('/api/user/score/all', "#heatmap-best-container", "json");
-      const heatmapContainer = await renderHeatmapContainer("Best Score", "heatmap-best-container", "/api/user/score/all", "json");
+      const heatmapContainer = await renderHeatmapContainer("Best Score", "heatmap-best-container", "/api/score/all");
       setBestHeatmap(heatmapContainer);
-      setInterval(async () => {
-        const data = await fetchHeatmapData('/api/user/score/all', "json");
-        cal.fill({ source: data });
-      }, 60000); // Update every 60 seconds
+      await renderHeatmap('/api/score/all', "#heatmap-best-container");
     };
     renderBestHeatmap();
   }, [renderHeatmap, renderHeatmapContainer]);
+  
 
   return (
     <div className="historypage">
@@ -424,6 +505,7 @@ function HistoryPage() {
           {/* Render Heatmaps */}
           {latestHeatmap}
           {bestHeatmap}
+          
         </div>
 
         

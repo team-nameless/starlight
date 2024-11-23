@@ -414,7 +414,7 @@ body {
 }
 
 .search-bar-container input[type="search"] {
-  -webkit-appearance: none !important;
+  /*-webkit-appearance: none !important;*/
   background-clip: padding-box;
   background-color: white;
   vertical-align: middle;
@@ -471,7 +471,7 @@ body {
   border-bottom-right-radius: 0.25rem;
   font-family: "Font Awesome 5 Free";
   font-size: 1rem;
-  background-color: #e6547c;
+  background-color: #f9d342;
   color: #292826;
   border: 1px solid transparent;
   cursor: pointer;
