@@ -406,7 +406,7 @@ const LandingPageApp = () => {
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elrvccozRequestFullScreen) { // Firefox
+    } else if (elem.mozRequestFullScreen) { // Firefox
       elem.mozRequestFullScreen();
     } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
       elem.webkitRequestFullscreen();
