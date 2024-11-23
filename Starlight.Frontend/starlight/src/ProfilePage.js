@@ -16,6 +16,7 @@ import eventsIcon from './assets/Header_Items/events-icon.png';
 import storeIcon from './assets/Header_Items/store-icon.png'; 
 import chatimage from './assets/modal-image/chat.png'; 
 import girlImage from './assets/modal-image/girlimage.png'; 
+import { useNavigate } from 'react-router-dom';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -30,6 +31,7 @@ function ProfilePage() {
   ]); 
   const [newMessage, setNewMessage] = useState(""); 
   const [activeTab, setActiveTab] = useState('scoreRecord');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
