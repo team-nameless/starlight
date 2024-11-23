@@ -10,7 +10,8 @@ import eventsIcon from './assets/Header_Items/events-icon.png'; // Events icon
 import storeIcon from './assets/Header_Items/store-icon.png'; // Store icon
 import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sidebar background
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
-//import axios from 'axios';
+import Fuse from 'fuse.js';
+import { FaSearch } from 'react-icons/fa';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 // const rootUrl = "https://localhost:7224";
@@ -25,7 +26,9 @@ function StorePage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
-  //const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
+  const filteredSongs = searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs;
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
@@ -98,6 +101,14 @@ function StorePage() {
     setShowPopup(false);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="storepage">
       {/* Header Navigation Bar */}
@@ -164,11 +175,24 @@ function StorePage() {
 
       {/* Song List Sidebar */}
       <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-        <div className="sidebar-header">
-          Song List
+        <div className="search-bar-container">
+          <form className="search-form" onSubmit={handleSearchSubmit}>
+            <label htmlFor="search" className="screen-reader-text">Search</label>
+            <input
+              type="search"
+              id="search"
+              placeholder="Search songs..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="search-field"
+            />
+            <button type="submit" className="search-submit">
+              <FaSearch className="search-bar-icon" />
+            </button>
+          </form>
         </div>
         <ul>
-          {songs.map((song, index) => (
+          {filteredSongs.map((song, index) => (
             <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
               <div className="song-info-sidebar">
                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />

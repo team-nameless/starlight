@@ -15,6 +15,8 @@ import nextArrow from './assets/nextArrow.png'; // Next button arrow
 import CalHeatmap from "cal-heatmap";
 import "cal-heatmap/cal-heatmap.css";
 import './Heatmap_Style.css'; // Custom styles for the heatmap
+import Fuse from 'fuse.js';
+import { FaSearch } from 'react-icons/fa';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -34,6 +36,18 @@ function HistoryPage() {
   const [songs, setSongs] = useState([]);
   const [latestHeatmap, setLatestHeatmap] = useState(null);
   const [bestHeatmap, setBestHeatmap] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
+
+  const filteredSongs = searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs;
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
@@ -351,11 +365,24 @@ function HistoryPage() {
 
           {/* Song List Sidebar */}
           <div className={`sidebar ${isSongListOpen ? 'open' : ''}`} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
-            <div className="sidebar-header">
-              Song List
+            <div className="search-bar-container">
+              <form className="search-form" onSubmit={handleSearchSubmit}>
+                <label htmlFor="search" className="screen-reader-text">Search</label>
+                <input
+                  type="search"
+                  id="search"
+                  placeholder="Search songs..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="search-field"
+                />
+                <button type="submit" className="search-submit">
+                  <FaSearch className="search-bar-icon" />
+                </button>
+              </form>
             </div>
             <ul>
-              {songs.map((song, index) => (
+              {filteredSongs.map((song, index) => (
                 <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />

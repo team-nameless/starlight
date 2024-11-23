@@ -1,4 +1,5 @@
 ﻿import Phaser from "phaser";
+import Image = Phaser.GameObjects.Image;
 
 // game assets
 
