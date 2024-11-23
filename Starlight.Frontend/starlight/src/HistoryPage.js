@@ -32,8 +32,8 @@ function HistoryPage() {
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
-  const [heatmapLatestData, setHeatmapLatestData] = useState([]);
-  const [heatmapBestData, setHeatmapBestData] = useState([]);
+  const [latestHeatmap, setLatestHeatmap] = useState(null);
+  const [bestHeatmap, setBestHeatmap] = useState(null);
 
   useEffect(() => {
     setCurrentSong(currentSongFromLocation);
@@ -144,40 +144,45 @@ function HistoryPage() {
     }
   }, [currentSong]);
 
-  const fetchHeatmapData = async (url) => {
+  const fetchHeatmapData = async (url, dataType) => {
     try {
       const response = await axios.get(`${rootUrl}${url}`, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': dataType === 'csv' ? 'json' : 'application/json'
         }
       });
-      return response.data;
+      return dataType === 'csv' ? response.data : response.data;
     } catch (error) {
       console.error('Error fetching heatmap data:', error);
       return []; // Return empty array on error
     }
   };
 
-  const renderHeatmap = (data, selector) => {
+  const renderHeatmap = async (url, selector, dataType = "json") => {
     const container = document.querySelector(selector);
     if (!container) return;
-  
+
     container.innerHTML = "";
-  
+
+    const data = await fetchHeatmapData(url, dataType);
+
     const cal = new CalHeatmap();
-    const dataMap = {};
-  
-    data.forEach((d) => {
-      const timestamp = `${d.x}-${d.y}`;
-      dataMap[timestamp] = d.value;
-    });
-  
     cal.paint({
-      data: { source: dataMap },
+      data: {
+        source: data,
+        type: dataType,
+        x: "x",
+        y: "y",
+        value: "value"
+      },
       range: 30,
       domain: {
         type: "column",
-        label: { text: "Segments", textAlign: "center", position: "top" },
+        label: {
+          text: (timestamp) => `${Math.floor(timestamp / 1000)}s`,
+          textAlign: "center",
+          position: "top"
+        },
       },
       subDomain: {
         type: "row",
@@ -198,67 +203,66 @@ function HistoryPage() {
         show: true,
         position: "bottom",
       },
-      tooltip: {
-        enabled: true,
-        html: (timestamp) => {
-          const cellData = data.find((d) => `${d.x}-${d.y}` === timestamp);
-          if (cellData) {
-            return `Hits: ${cellData.hits}/${cellData.totalBeats} (${cellData.value}%)`;
-          }
-          return "No data";
-        },
-      },
-      verticalOrientation: true, // Ensure vertical orientation
-      itemName: ["beat", "beats"], // Add itemName to properly render data cells
+      verticalOrientation: true,
+      itemName: ["beat", "beats"],
     });
+
+    return cal;
   };
-  
-  const renderHeatmapContainer = (title, heatmapId) => (
-    <div className="heatmap-container">
-      <h3>{title}</h3>
-      <div className="heatmap-details">
-        <div className="judgement-column">
-          <div className="judgement-title">Combo</div>
-          <div>CP: {Math.floor(Math.random() * 100)}</div>
-          <div>P: {Math.floor(Math.random() * 100)}</div>
-          <div>G: {Math.floor(Math.random() * 100)}</div>
-          <div>B: {Math.floor(Math.random() * 100)}</div>
-          <div>M: {Math.floor(Math.random() * 100)}</div>
-        </div>
-        <div className="heatmap-column">
-          <div className="overall-score">
-            ✨{Math.floor(Math.random() * 100000)}✨
+
+  const renderHeatmapContainer = async (title, heatmapId, url, dataType = "json") => {
+    const data = await fetchHeatmapData(url, dataType);
+    const judgmentData = data.judgment || {};
+    const overallScore = data.overallScore || 0;
+
+    return (
+      <div className="heatmap-container">
+        <h3>{title}</h3>
+        <div className="heatmap-details">
+          <div className="judgement-column">
+            <div className="judgement-title">Combo</div>
+            <div>CP: {judgmentData.cp || 1000}</div>
+            <div>P: {judgmentData.p || 1000}</div>
+            <div>G: {judgmentData.g || 1000}</div>
+            <div>B: {judgmentData.b || 1000}</div>
+            <div>M: {judgmentData.m || 1000}</div>
           </div>
-          <div id={heatmapId}></div>
-          <div className="segment-times">
-            {Array.from({ length: 30 }, (_, i) => (
-              <div key={i} className="segment-time">{i + 1}</div>
-            ))}
+          <div className="heatmap-column">
+            <div className="overall-score">
+              ✨{overallScore || 100000}✨
+            </div>
+            <div id={heatmapId}></div>
           </div>
         </div>
       </div>
-    </div>
-  );
-  
+    );
+  };
+
   useEffect(() => {
-    const fetchAndSetHeatmapData = async () => {
-      const latestData = await fetchHeatmapData('/api/user/score/recent');
-      const bestData = await fetchHeatmapData('/api/user/score/all');
-      setHeatmapLatestData(latestData);
-      setHeatmapBestData(bestData);
+    const renderLatestHeatmap = async () => {
+      const cal = await renderHeatmap('/api/user/score/recent', "#heatmap-latest-container", "json");
+      const heatmapContainer = await renderHeatmapContainer("Latest Play", "heatmap-latest-container", "/api/user/score/recent", "json");
+      setLatestHeatmap(heatmapContainer);
+      setInterval(async () => {
+        const data = await fetchHeatmapData('/api/user/score/recent', "json");
+        cal.fill({ source: data });
+      }, 60000); // Update every 60 seconds
     };
-  
-    fetchAndSetHeatmapData();
+    renderLatestHeatmap();
   }, []);
-  
+
   useEffect(() => {
-    renderHeatmap(heatmapLatestData, "#heatmap-latest-container");
-  }, [heatmapLatestData]);
-  
-  useEffect(() => {
-    renderHeatmap(heatmapBestData, "#heatmap-best-container");
-  }, [heatmapBestData]);
-  
+    const renderBestHeatmap = async () => {
+      const cal = await renderHeatmap('/api/user/score/all', "#heatmap-best-container", "json");
+      const heatmapContainer = await renderHeatmapContainer("Best Score", "heatmap-best-container", "/api/user/score/all", "json");
+      setBestHeatmap(heatmapContainer);
+      setInterval(async () => {
+        const data = await fetchHeatmapData('/api/user/score/all', "json");
+        cal.fill({ source: data });
+      }, 60000); // Update every 60 seconds
+    };
+    renderBestHeatmap();
+  }, []);
 
   return (
     <div className="historypage">
@@ -349,8 +353,9 @@ function HistoryPage() {
             </button>
           </div>
 
-          {renderHeatmapContainer("Latest Play", "heatmap-latest-container")}
-          {renderHeatmapContainer("Best Score", "heatmap-best-container")}
+          {/* Render Heatmaps */}
+          {latestHeatmap}
+          {bestHeatmap}
         </div>
 
         

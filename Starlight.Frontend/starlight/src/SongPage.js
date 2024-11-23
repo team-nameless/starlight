@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, Fragment, lazy, Suspense } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
@@ -33,7 +33,7 @@ function SongPage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [userName, setUserName] = useState();
   const [score, setScore] = useState();
-  const [usePhaser, setUsePhaser] = useState(false); // State to toggle between Unity and Phaser
+
 
   const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: "build/myunityapp.loader.js",
@@ -41,6 +41,8 @@ function SongPage() {
     frameworkUrl: "build/myunityapp.framework.js",
     codeUrl: "build/myunityapp.wasm",
   });
+
+  const navigate = useNavigate();
 
   const handleGameOver = useCallback((userName, score) => {
     setIsGameOver(true);
@@ -131,11 +133,7 @@ function SongPage() {
     if (currentSong) {
       try {
         await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
-        if (usePhaser) {
-          window.location.href = `/game/${currentSong.id}`;
-        } else {
-          sendMessage("GameController", "LoadSong", currentSong.id);
-        }
+        navigate(`/TestGame`, { state: { songId: currentSong.id } });
       } catch (error) {
         console.error('Error starting game:', error);
       }
@@ -195,7 +193,7 @@ function SongPage() {
           <Route path="/StorePage" element={<StorePage />} />
           <Route path="/Logout" element={<LandingPage />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/game/:songId" element={<GameApp />} /> {/* Add route for Phaser game */}
+          <Route path="/TestGame" element={<GameApp songId={currentSong?.id} />} />
         </Routes>
       </Suspense>
       <div className="songpage">

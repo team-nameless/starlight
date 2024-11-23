@@ -1,11 +1,14 @@
 ﻿import Phaser from "phaser";
 import { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import MainScene from "./scenes/MainScene.js";
 import DataLoader from "./scenes/DataLoader.js";
 import AssetLoader from "./scenes/AssetLoader.js";
 
 function GameApp() {
     const gameRef = useRef(null);
+    const location = useLocation();
+    const { songId } = location.state || {};
 
     useEffect(() => {
         const config = {
@@ -37,7 +40,7 @@ function GameApp() {
         return () => {
             game.destroy(true);
         };
-    }, []);
+    }, [songId]);
 
     return (
         <div
