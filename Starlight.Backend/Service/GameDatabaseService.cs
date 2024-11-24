@@ -17,11 +17,6 @@ public class GameDatabaseService : IdentityDbContext<Player, Role, Guid>
     public GameDatabaseService(IConfiguration configuration)
     {
         _configuration = configuration;
-        
-        // ReSharper disable once VirtualMemberCallInConstructor
-        // The database will be created eventually, just don't do manual migration.
-        // https://github.com/dotnet/efcore/issues/10346#issuecomment-345543264
-        Database.EnsureCreated();
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
