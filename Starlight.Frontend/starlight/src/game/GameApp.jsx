@@ -1,4 +1,4 @@
-﻿import Phaser from "phaser";
+import Phaser from "phaser";
 import { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import MainScene from "./scenes/MainScene.js";
