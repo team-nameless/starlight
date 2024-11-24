@@ -171,7 +171,14 @@ class MainScene extends Phaser.Scene {
             this.noteOuter2PositionX
         ];
 
-        const noteObject = this.add.image(xPositions[pos], 0, "noteOuter");
+        const noteSelection = [
+            "noteOuter",
+            "noteInner",
+            "noteInner",
+            "noteOuter",
+        ]
+
+        const noteObject = this.add.image(xPositions[pos], 0, noteSelection[pos]);
 
         noteObject.setData("time", note.time);
         noteObject.setData("position", pos);
@@ -181,7 +188,10 @@ class MainScene extends Phaser.Scene {
         this.notes.setVelocityY(this.noteSpeed * this.noteScale);
     }
 
-    judgementDisappear() {
+    /*
+        Make judgement texts (right-hand side) disappears after 200ms.
+     */
+    makeJudgementTextDisappear() {
         this.time.delayedCall(200, () => {
             this.judgementText.setText("");
             this.errorText.setText("");
@@ -264,28 +274,28 @@ class MainScene extends Phaser.Scene {
             this.judgementText.setText("Nice!");
             this.errorText.setText("");
             shouldLockKey = true;
-            this.judgementDisappear();
+            this.makeJudgementTextDisappear();
         }
         else if (critWindow < offset && offset <= perfWindow) {
             ++this.totalPerf;
             this.judgementText.setText("Perfect");
             this.errorText.setText(errTxt);
             shouldLockKey = true;
-            this.judgementDisappear();
+            this.makeJudgementTextDisappear();
         }
         else if (perfWindow < offset && offset <= goodWindow) {
             ++this.totalGood;
             this.judgementText.setText("Fine");
             this.errorText.setText(errTxt);
             shouldLockKey = true;
-            this.judgementDisappear();
+            this.makeJudgementTextDisappear();
         }
         else if (goodWindow < offset && offset <= badWindow) {
             ++this.totalBad;
             this.judgementText.setText("Meh.");
             this.errorText.setText(errTxt);
             shouldLockKey = true;
-            this.judgementDisappear();
+            this.makeJudgementTextDisappear();
         }
 
         // lock the key
@@ -305,6 +315,25 @@ class MainScene extends Phaser.Scene {
             default:
                 break;
         }
+    }
+
+    /*
+        Highlights the key being pressed.
+     */
+    drawInputIndicator(keyPosition) {
+        // I sleep again.
+        keyPosition -= 1;
+
+        const xPositions = [
+            this.noteOuter1PositionX,
+            this.noteInner1PositionX,
+            this.noteInner2PositionX,
+            this.noteOuter2PositionX
+        ];
+
+        let indicator = this.add.image(xPositions[keyPosition], 845, "indicator");
+
+        setTimeout((x) => { x.destroy(); }, 20, indicator);
     }
 
     update(time, delta) {
@@ -358,7 +387,7 @@ class MainScene extends Phaser.Scene {
                 ++this.totalMiss;
                 this.judgementText.setText("Missed.");
                 this.errorText.setText("");
-                this.judgementDisappear();
+                this.makeJudgementTextDisappear();
             }
         });
 

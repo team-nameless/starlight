@@ -25,7 +25,9 @@ class AssetLoader extends Phaser.Scene {
         const audioFile = `https://cluster1.swyrin.id.vn/static/${this.mapId}/${audioName}`;
 
         this.load.image("noteOuter", require("../assets/star_note_outer.png"));
+        this.load.image("noteInner", require("../assets/star_note_inner.png"));
         this.load.image("noteRing", require("../assets/ring.png"));
+        this.load.image("indicator", require("../assets/indicator.png"));
         this.load.image("background", imageUrl);
         this.load.audio("music", audioFile);
     }
