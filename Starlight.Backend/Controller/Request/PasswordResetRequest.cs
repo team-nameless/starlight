@@ -1,6 +1,9 @@
-﻿namespace Starlight.Backend.Controller.Request.Identity;
+﻿namespace Starlight.Backend.Controller.Request;
 
-public class PasswordResetForm
+/// <summary>
+///     Represents a reset password request.
+/// </summary>
+public class PasswordResetRequest
 {
     /// <summary>
     ///     Email address to perform reset.

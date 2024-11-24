@@ -1,6 +1,9 @@
-namespace Starlight.Backend.Controller.Request.Identity;
+namespace Starlight.Backend.Controller.Request;
 
-public class RegisterForm
+/// <summary>
+///     Represent a register request.
+/// </summary>
+public class RegisterRequest
 {
     /// <summary>
     ///     Initial handle.

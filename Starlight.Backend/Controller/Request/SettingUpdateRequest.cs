@@ -1,8 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Starlight.Backend.Controller.Request.User;
+namespace Starlight.Backend.Controller.Request;
 
-public class SettingUpdateForm
+/// <summary>
+///     Represents a settings update request.
+/// </summary>
+public class SettingUpdateRequest
 {
     /// <summary>
     ///     KeyCode, an array of 4 values of keycode, from left to right.

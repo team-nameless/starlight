@@ -1,9 +1,9 @@
-namespace Starlight.Backend.Controller.Request.Identity;
+namespace Starlight.Backend.Controller.Request;
 
 /// <summary>
 ///     Represent a login request.
 /// </summary>
-public class LoginForm
+public class LoginRequest
 {
     /// <summary>
     ///     Login email.

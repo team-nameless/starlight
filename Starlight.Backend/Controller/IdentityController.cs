@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Starlight.Backend.Controller.Request.Identity;
+using Starlight.Backend.Controller.Request;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Enum;
 using Starlight.Backend.Service;
@@ -29,7 +29,7 @@ public class IdentityController : ControllerBase
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<ActionResult> Register(
-        [FromBody] RegisterForm registration
+        [FromBody] RegisterRequest registration
     )
     {
         var services = HttpContext.RequestServices;
@@ -86,7 +86,7 @@ public class IdentityController : ControllerBase
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<ActionResult> Login(
-        [FromBody] LoginForm login
+        [FromBody] LoginRequest login
     )
     {
         var services = HttpContext.RequestServices;
@@ -138,7 +138,7 @@ public class IdentityController : ControllerBase
     [HttpPost("forgotPassword")]
     [AllowAnonymous]
     public async Task<ActionResult> Recovery(
-        [FromBody] PasswordForgotForm passwordForgot
+        [FromBody] PasswordForgotRequest passwordForgot
     )
     {
         var services = HttpContext.RequestServices;
@@ -162,7 +162,7 @@ public class IdentityController : ControllerBase
     [HttpPost("resetPassword")]
     [AllowAnonymous]
     public async Task<ActionResult> ResetPassword(
-        [FromBody] PasswordResetForm passwordReset
+        [FromBody] PasswordResetRequest passwordReset
     )
     {
         var services = HttpContext.RequestServices;

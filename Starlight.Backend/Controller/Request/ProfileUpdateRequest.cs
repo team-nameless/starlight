@@ -1,6 +1,9 @@
-namespace Starlight.Backend.Controller.Request.User;
+namespace Starlight.Backend.Controller.Request;
 
-public class ProfileUpdateForm
+/// <summary>
+///     Represents a profile update request.
+/// </summary>
+public class ProfileUpdateRequest
 {
     /// <summary>
     ///     New handle.
