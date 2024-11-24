@@ -16,11 +16,13 @@ function GameApp() {
             parent: gameRef.current,
             width: 1920,
             height: 1080,
+            /*
             scene: [
                 DataLoader,
                 AssetLoader,
                 MainScene,
             ],
+             */
             powerPreference: "high-performance",
             fps: {
                 smoothStep: true,
@@ -33,10 +35,15 @@ function GameApp() {
                 arcade: {
                     debug: false,
                 },
-            },
+            }
         };
 
         const game = new Phaser.Game(config);
+
+        game.scene.add("DataLoader", DataLoader, true, { song: songId });
+        game.scene.add("AssetLoader", AssetLoader);
+        game.scene.add("MainScene", MainScene);
+
         return () => {
             game.destroy(true);
         };

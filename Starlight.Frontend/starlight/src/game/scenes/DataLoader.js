@@ -4,10 +4,15 @@ import Phaser from "phaser";
  *  Class used for loading all the meta stuffs into the game.
  */
 class DataLoader extends Phaser.Scene {
-    mapId = 2212131;
+    mapId;
 
     constructor() {
         super("DataLoader");
+    }
+
+    init(data) {
+        // fallback to the arya song if we launch this standalone?
+        this.mapId = data["song"] || 2212131;
     }
 
     preload() {
