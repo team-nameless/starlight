@@ -41,6 +41,11 @@ public class Player : IdentityUser<Guid>
     public ulong CurrentLevel { get; set; }
     
     /// <summary>
+    ///     Recent played song ID.
+    /// </summary>
+    public ulong RecentlyPlayedSong { get; set; }
+    
+    /// <summary>
     ///     Achievements of this user.
     /// </summary>
     [PersonalData]

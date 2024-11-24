@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Starlight.Backend.Service;
 
@@ -11,9 +12,11 @@ using Starlight.Backend.Service;
 namespace Starlight.Backend.Migrations.Game
 {
     [DbContext(typeof(GameDatabaseService))]
-    partial class GameDatabaseServiceModelSnapshot : ModelSnapshot
+    [Migration("20241124133044_AddRecentPlayedSong")]
+    partial class AddRecentPlayedSong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
