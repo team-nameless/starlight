@@ -8,6 +8,7 @@ import ModalBackground from './assets/background-image/pur.png';
 import GirlImage from './assets/modal-image/girlimage.png'; 
 import LogoImage from './assets/background-image/logoo.png';
 import { useNavigate } from 'react-router-dom';
+import {requestFullScreen} from "./utils";
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 // const rootUrl = "https://localhost:7224";
@@ -401,19 +402,6 @@ const LandingPageApp = () => {
       }
     }
   };
-
-  const requestFullScreen = () => {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { // Firefox
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // IE/Edge
-      elem.msRequestFullscreen();
-    }
-  }
 
   const handlePlayButtonClick = () => {
     if (!isLoggedIn) {

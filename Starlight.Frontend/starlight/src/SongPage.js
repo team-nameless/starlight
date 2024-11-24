@@ -16,6 +16,7 @@ import bgSidebarImage from './assets/Collapsed_Sidebar/sidebar-bg.png'; // Sideb
 import songSidebarIcon from './assets/Collapsed_Sidebar/Song-sidebar-icon.png'; // Song icon for sidebar
 import Fuse from 'fuse.js';
 import { FaSearch } from 'react-icons/fa';
+import {requestFullScreen} from "./utils";
 
 const LandingPage = lazy(() => import('./LandingPageApp'));
 const HistoryPage = lazy(() => import('./HistoryPage'));
@@ -147,6 +148,7 @@ function SongPage() {
     if (currentSong) {
       try {
         await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
+        requestFullScreen();
         navigate(`/TestGame`, { state: { songId: currentSong.id } });
       } catch (error) {
         console.error('Error starting game:', error);
