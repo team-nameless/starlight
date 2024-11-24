@@ -1,4 +1,4 @@
-﻿import Phaser from "phaser";
+import Phaser from "phaser";
 
 /*
  *  The game.
@@ -53,6 +53,12 @@ class MainScene extends Phaser.Scene {
     totalMiss;
     inGameTimeInMs;
 
+    // keybind locking
+    key1locked;
+    key2locked;
+    key3locked;
+    key4locked;
+
     constructor() {
         super("MainScene");
     }
@@ -76,6 +82,12 @@ class MainScene extends Phaser.Scene {
         this.noteInner1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON);
         this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.QUOTES);
+
+        // input lock
+        this.key1locked = false;
+        this.key2locked = false;
+        this.key3locked = false;
+        this.key4locked = false;
 
         // notes
         this.notes = this.physics.add.group();
@@ -169,6 +181,13 @@ class MainScene extends Phaser.Scene {
         this.notes.setVelocityY(this.noteSpeed * this.noteScale);
     }
 
+    judgementDisappear() {
+        this.time.delayedCall(200, () => {
+            this.judgementText.setText("");
+            this.errorText.setText("");
+        }, [], this);
+    }
+
     handleInput(keyPosition) {
         const now = this.inGameTimeInMs;
 
@@ -233,39 +252,91 @@ class MainScene extends Phaser.Scene {
         console.log(offset);
 
         let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
+        let shouldLockKey = false;
 
-        if (offset <= 10) {
+        let critWindow = 40,
+            perfWindow = 80,
+            goodWindow = 120,
+            badWindow = 180;
+
+        if (offset <= critWindow) {
             ++this.totalCrit;
             this.judgementText.setText("Nice!");
             this.errorText.setText("");
+            shouldLockKey = true;
+            this.judgementDisappear();
         }
-        else if (10 < offset && offset <= 25) {
+        else if (critWindow < offset && offset <= perfWindow) {
             ++this.totalPerf;
             this.judgementText.setText("Perfect");
             this.errorText.setText(errTxt);
+            shouldLockKey = true;
+            this.judgementDisappear();
         }
-        else if (25 < offset && offset <= 50) {
+        else if (perfWindow < offset && offset <= goodWindow) {
             ++this.totalGood;
             this.judgementText.setText("Fine");
             this.errorText.setText(errTxt);
+            shouldLockKey = true;
+            this.judgementDisappear();
         }
-        else if (50 < offset && offset <= 80) {
+        else if (goodWindow < offset && offset <= badWindow) {
             ++this.totalBad;
             this.judgementText.setText("Meh.");
             this.errorText.setText(errTxt);
-        } else {
-            this.judgementText.setText("Missed");
-            this.errorText.setText("");
+            shouldLockKey = true;
+            this.judgementDisappear();
+        }
+
+        // lock the key
+        switch (keyPosition) {
+            case 0:
+                this.key1locked = shouldLockKey;
+                break;
+            case 1:
+                this.key2locked = shouldLockKey;
+                break;
+            case 2:
+                this.key3locked = shouldLockKey;
+                break;
+            case 3:
+                this.key4locked = shouldLockKey;
+                break;
+            default:
+                break;
         }
     }
 
     update(time, delta) {
         this.inGameTimeInMs += delta;
 
-        if (this.noteOuter1Key.isDown) this.handleInput(1);
-        if (this.noteInner1Key.isDown) this.handleInput(2);
-        if (this.noteInner2Key.isDown) this.handleInput(3);
-        if (this.noteOuter2Key.isDown) this.handleInput(4);
+        if (this.noteOuter1Key.isDown) {
+            if (!this.key1locked) this.handleInput(1);
+            this.drawInputIndicator(1);
+        } else {
+            this.key1locked = false;
+        }
+
+        if (this.noteInner1Key.isDown) {
+            if (!this.key2locked) this.handleInput(2);
+            this.drawInputIndicator(2);
+        } else {
+            this.key2locked = false;
+        }
+
+        if (this.noteInner2Key.isDown) {
+            if (!this.key3locked) this.handleInput(3);
+            this.drawInputIndicator(3);
+        } else {
+            this.key3locked = false;
+        }
+
+        if (this.noteOuter2Key.isDown) {
+            if (!this.key4locked) this.handleInput(4);
+            this.drawInputIndicator(4);
+        } else {
+            this.key4locked = false;
+        }
 
         // noinspection PointlessArithmeticExpressionJS
         this.accuracy = (
@@ -276,10 +347,6 @@ class MainScene extends Phaser.Scene {
                   0 * this.totalMiss
             ) / (350.00 * this.totalNotes) * 100.0;
 
-        this.comboText.setText(`${this.combo}x`);
-        this.scoreText.setText(`${this.score}`.padStart(7, "0"));
-        this.accuracyText.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
-
         // handle MISS judgement
         this.notes.getChildren().forEach((note) => {
             const noteObj = note;
@@ -289,8 +356,15 @@ class MainScene extends Phaser.Scene {
                 noteObj.destroy();
                 this.combo = 0;
                 ++this.totalMiss;
+                this.judgementText.setText("Missed.");
+                this.errorText.setText("");
+                this.judgementDisappear();
             }
         });
+
+        this.comboText.setText(`${this.combo}x`);
+        this.scoreText.setText(`${this.score}`.padStart(7, "0"));
+        this.accuracyText.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
     }
 }
 
