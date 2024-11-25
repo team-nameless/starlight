@@ -147,7 +147,7 @@ function SongPage() {
     const currentSong = songs[currentSongIndex];
     if (currentSong) {
       try {
-        await axios.post(`${rootUrl}/api/play`, { songId: currentSong.id });
+        await axios.post(`${rootUrl}/api/game/start`, { songId: currentSong.id }, {withCredentials: true});
         requestFullScreen();
         navigate(`/TestGame`, { state: { songId: currentSong.id } });
       } catch (error) {
