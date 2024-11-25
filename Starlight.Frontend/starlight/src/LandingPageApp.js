@@ -299,6 +299,7 @@ const LandingPageApp = () => {
   const [signUpEmailError, setSignUpEmailError] = useState(''); 
   const [loginEmailError, setLoginEmailError] = useState('');
   const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -316,6 +317,7 @@ const LandingPageApp = () => {
     setHandleError('');  
     setSignUpEmailError('');
     setSignUpPasswordError('');
+    setIsLoading(true); // Start loading
   
     let formHasError = false;
     
@@ -340,6 +342,7 @@ const LandingPageApp = () => {
     }
   
     if (formHasError) {
+      setIsLoading(false); // Stop loading if there's an error
       return;
     }
   
@@ -367,6 +370,8 @@ const LandingPageApp = () => {
       } else {
         alert('Registration failed. Please try again.');
       }
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
   
@@ -376,6 +381,7 @@ const LandingPageApp = () => {
   
     setLoginEmailError('');
     setLoginPasswordError('');
+    setIsLoading(true); // Start loading
   
     try {
       const response = await axios.post(`${rootUrl}/api/login`, { email: loginEmail, password: loginPassword }, {
@@ -388,8 +394,6 @@ const LandingPageApp = () => {
       setData(response.data); 
       setIsLoggedIn(true);
       setShowLoginModal(false); 
-  
-      console.log('Login successful:', response.data);
       setShowLoginSuccessModal(true); // Show login success popup
   
     } catch (error) {
@@ -400,6 +404,8 @@ const LandingPageApp = () => {
         console.error('Error logging in:', error);
         alert('An unexpected error occurred. Please try again later.');
       }
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -439,6 +445,12 @@ const LandingPageApp = () => {
 
   return (
     <AppContainer>
+      {isLoading && (
+        <div className="loader">
+          <div className="one"></div>
+          <div className="two"></div>
+        </div>
+      )}
       <BackgroundLandingPage>
         <header>
           <NavButtons>
@@ -461,7 +473,7 @@ const LandingPageApp = () => {
           Start Game
         </PlayButton>
       </BackgroundLandingPage>
-  
+    
       {showSignUpModal && (
         <Modal>
           <ModalContent>
@@ -482,7 +494,6 @@ const LandingPageApp = () => {
                     required
                   />
                   {handleError && <span style={{ color: 'red', fontSize: '10px' }}>{handleError}</span>}
-
                 </TextFieldContainer>
                 <TextFieldContainer>
                   <label htmlFor="email">Email:</label>
@@ -495,25 +506,22 @@ const LandingPageApp = () => {
                   {signUpEmailError && <span style={{ color: 'red', fontSize: '10px' }}>{signUpEmailError}</span>}
                 </TextFieldContainer>
                 <TextFieldContainer>
-                     <label htmlFor="password">Password:</label>
-                     <TextField
-                         id="password"
-                         type="password"
-                         value={password}
-                         onChange={(e) => setPassword(e.target.value)}
-                      required
-                      />
-                      {signUpPasswordError && (
-                      <span style={{ color: 'red', fontSize: '10px' }}>
-                         Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter
-                         <br />
-                         and a special character (@, !, #, $, %, *)
-                      </span>
-                     )}
-
-
+                  <label htmlFor="password">Password:</label>
+                  <TextField
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  {signUpPasswordError && (
+                    <span style={{ color: 'red', fontSize: '10px' }}>
+                      Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter
+                      <br />
+                      and a special character (@, !, #, $, %, *)
+                    </span>
+                  )}
                 </TextFieldContainer>
-
                 <FormWrapper>
                   <ButtonContainer>
                     <SubmitButton type="submit">Create Account</SubmitButton>
@@ -529,63 +537,61 @@ const LandingPageApp = () => {
           </ModalContent>
         </Modal>
       )}
-
-{showLoginModal && (
-  <Modal>
-    <ModalContent>
-      <ModalBackground2 />
-      <CloseButton onClick={closeModal}>&times;</CloseButton>
-      <GirlImage2 src={GirlImage} alt="Girl" /> 
-      <LogoImage2 src={LogoImage} alt="Logo" />
-      <ModalTitle style={{ marginLeft: '50px' }}>Log In</ModalTitle>
-      <form onSubmit={handleLogin}>
-        <FormContainer style={{ flexDirection: 'column', height: '403px', justifyContent: 'space-between' }}>
-          <TextFieldContainer>
-            <label htmlFor="loginEmail">Email:</label>
-            <TextField
-              id="loginEmail"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              required
-            />
-            {loginEmailError && <span style={{ color: 'red', fontSize: '10px' }}>{loginEmailError}</span>}
-          </TextFieldContainer>
-
-          <TextFieldContainer>
-  <label htmlFor="loginPassword" style={{ display: 'block', marginBottom: '12px', fontSize: '16px', width: '471px' }}>
-    Password :</label>
-            <TextField
-              id="loginPassword"
-              type="password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              required
-            />
-            {loginPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{loginPasswordError}</span>}
-          </TextFieldContainer>
-        </FormContainer>
-
-        <FormWrapper>
-          <ButtonContainer>
-          <div style={{ marginTop: '-80px', marginBottom: '165px' }}>
-              <SubmitButton type="submit" style={{ width: '470px', marginLeft: '22px' }}>Log In</SubmitButton>
-            </div>
-          </ButtonContainer>
-
-          <div style={{ position: 'relative', right: '-20px', marginTop: '10px', textAlign: 'left' }}>
-            <p style={{ margin: '0', display: 'block', opacity: 0.7, marginTop: '-150px', marginRight:'0px' }}>
-              Don't have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToSignUp}>Sign Up</span>.
-            </p>
-            <p style={{ margin: '0', display: 'block', opacity: 0.5, marginTop: '-125px', textAlign: 'right', fontStyle: 'italic', marginRight: '-220px' }}>
-              <a href="/forgot-password" style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }}>Forgot your password?</a>
-            </p>
-          </div>
-        </FormWrapper>
-      </form>
-    </ModalContent>
-  </Modal>
-)}
-
+    
+      {showLoginModal && (
+        <Modal>
+          <ModalContent>
+            <ModalBackground2 />
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <GirlImage2 src={GirlImage} alt="Girl" /> 
+            <LogoImage2 src={LogoImage} alt="Logo" />
+            <ModalTitle style={{ marginLeft: '50px' }}>Log In</ModalTitle>
+            <form onSubmit={handleLogin}>
+              <FormContainer style={{ flexDirection: 'column', height: '403px', justifyContent: 'space-between' }}>
+                <TextFieldContainer>
+                  <label htmlFor="loginEmail">Email:</label>
+                  <TextField
+                    id="loginEmail"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    required
+                  />
+                  {loginEmailError && <span style={{ color: 'red', fontSize: '10px' }}>{loginEmailError}</span>}
+                </TextFieldContainer>
+                <TextFieldContainer>
+                  <label htmlFor="loginPassword" style={{ display: 'block', marginBottom: '12px', fontSize: '16px', width: '471px' }}>
+                    Password:
+                  </label>
+                  <TextField
+                    id="loginPassword"
+                    type="password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    required
+                  />
+                  {loginPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{loginPasswordError}</span>}
+                </TextFieldContainer>
+              </FormContainer>
+              <FormWrapper>
+                <ButtonContainer>
+                  <div style={{ marginTop: '-80px', marginBottom: '165px' }}>
+                    <SubmitButton type="submit" style={{ width: '470px', marginLeft: '22px' }}>Log In</SubmitButton>
+                  </div>
+                </ButtonContainer>
+                <div style={{ position: 'relative', right: '-20px', marginTop: '10px', textAlign: 'left' }}>
+                  <p style={{ margin: '0', display: 'block', opacity: 0.7, marginTop: '-150px', marginRight: '0px' }}>
+                    Don't have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToSignUp}>Sign Up</span>.
+                  </p>
+                  <p style={{ margin: '0', display: 'block', opacity: 0.5, marginTop: '-125px', textAlign: 'right', fontStyle: 'italic', marginRight: '-220px' }}>
+                    <a href="/forgot-password" style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }}>Forgot your password?</a>
+                  </p>
+                </div>
+              </FormWrapper>
+            </form>
+          </ModalContent>
+        </Modal>
+      )}
+    
       {showSuccessModal && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -595,7 +601,7 @@ const LandingPageApp = () => {
           </div>
         </div>
       )}
-
+    
       {showNotificationModal && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -605,7 +611,7 @@ const LandingPageApp = () => {
           </div>
         </div>
       )}
-
+    
       {showLoginSuccessModal && (
         <div className="popup-overlay">
           <div className="popup-content">

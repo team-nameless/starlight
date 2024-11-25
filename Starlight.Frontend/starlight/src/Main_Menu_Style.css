@@ -227,7 +227,7 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: 100% 50%;
-  transition: opacity 1s ease-in-out; /* Add transition effect */
+  transition: opacity 0.5s ease-in-out; /* Reduced transition duration */
 }
 
 .background-image img.morph {
