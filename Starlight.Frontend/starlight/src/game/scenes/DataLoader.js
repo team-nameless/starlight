@@ -11,8 +11,7 @@ class DataLoader extends Phaser.Scene {
     }
 
     init(data) {
-        // fallback to the arya song if we launch this standalone?
-        this.mapId = data["song"] || 2212131;
+        this.mapId = data["song"];
     }
 
     preload() {

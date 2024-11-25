@@ -1,14 +1,15 @@
 import Phaser from "phaser";
 import { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import MainScene from "./scenes/MainScene.js";
-import DataLoader from "./scenes/DataLoader.js";
-import AssetLoader from "./scenes/AssetLoader.js";
+import MainScene from "./scenes/MainScene";
+import DataLoader from "./scenes/DataLoader";
+import AssetLoader from "./scenes/AssetLoader";
+import GameFinalizer from "./scenes/GameFinalizer";
 
 function GameApp() {
     const gameRef = useRef(null);
     const location = useLocation();
-    const { songId } = location.state || {};
+    const { songId } = location.state || { songId: 2212131 };
 
     useEffect(() => {
         const config = {
@@ -16,13 +17,6 @@ function GameApp() {
             parent: gameRef.current,
             width: 1920,
             height: 1080,
-            /*
-            scene: [
-                DataLoader,
-                AssetLoader,
-                MainScene,
-            ],
-             */
             powerPreference: "high-performance",
             fps: {
                 smoothStep: true,
@@ -43,6 +37,7 @@ function GameApp() {
         game.scene.add("DataLoader", DataLoader, true, { song: songId });
         game.scene.add("AssetLoader", AssetLoader);
         game.scene.add("MainScene", MainScene);
+        game.scene.add("GameFinalizer", GameFinalizer);
 
         return () => {
             game.destroy(true);
