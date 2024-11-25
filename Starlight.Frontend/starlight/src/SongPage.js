@@ -37,6 +37,7 @@ function SongPage() {
   const [userName, setUserName] = useState();
   const [score, setScore] = useState();
   const [searchQuery, setSearchQuery] = useState('');
+  const [bestScore, setBestScore] = useState(null);
 
   const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
 
@@ -117,6 +118,30 @@ function SongPage() {
     fetchData();
   }, []);
 
+  /*useEffect(() => {
+    const fetchBestScore = async () => {
+      if (currentSong) {
+        try {
+          const response = await axios.get(`${rootUrl}/api/user/score/${currentSong.id}`, {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true
+          });
+          if (response.status === 200) {
+            setBestScore(response.data.bestScore);
+          } else {
+            console.error('Error fetching best score:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching best score:', error);
+        }
+      }
+    };
+
+    fetchBestScore();
+  }, [currentSong]);
+*/
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
   };
@@ -388,7 +413,7 @@ function SongPage() {
               <div className="song-info">
                 <div className="song-name">{currentSong?.title }</div>
                 <div className="artist-name">- {currentSong?.artist } -</div>
-                <button className="best-score-btn">Best Score</button>
+                <div className="best-score">Best Score{/*bestScore !== null ? bestScore : 'N/A'*/}</div>
               </div>
               <div className="play-button-container">
                 <button className="play-button" onClick={handlePlayButtonClick}>

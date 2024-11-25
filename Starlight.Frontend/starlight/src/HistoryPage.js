@@ -246,9 +246,9 @@ function HistoryPage() {
     const { data, isRandom } = await fetchHeatmapData(url);
   
     // Dimensions and margins
-    const margin = { top: 80, right: 25, bottom: 30, left: 40 };
-    const width = 450 - margin.left - margin.right;
-    const height = 450 - margin.top - margin.bottom;
+    const margin = { top: 50, right: 25, bottom: 10, left: 10 };
+    const width = 170 - margin.left - margin.right;
+    const height = 170 - margin.top - margin.bottom;
   
     // Append the SVG
     const svg = d3
