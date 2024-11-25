@@ -240,6 +240,13 @@ function SongPage() {
     };
   }, []);
 
+  const handleSongClick = (song) => {
+    const index = songs.findIndex(s => s.id === song.id);
+    if (index !== -1) {
+      setCurrentSongIndex(index);
+    }
+  };
+
   return (
     <Fragment>
       <Suspense fallback={<div>Loading...</div>}>
@@ -315,7 +322,7 @@ function SongPage() {
             </div>
             <ul>
               {filteredSongs.map((song, index) => (
-                <li key={index} className="song-item" onClick={() => setCurrentSongIndex(index)}>
+                <li key={index} className="song-item" onClick={() => handleSongClick(song)}>
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                     <span className="sidebar-song">
