@@ -9,8 +9,8 @@ class MainScene extends Phaser.Scene {
     rawNoteList;
 
     // gameplay properties
-    noteSpeed = 100;
-    noteScale = 15;
+    noteSpeed = 200;
+    noteScale = 10;
     gameData;
 
     // note positions
@@ -40,6 +40,7 @@ class MainScene extends Phaser.Scene {
     noteOuter2Key;
 
     // random
+    duration;
     combo;
     score;
     accuracy;
@@ -51,6 +52,16 @@ class MainScene extends Phaser.Scene {
     totalGood;
     totalBad;
     totalMiss;
+
+    // partial stats
+    partialNotes;
+    partialCrit;
+    partialPerf;
+    partialGood;
+    partialBad;
+    partialMiss;
+
+    // yes?
     inGameTimeInMs;
 
     // keybind locking
@@ -71,9 +82,15 @@ class MainScene extends Phaser.Scene {
         this.totalGood = 0;
         this.totalBad = 0;
         this.totalMiss = 0;
+        this.partialCrit = 0;
+        this.partialPerf = 0;
+        this.partialGood = 0;
+        this.partialBad = 0;
+        this.partialMiss = 0;
         this.inGameTimeInMs = 0;
         this.accuracy = 100;
         this.gameData = data.gameData;
+        this.duration = data.gameData["metadata"]["duration"];
         this.rawNoteList = this.gameData.notes;
         this.gameStartTime = new Date(Date.now());
 
@@ -154,12 +171,40 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+        // partial data collection event
+        this.time.addEvent({
+            loop: true,
+            callbackScope: this,
+            callback: () => this.partialDataFinalize(),
+            delay: this.duration / 30
+        });
+
+        // game end
+        this.time.addEvent({
+            delay: this.duration + 100,
+           callbackScope: this,
+           callback: () => this.endGame()
+        });
+
         let bgMusic = this.sound.add("music");
         this.scene.resume();
         this.gameStartTime = new Date(Date.now());
         bgMusic.play();
     }
 
+    partialDataFinalize() {
+    }
+
+    /*
+        End this game session and move to game finalizer.
+     */
+    endGame() {
+        this.scene.switch("GameFinalizer");
+    }
+
+    /*
+        Spawns the note, isn't that obvious?
+     */
     spawnNote(note) {
         // I sleep
         let pos = note.position -= 1;
