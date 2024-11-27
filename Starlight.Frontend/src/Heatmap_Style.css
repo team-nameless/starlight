@@ -70,69 +70,33 @@
   z-index: 1000; /* Ensure the heatmap is in front of everything */
 }
 
-.heatmap-container h3 {
+.heatmap-title {
   font-family: 'Kaushan Script', cursive;
   font-weight: 400;
   color: #FE364F;
   margin-right: -12px;
+  margin-top: 20px;
   margin-bottom: 0px;
   font-size: 40px;
-  position: relative;
-  top: -60px;
-}
-
-.heatmap-details {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.judgement-column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-right: 20px;
-}
-
-.judgement-title {
-  font-family: 'Keania One', sans-serif;
-  font-size: 34px;
-  font-weight: 400;
-  color: #F38BA8;
-}
-
-.judgement-column div {
-  font-size: 14px;
-  margin-bottom: 5px;
-  width: 80px;
-}
-
-.heatmap-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 1500px;
+  text-align: center;
 }
 
 .overall-score {
   font-family: 'Keania One', sans-serif;
   font-size: 34px;
   font-weight: 400;
-  color: #F38BA8;
+  color: #ffffff;
   text-align: center;
 }
 
-.segment-times {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 10px;
-}
-
-.segment-time {
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
   font-size: 12px;
-  color: #adbac7;
+  z-index: 10;
 }
 
 #heatmap-container-1, #heatmap-container-2 {
@@ -140,11 +104,11 @@
   padding: 20px;
   border-radius: 8px;
   color: white;
-  margin: 40px 150px 0px 150px;
+  margin: 0px 300px 0px 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 1000; 
   width: 900px; 
-  height: 300px;  
+  height: 270px;  
 }

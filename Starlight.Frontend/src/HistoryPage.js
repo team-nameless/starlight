@@ -236,7 +236,7 @@ function HistoryPage() {
     try {
       const response = await axios.get(`${rootUrl}${url}`);
       const data = response.data;
-      return data.overallScore || 0; // Adjust this based on your API response structure
+      return data.overallScore || 100000; // Adjust this based on your API response structure
     } catch (error) {
       console.error('Error fetching overall score:', error);
       return 0; // Return 0 if there's an error
@@ -258,7 +258,7 @@ function HistoryPage() {
   
     // Add overall score
     const scoreElement = document.createElement('div');
-    scoreElement.textContent = `Overall Score: ${overallScore}`;
+    scoreElement.textContent = `✨${overallScore || 100000}✨`;
     scoreElement.className = 'overall-score';
     container.appendChild(scoreElement);
   
@@ -268,7 +268,7 @@ function HistoryPage() {
     // Dimensions and margins
     const margin = { top: 0, right: 25, bottom: 50, left: 50 }; // Adjusted margins
     const width = 900 - margin.left - margin.right; // Adjusted width
-    const height = 300 - margin.top - margin.bottom; // Adjusted height
+    const height = 186 - margin.top - margin.bottom; // Adjusted height
   
     // Append the SVG
     const svg = d3
@@ -316,7 +316,8 @@ function HistoryPage() {
       .style("border", "solid")
       .style("border-width", "2px")
       .style("border-radius", "5px")
-      .style("padding", "5px");
+      .style("padding", "5px")
+      .style("position", "absolute");
   
     const mouseover = function (event, d) {
       tooltip.style("opacity", 1);
@@ -483,9 +484,9 @@ function HistoryPage() {
           </div>
 
           {/* Render Heatmaps */}
-          <h3>Latest Score</h3>
+          <h3 className="heatmap-title">Latest Score</h3>
           <div id="heatmap-container-1" className="heatmap-container"></div>
-          <h3>Best Score</h3>
+          <h3 className="heatmap-title">Best Score</h3>
           <div id="heatmap-container-2" className="heatmap-container"></div>
           
         </div>
