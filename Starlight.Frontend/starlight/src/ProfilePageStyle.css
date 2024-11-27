@@ -450,7 +450,7 @@
   }
   
   .chat-body {
-    height: 500px; 
+    height: 600px; 
     width: 95%; 
     overflow-y: auto; 
     overflow-x: hidden; 
@@ -484,7 +484,7 @@
   
   .message-sender {
     font-weight: bold;
-    color: #ffffff; 
+    color: #767979; 
     font-size: 9px; 
   }
   
@@ -492,6 +492,7 @@
     flex: 1;
     margin-top: 5px; 
     font-size: 10px; 
+    color: #ffffff;
   }
   
   .message-time {
@@ -514,7 +515,7 @@
     border: none;
     border-radius: 5px;
     background-color: #13171B; 
-    color: #353F45; 
+    color: #ffffff; 
   }
   
   .chat-footer input::placeholder {
