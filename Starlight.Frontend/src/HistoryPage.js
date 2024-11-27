@@ -206,7 +206,7 @@ function HistoryPage() {
   
       // Validate the response and structure (adjust this as per your API's response format)
       if (Array.isArray(data)) {
-        return { data, isRandom: false };
+        return { data, isFallback: false };
       } else {
         throw new Error('Invalid API response');
       }
@@ -215,8 +215,8 @@ function HistoryPage() {
   
       // Generate random fallback data
       const randomData = [];
-      const groups = ['A', 'B', 'C', 'D', 'E'];
-      const variables = ['1', '2', '3', '4', '5'];
+      const groups = Array.from({ length: 30 }, (_, i) => i + 1); // Simplified group generation
+      const variables = ['M', 'B', 'G', 'P', 'CP'];
   
       for (let i = 0; i < groups.length; i++) {
         for (let j = 0; j < variables.length; j++) {
@@ -228,11 +228,22 @@ function HistoryPage() {
         }
       }
   
-      return { data: randomData, isRandom: true };
+      return { data: randomData, isFallback: true };
+    }
+  };
+
+  const fetchOverallScore = async (url) => {
+    try {
+      const response = await axios.get(`${rootUrl}${url}`);
+      const data = response.data;
+      return data.overallScore || 0; // Adjust this based on your API response structure
+    } catch (error) {
+      console.error('Error fetching overall score:', error);
+      return 0; // Return 0 if there's an error
     }
   };
   
-  const renderHeatmap = useCallback(async (url, selector) => {
+  const renderHeatmap = useCallback(async (url, selector, scoreUrl) => {
     const container = document.querySelector(selector);
     if (!container) {
       console.error(`Container with selector "${selector}" not found.`);
@@ -240,15 +251,24 @@ function HistoryPage() {
     }
   
     // Clear existing content
-    container.innerHTML = "";
+    container.innerHTML = ""; // Ensure the container is cleared before rendering
+  
+    // Fetch overall score
+    const overallScore = await fetchOverallScore(scoreUrl);
+  
+    // Add overall score
+    const scoreElement = document.createElement('div');
+    scoreElement.textContent = `Overall Score: ${overallScore}`;
+    scoreElement.className = 'overall-score';
+    container.appendChild(scoreElement);
   
     // Fetch data for the heatmap
-    const { data, isRandom } = await fetchHeatmapData(url);
+    const { data, isFallback } = await fetchHeatmapData(url);
   
     // Dimensions and margins
-    const margin = { top: 50, right: 25, bottom: 10, left: 10 };
-    const width = 170 - margin.left - margin.right;
-    const height = 170 - margin.top - margin.bottom;
+    const margin = { top: 0, right: 25, bottom: 50, left: 50 }; // Adjusted margins
+    const width = 900 - margin.left - margin.right; // Adjusted width
+    const height = 300 - margin.top - margin.bottom; // Adjusted height
   
     // Append the SVG
     const svg = d3
@@ -263,10 +283,12 @@ function HistoryPage() {
     const myGroups = Array.from(new Set(data.map((d) => d.group)));
     const myVars = Array.from(new Set(data.map((d) => d.variable)));
   
+    const cellSize = 25;
+    const gap = 2;
     const x = d3.scaleBand().range([0, width]).domain(myGroups).padding(0.05);
     const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
   
-    const myColor = d3.scaleSequential().interpolator(d3.interpolateInferno).domain([0, 100]);
+    const myColor = d3.scaleLinear().domain([0, 33, 66, 100]).range(['#14432a', '#166b34', '#37a446', '#4dd05a']);
   
     // Add axes
     svg
@@ -319,12 +341,12 @@ function HistoryPage() {
       .data(data, (d) => `${d.group}:${d.variable}`)
       .enter()
       .append("rect")
-      .attr("x", (d) => x(d.group))
-      .attr("y", (d) => y(d.variable))
-      .attr("rx", 4)
+      .attr("x", (d) => x(d.group) + gap / 2)
+      .attr("y", (d) => y(d.variable) + gap / 2)
+      .attr("width", cellSize - gap)
+      .attr("height", cellSize - gap)
+      .attr("rx", 4) 
       .attr("ry", 4)
-      .attr("width", x.bandwidth())
-      .attr("height", y.bandwidth())
       .style("fill", (d) => myColor(d.value || 0))
       .style("stroke-width", 4)
       .style("stroke", "none")
@@ -333,73 +355,31 @@ function HistoryPage() {
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
   
-    // Add titles
-    svg
-      .append("text")
-      .attr("x", 0)
-      .attr("y", -50)
-      .attr("text-anchor", "left")
-      .style("font-size", "22px")
-      .text("A d3.js heatmap");
-  
-    svg
-      .append("text")
-      .attr("x", 0)
-      .attr("y", -20)
-      .attr("text-anchor", "left")
-      .style("font-size", "14px")
-      .style("fill", "grey")
-      .style("max-width", 400)
-      .text(isRandom ? "Randomized data due to fetch error." : "Data fetched successfully.");
-  }, []);
-  
-  const renderHeatmapContainer = useCallback(async (title, heatmapId, url) => {
-    const data = await fetchHeatmapData(url);
-    const judgmentData = data.judgment || {};
-    const overallScore = data.overallScore || 0;
-  
-    return (
-      <div className="heatmap-container">
-        <h3>{title}</h3>
-        <div className="heatmap-details">
-          <div className="judgement-column">
-            <div className="judgement-title">Combo</div>
-            <div>CP: {judgmentData.cp || 1000}</div>
-            <div>P: {judgmentData.p || 1000}</div>
-            <div>G: {judgmentData.g || 1000}</div>
-            <div>B: {judgmentData.b || 1000}</div>
-            <div>M: {judgmentData.m || 1000}</div>
-          </div>
-          <div className="heatmap-column">
-            <div className="overall-score">
-              ✨{overallScore || 100000}✨
-            </div>
-            <div id={heatmapId}></div>
-          </div>
-        </div>
-      </div>
-    );
+    if (isFallback) {
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom + 20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style("fill", "red")
+        .text("Data fetched from fallback random data");
+    }
   }, []);
   
   useEffect(() => {
-    const renderLatestHeatmap = async () => {
-      const heatmapContainer = await renderHeatmapContainer("Latest Play", "heatmap-latest-container", "/api/score/recent");
-      setLatestHeatmap(heatmapContainer);
-      await renderHeatmap('/api/score/recent', "#heatmap-latest-container");
+    const renderHeatmap1 = async () => {
+      await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent");
     };
-    renderLatestHeatmap();
-  }, [renderHeatmap, renderHeatmapContainer]);
+    renderHeatmap1();
+  }, [renderHeatmap, currentSong]);
   
   useEffect(() => {
-    const renderBestHeatmap = async () => {
-      const heatmapContainer = await renderHeatmapContainer("Best Score", "heatmap-best-container", "/api/score/all");
-      setBestHeatmap(heatmapContainer);
-      await renderHeatmap('/api/score/all', "#heatmap-best-container");
+    const renderHeatmap2 = async () => {
+      await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all");
     };
-    renderBestHeatmap();
-  }, [renderHeatmap, renderHeatmapContainer]);
+    renderHeatmap2();
+  }, [renderHeatmap, currentSong]);
   
-
   return (
     <div className="historypage">
       <Suspense fallback={<div>Loading...</div>}>
@@ -503,12 +483,12 @@ function HistoryPage() {
           </div>
 
           {/* Render Heatmaps */}
-          {latestHeatmap}
-          {bestHeatmap}
+          <h3>Latest Score</h3>
+          <div id="heatmap-container-1" className="heatmap-container"></div>
+          <h3>Best Score</h3>
+          <div id="heatmap-container-2" className="heatmap-container"></div>
           
         </div>
-
-        
 
         {showPopup && (
           <div className="popup-overlay">

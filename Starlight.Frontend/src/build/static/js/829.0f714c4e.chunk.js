@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkstarlight=self.webpackChunkstarlight||[]).push([[829],{3829:(e,s,t)=>{t.d(s,{t:()=>u});const u=()=>{const e=document.documentElement;e.requestFullscreen?e.requestFullscreen():e.mozRequestFullScreen?e.mozRequestFullScreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen()}}}]);
+//# sourceMappingURL=829.0f714c4e.chunk.js.map
