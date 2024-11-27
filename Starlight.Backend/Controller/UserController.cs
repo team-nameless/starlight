@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Starlight.Backend.Controller.Request.User;
+using Starlight.Backend.Controller.Request;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Service;
 
@@ -84,7 +84,7 @@ public class UserController : ControllerBase
     /// </summary>
     [HttpPatch("profile")]
     [Authorize]
-    public async Task<ActionResult> UpdateProfile([FromBody] ProfileUpdateForm profileUpdate)
+    public async Task<ActionResult> UpdateProfile([FromBody] ProfileUpdateRequest profileUpdate)
     {
         var services = HttpContext.RequestServices;
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
@@ -210,7 +210,7 @@ public class UserController : ControllerBase
     /// </summary>
     [HttpPatch("settings")]
     [Authorize]
-    public async Task<ActionResult> UpdateSettings([FromBody] SettingUpdateForm settingsUpdate)
+    public async Task<ActionResult> UpdateSettings([FromBody] SettingUpdateRequest settingsUpdate)
     {
         var services = HttpContext.RequestServices;
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
