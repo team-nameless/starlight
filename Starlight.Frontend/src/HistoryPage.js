@@ -17,6 +17,7 @@ import Fuse from 'fuse.js';
 import { FaSearch } from 'react-icons/fa';
 import * as d3 from 'd3';
 import 'd3-scale-chromatic';
+import testHeatmapData from './test_heatmap.json';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -205,30 +206,85 @@ function HistoryPage() {
       const data = response.data;
   
       // Validate the response and structure (adjust this as per your API's response format)
-      if (Array.isArray(data)) {
-        return { data, isFallback: false };
+      if (data && data.partial && Array.isArray(data.partial)) {
+        const durationInSeconds = Math.floor(data.stats.duration / 1000);
+        const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
+        const variables = ['CP', 'P', 'G', 'B', 'M'];
+        const heatmapData = [];
+  
+        data.partial.forEach((segment, index) => {
+          const totalNotes = segment.totalNotes;
+          heatmapData.push({
+            group: groups[index],
+            variable: 'M',
+            value: (segment.miss / totalNotes) * 100,
+          });
+          heatmapData.push({
+            group: groups[index],
+            variable: 'B',
+            value: (segment.bad / totalNotes) * 100,
+          });
+          heatmapData.push({
+            group: groups[index],
+            variable: 'G',
+            value: (segment.good / totalNotes) * 100,
+          });
+          heatmapData.push({
+            group: groups[index],
+            variable: 'P',
+            value: (segment.perf / totalNotes) * 100,
+          });
+          heatmapData.push({
+            group: groups[index],
+            variable: 'CP',
+            value: (segment.crit / totalNotes) * 100,
+          });
+        });
+  
+        return { data: heatmapData, score: data.stats.score, isFallback: false };
       } else {
         throw new Error('Invalid API response');
       }
     } catch (error) {
       console.error('Error fetching heatmap data:', error);
   
-      // Generate random fallback data
-      const randomData = [];
-      const groups = Array.from({ length: 30 }, (_, i) => i + 1); // Simplified group generation
-      const variables = ['M', 'B', 'G', 'P', 'CP'];
+      // Use test_heatmap.json data
+      const data = testHeatmapData;
+      const durationInSeconds = Math.floor(data.stats.duration / 1000);
+      const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
+      const variables = ['CP', 'P', 'G', 'B', 'M'];
+      const heatmapData = [];
   
-      for (let i = 0; i < groups.length; i++) {
-        for (let j = 0; j < variables.length; j++) {
-          randomData.push({
-            group: groups[i],
-            variable: variables[j],
-            value: Math.floor(Math.random() * 100),
-          });
-        }
-      }
+      data.partial.forEach((segment, index) => {
+        const totalNotes = segment.totalNotes;
+        heatmapData.push({
+          group: groups[index],
+          variable: 'M',
+          value: (segment.miss / totalNotes) * 100,
+        });
+        heatmapData.push({
+          group: groups[index],
+          variable: 'B',
+          value: (segment.bad / totalNotes) * 100,
+        });
+        heatmapData.push({
+          group: groups[index],
+          variable: 'G',
+          value: (segment.good / totalNotes) * 100,
+        });
+        heatmapData.push({
+          group: groups[index],
+          variable: 'P',
+          value: (segment.perf / totalNotes) * 100,
+        });
+        heatmapData.push({
+          group: groups[index],
+          variable: 'CP',
+          value: (segment.crit / totalNotes) * 100,
+        });
+      });
   
-      return { data: randomData, isFallback: true };
+      return { data: heatmapData, score: data.stats.score, isFallback: true };
     }
   };
 
@@ -236,14 +292,14 @@ function HistoryPage() {
     try {
       const response = await axios.get(`${rootUrl}${url}`);
       const data = response.data;
-      return data.overallScore || 100000; // Adjust this based on your API response structure
+      return data.stats.score || 100000; // Adjust this based on your API response structure
     } catch (error) {
       console.error('Error fetching overall score:', error);
-      return 0; // Return 0 if there's an error
+      return testHeatmapData.stats.score; // Return score from test_heatmap.json if there's an error
     }
   };
   
-  const renderHeatmap = useCallback(async (url, selector, scoreUrl) => {
+  const renderHeatmap = useCallback(async (url, selector, scoreUrl, songId) => {
     const container = document.querySelector(selector);
     if (!container) {
       console.error(`Container with selector "${selector}" not found.`);
@@ -258,7 +314,7 @@ function HistoryPage() {
   
     // Add overall score
     const scoreElement = document.createElement('div');
-    scoreElement.textContent = `✨${overallScore || 100000}✨`;
+    scoreElement.textContent = `✨${overallScore}✨`;
     scoreElement.className = 'overall-score';
     container.appendChild(scoreElement);
   
@@ -326,7 +382,7 @@ function HistoryPage() {
   
     const mousemove = function (event, d) {
       tooltip
-        .html(`Beat Accuracy: ${d.value || 0}%`)
+        .html(`Beat Accuracy: ${d.value.toFixed(2)}%`)
         .style("left", `${event.pageX + 20}px`)
         .style("top", `${event.pageY - 20}px`);
     };
@@ -363,22 +419,40 @@ function HistoryPage() {
         .attr("text-anchor", "middle")
         .style("font-size", "12px")
         .style("fill", "red")
-        .text("Data fetched from fallback random data");
+        .text("Data fetched from test_heatmap.json");
     }
   }, []);
   
   useEffect(() => {
     const renderHeatmap1 = async () => {
-      await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent");
+      await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent", currentSong?.id);
     };
     renderHeatmap1();
   }, [renderHeatmap, currentSong]);
   
   useEffect(() => {
     const renderHeatmap2 = async () => {
-      await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all");
+      await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all", currentSong?.id);
     };
     renderHeatmap2();
+  }, [renderHeatmap, currentSong]);
+  
+  useEffect(() => {
+    const handlePageRefresh = () => {
+      const renderHeatmap1 = async () => {
+        await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent", currentSong?.id);
+      };
+      const renderHeatmap2 = async () => {
+        await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all", currentSong?.id);
+      };
+      renderHeatmap1();
+      renderHeatmap2();
+    };
+  
+    window.addEventListener('load', handlePageRefresh);
+    return () => {
+      window.removeEventListener('load', handlePageRefresh);
+    };
   }, [renderHeatmap, currentSong]);
   
   return (
