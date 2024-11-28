@@ -522,6 +522,12 @@ function HistoryPage() {
             <img src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ''} alt="Background" />
           </div>
 
+          {/* Song Name and Artist */}
+          <div className="song-info">
+            <div className="song-name">{currentSong?.title}</div>
+            <div className="artist-name">- {currentSong?.artist} -</div>
+          </div>
+
           {/* Next/Previous Buttons */}
           <div className="song-navigation">
             <button className="nav-btn prev-btn" onClick={handlePreviousSong}>

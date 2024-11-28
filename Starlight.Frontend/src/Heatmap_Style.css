@@ -112,3 +112,24 @@
   width: 900px; 
   height: 270px;  
 }
+
+.song-info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: right;
+}
+
+.song-name {
+  font-family: 'Lemon', sans-serif;
+  font-weight: 400;
+  color: white;
+  font-size: 24px;
+}
+
+.artist-name {
+  font-family: 'Artifika', serif;
+  font-weight: 400;
+  color: orange;
+  font-size: 18px;
+}
