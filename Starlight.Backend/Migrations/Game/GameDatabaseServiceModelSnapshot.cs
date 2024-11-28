@@ -34,7 +34,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasIndex("OwnersId");
 
-                    b.ToTable("AchievementPlayer");
+                    b.ToTable("AchievementPlayer", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -180,7 +180,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasKey("Id");
 
-                    b.ToTable("Achievements");
+                    b.ToTable("Achievements", (string)null);
                 });
 
             modelBuilder.Entity("Starlight.Backend.Database.Game.Player", b =>
@@ -219,6 +219,9 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<ulong>("MaxExpForLevel")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -325,7 +328,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Scores");
+                    b.ToTable("Scores", (string)null);
                 });
 
             modelBuilder.Entity("Starlight.Backend.Database.Game.Setting", b =>
@@ -371,7 +374,7 @@ namespace Starlight.Backend.Migrations.Game
                     b.HasIndex("PlayerId")
                         .IsUnique();
 
-                    b.ToTable("Settings");
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("AchievementPlayer", b =>

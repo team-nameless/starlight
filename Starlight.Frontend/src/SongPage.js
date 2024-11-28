@@ -50,16 +50,16 @@ function SongPage() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
   };
-
+  /*
   const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
-    loaderUrl: "build/myunityapp.loader.js",
-    dataUrl: "build/myunityapp.data",
-    frameworkUrl: "build/myunityapp.framework.js",
-    codeUrl: "build/myunityapp.wasm",
-  });
+    loaderUrl: require("./game/unity/pkg/WebUnity.loader.js"),
+    dataUrl: require("./game/unity/pkg/WebUnity.data.br"),
+    frameworkUrl: require("./game/unity/pkg/WebUnity.framework.js.br"),
+    codeUrl: require("./game/unity/pkg/WebUnity.wasm.br"),
+  });*/
 
   const navigate = useNavigate();
-
+  /*
   const handleGameOver = useCallback((userName, score) => {
     setIsGameOver(true);
     setUserName(userName);
@@ -72,6 +72,7 @@ function SongPage() {
       removeEventListener("GameOver", handleGameOver);
     };
   }, [addEventListener, removeEventListener, handleGameOver]);
+ */
 
   // Fetch user profile and song list data from the backend
   useEffect(() => {
@@ -436,10 +437,10 @@ function SongPage() {
           </div>
         )}
       </div>
-      <Unity unityProvider={unityProvider} />
+      {/*<Unity unityProvider={unityProvider} />
       {isGameOver === true && (
         <p>{`Game Over ${userName}! You've scored ${score} points.`}</p>
-      )}
+      )}*/}
     </Fragment>
   );
 }

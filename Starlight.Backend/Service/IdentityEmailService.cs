@@ -14,9 +14,38 @@ public class IdentityEmailService : IEmailSender<Player>
         _configuration = configuration;
     }
     
-    public Task SendConfirmationLinkAsync(Player user, string email, string confirmationLink)
+    public async Task SendConfirmationLinkAsync(Player user, string email, string confirmationLink)
     {
-        throw new NotImplementedException();
+        var host = _configuration.GetValue<string>("Email:Host") ?? "localhost";
+        var port = _configuration.GetValue<int>("Email:Port");
+        var sender = _configuration.GetValue<string>("Email:Sender") ?? "i.do.not@exist.here";
+        var auth = _configuration.GetValue<string>("Email:Auth") ?? "youshallnotpass";
+
+        var message = new MailMessage
+        {
+            Subject = "Email Validation Request",
+            From = new MailAddress(sender, "Team Starlight"),
+            To =
+            {
+                new MailAddress(email)
+            },
+            Body = $"""
+                    Dear {user.UserName},
+
+                    We heard that you want to validate your email.
+                    If you are the one that requested this, keep reading, or else, feel free to ignore.
+
+                    Your verification link code is: {confirmationLink}
+                    
+                    Regards,
+                    Team Starlight.
+                    """
+        };
+
+        using var client = new SmtpClient(host, port);
+
+        client.Credentials = new NetworkCredential(sender, auth);
+        await client.SendMailAsync(message);
     }
 
     public Task SendPasswordResetLinkAsync(Player user, string email, string resetLink)

@@ -30,7 +30,7 @@ public class Player : IdentityUser<Guid>
     public ulong TotalPlayTime { get; set; }
     
     /// <summary>
-    ///     Player exp.
+    ///     Player exp of the level.
     /// </summary>
     public ulong TotalExp { get; set; }
 
@@ -39,7 +39,23 @@ public class Player : IdentityUser<Guid>
     ///     Could have used prefix-sum, but let's *not* talk about it.
     /// </summary>
     public ulong CurrentLevel { get; set; }
-    
+
+    /// <summary>
+    ///     Max exp for designated level.
+    /// </summary>
+    public ulong MaxExpForLevel
+    {
+        get
+        {
+            const ulong c = 53;
+            var z = (double) CurrentLevel;
+            var t = Math.Max(0, (z + c - 92) * 0.02);
+
+            return (ulong) ((t + 0.1) * Math.Pow(z + c, 2)) + 1;
+        }
+        set => _ = value;
+    }
+
     /// <summary>
     ///     Recent played song ID.
     /// </summary>

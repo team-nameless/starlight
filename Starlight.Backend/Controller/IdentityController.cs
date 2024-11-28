@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Starlight.Backend.Controller.Request;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Enum;
@@ -176,5 +178,49 @@ public class IdentityController : ControllerBase
         var result = await userManager.ResetPasswordAsync(user, passwordReset.Code, passwordReset.NewPassword);
         
         return result.Succeeded ? Ok() : BadRequest(result.ToString());
+    }
+
+    /// <summary>
+    ///     Create an email/account verification request.
+    /// </summary>
+    [HttpGet("createEmailConfirmation")]
+    [Authorize]
+    public async Task<ActionResult> ConfirmEmail()
+    {
+        var services = HttpContext.RequestServices;
+        var userManager = services.GetRequiredService<UserManager<Player>>();
+        var user = await userManager.GetUserAsync(User);
+        
+        // ok I guess?
+        if (await userManager.IsEmailConfirmedAsync(user!)) return Ok();
+
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user!);
+        
+        var scheme = HttpContext.Request.Scheme;
+        var authorityUrl = HttpContext.Request.Host.Value;
+        
+        var confirmationUrl = $"{scheme}://{authorityUrl}/api/verifyEmail?token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token))}";
+        
+        await _emailService.SendConfirmationLinkAsync(user!, user!.Email!, confirmationUrl);
+        
+        return Ok();
+    }
+
+    /// <summary>
+    ///     Verify email.
+    /// </summary>
+    [HttpGet("verifyEmail")]
+    [Authorize]
+    public async Task<ActionResult> VerifyEmail([Required] string token)
+    {
+        var services = HttpContext.RequestServices;
+        var userManager = services.GetRequiredService<UserManager<Player>>();
+        var user = await userManager.GetUserAsync(User);
+
+        var result = await userManager.ConfirmEmailAsync(user!, token);
+
+        if (!result.Succeeded) return BadRequest(result.ToString());
+        
+        return Ok();
     }
 }
