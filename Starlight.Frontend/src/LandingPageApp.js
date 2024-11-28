@@ -281,6 +281,14 @@ const Hero = styled.div`
   }
 `;
 
+const EyeIcon = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+`;
+
 const LandingPageApp = () => {
   const [handle, setHandle] = useState('');
   const [email, setEmail] = useState('');
@@ -300,6 +308,8 @@ const LandingPageApp = () => {
   const [loginEmailError, setLoginEmailError] = useState('');
   const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -317,7 +327,7 @@ const LandingPageApp = () => {
     setHandleError('');  
     setSignUpEmailError('');
     setSignUpPasswordError('');
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
   
     let formHasError = false;
     
@@ -342,7 +352,7 @@ const LandingPageApp = () => {
     }
   
     if (formHasError) {
-      setIsLoading(false); // Stop loading if there's an error
+      setIsLoading(false); 
       return;
     }
   
@@ -371,7 +381,7 @@ const LandingPageApp = () => {
         alert('Registration failed. Please try again.');
       }
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     }
   };
   
@@ -381,7 +391,7 @@ const LandingPageApp = () => {
   
     setLoginEmailError('');
     setLoginPasswordError('');
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
   
     try {
       const response = await axios.post(`${rootUrl}/api/login`, { email: loginEmail, password: loginPassword }, {
@@ -394,7 +404,7 @@ const LandingPageApp = () => {
       setData(response.data); 
       setIsLoggedIn(true);
       setShowLoginModal(false); 
-      setShowLoginSuccessModal(true); // Show login success popup
+      setShowLoginSuccessModal(true); 
   
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -405,7 +415,7 @@ const LandingPageApp = () => {
         alert('An unexpected error occurred. Please try again later.');
       }
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     }
   };
 
@@ -414,7 +424,7 @@ const LandingPageApp = () => {
       setShowNotificationModal(true);
     } else {
       requestFullScreen();
-      navigate('/songpage'); // Ensure the path is lowercase
+      navigate('/songpage'); 
     }
   }
 
@@ -423,7 +433,7 @@ const LandingPageApp = () => {
     setShowSignUpModal(false);
     setShowNotificationModal(false);
     setShowSuccessModal(false);
-    setShowLoginSuccessModal(false); // Close login success popup
+    setShowLoginSuccessModal(false); 
   };
 
   const FormWrapper = styled.div`
@@ -441,6 +451,14 @@ const LandingPageApp = () => {
   const switchToSignUp = () => {
     setShowLoginModal(false);
     setShowSignUpModal(true);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleLoginPasswordVisibility = () => {
+    setShowLoginPassword(!showLoginPassword);
   };
 
   return (
@@ -507,13 +525,18 @@ const LandingPageApp = () => {
                 </TextFieldContainer>
                 <TextFieldContainer>
                   <label htmlFor="password">Password:</label>
-                  <TextField
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                  <div className="password-container">
+                    <TextField
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <EyeIcon onClick={togglePasswordVisibility}>
+                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    </EyeIcon>
+                  </div>
                   {signUpPasswordError && (
                     <span style={{ color: 'red', fontSize: '10px' }}>
                       Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter
@@ -562,13 +585,18 @@ const LandingPageApp = () => {
                   <label htmlFor="loginPassword" style={{ display: 'block', marginBottom: '12px', fontSize: '16px', width: '471px' }}>
                     Password:
                   </label>
-                  <TextField
-                    id="loginPassword"
-                    type="password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    required
-                  />
+                  <div className="password-container">
+                    <TextField
+                      id="loginPassword"
+                      type={showLoginPassword ? "text" : "password"}
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      required
+                    />
+                    <EyeIcon onClick={toggleLoginPasswordVisibility}>
+                      {showLoginPassword ? '👁️' : '👁️‍🗨️'}
+                    </EyeIcon>
+                  </div>
                   {loginPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{loginPasswordError}</span>}
                 </TextFieldContainer>
               </FormContainer>

@@ -20,6 +20,26 @@ import { useNavigate } from 'react-router-dom';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
+const ProgressBar = ({ current, total }) => {
+  const percentage = (current / total) * 100;
+
+  return (
+    <div className="level-container">
+      <div className="level">
+        <span>Level 1</span>
+        <span id="progress-text">{`${current}/${total}`}</span>
+      </div>
+      <div className="level">
+        <span>Next Level</span>
+        <span>Level 2</span>
+      </div>
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+      </div>
+    </div>
+  );
+};
+
 function ProfilePage() {
   const [userProfile, setUserProfile] = useState({});
   const [showPopup, setShowPopup] = useState(false);
@@ -32,6 +52,7 @@ function ProfilePage() {
   const [newMessage, setNewMessage] = useState(""); 
   const [activeTab, setActiveTab] = useState('scoreRecord');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [levelData, setLevelData] = useState({ level: 1, exp: 0, expNeededForNextLevel: 100 });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,7 +71,12 @@ function ProfilePage() {
             name: userData.name || 'Sanraku',
             profilePic: userData.avatar || profilePicPlaceholder
           });
-          setIsLoggedIn(true); // Set logged in state to true
+          setLevelData({
+            level: userData.level || 1,
+            exp: userData.exp || 0,
+            expNeededForNextLevel: userData.expNeededForNextLevel || 100
+          });
+          setIsLoggedIn(true); 
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
         }
@@ -139,6 +165,7 @@ function ProfilePage() {
 
         <div className="profile-container">
           <div className="profile-avatar-container">
+            <div className="avatar-indicator"></div> 
             <div className="profile-avatar-section">
               <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-avatar" />
               <div className="profile-username-avatar">{userProfile.name || 'Sanraku'}</div>
@@ -150,11 +177,13 @@ function ProfilePage() {
                 <span className={`profile-tab ${activeTab === 'achievements' ? 'active' : ''}`} onClick={() => handleTabClick('achievements')}>Achievements</span>
                 <span className={`profile-tab ${activeTab === 'accountSetting' ? 'active' : ''}`} onClick={() => handleTabClick('accountSetting')}>Account Setting</span>
               </div>
+              <ProgressBar current={levelData.exp} total={levelData.expNeededForNextLevel} />
             </div>
             <div className="profile-playtime-section">
               <div>Play time:</div>
               <div>Last Played:</div>
             </div>
+        
           </div>
             <div className="profile-info-container">
               {activeTab === 'scoreRecord' && (

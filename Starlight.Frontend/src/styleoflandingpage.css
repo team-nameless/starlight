@@ -43,7 +43,7 @@ body {
   justify-content: center;
   align-items: center;
   background: rgba(255, 255, 255, 0.8);
-  z-index: 2000; /* Increased z-index */
+  z-index: 20; 
 }
 
 .one, .two {
@@ -82,6 +82,24 @@ body {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   }
 }
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: calc(100% - 40px); 
+}
+
+.password-container .eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 
 
 

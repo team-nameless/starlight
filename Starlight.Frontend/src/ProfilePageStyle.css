@@ -37,7 +37,7 @@
     height: 28%;
     background-color: #1D2E38;
     margin-bottom: 15px;  
-    opacity: 0.5;
+    opacity: 0.9;
     margin-top: 50px;
     border-radius: 20px;
     display: flex;
@@ -66,6 +66,7 @@
     align-items: center;
     border-right: 2px solid #303030; 
     padding-right: 15px; 
+    position: relative; 
   }
 
   .profile-playtime-section {
@@ -103,7 +104,7 @@
     height: 110px; 
     margin-left: 5px;
     border-radius: 50%; 
-    z-index: 3; 
+    z-index: 5; 
     margin-bottom: 5px; 
     position: absolute;
     top: -35px; 
@@ -136,7 +137,6 @@
     width: 90%;
     height: 65%;
     background-color: #1D2E38;
-    opacity: 0.5;
     margin-top: 0; 
     border-radius: 20px;
     margin-bottom: 40px;
@@ -549,4 +549,45 @@
     margin-top: -14px;
     margin-right: 190px; 
     font-weight: 100;
+  }
+
+  .level {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    margin: 5px 0;
+    color: #C2BFBF;
+    font-weight: 300;
+  }
+
+  .progress-bar {
+    position: relative;
+    width: 415px;
+    height: 25px;
+    margin-top: -50px;
+    background-color: #1e1e1e;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(45deg, #ffa500, #ff4500);
+    border-radius: 20px;
+    transition: width 0.5s ease-out;
+  }
+
+  .level-container {
+    position: relative;
+    top: -150px; 
+  }
+
+  .level:first-of-type {
+    margin-top: -25px; 
+  }
+
+  .level:nth-of-type(2) {
+    margin-top: 35px; 
   }
