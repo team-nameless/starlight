@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Starlight.Backend.Service;
 
@@ -11,9 +12,11 @@ using Starlight.Backend.Service;
 namespace Starlight.Backend.Migrations.Game
 {
     [DbContext(typeof(GameDatabaseService))]
-    partial class GameDatabaseServiceModelSnapshot : ModelSnapshot
+    [Migration("20241128041043_AddLevelMaxExp")]
+    partial class AddLevelMaxExp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasIndex("OwnersId");
 
-                    b.ToTable("AchievementPlayer", (string)null);
+                    b.ToTable("AchievementPlayer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -180,7 +183,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasKey("Id");
 
-                    b.ToTable("Achievements", (string)null);
+                    b.ToTable("Achievements");
                 });
 
             modelBuilder.Entity("Starlight.Backend.Database.Game.Player", b =>
@@ -328,7 +331,7 @@ namespace Starlight.Backend.Migrations.Game
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Scores", (string)null);
+                    b.ToTable("Scores");
                 });
 
             modelBuilder.Entity("Starlight.Backend.Database.Game.Setting", b =>
@@ -374,7 +377,7 @@ namespace Starlight.Backend.Migrations.Game
                     b.HasIndex("PlayerId")
                         .IsUnique();
 
-                    b.ToTable("Settings", (string)null);
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("AchievementPlayer", b =>

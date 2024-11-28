@@ -60,23 +60,13 @@ public class UserController : ControllerBase
             Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
+            ExpNeededForNextLevel = user.MaxExpForLevel,
             PlayTime = user.TotalPlayTime,
             LastSeen = user.LastSeenTime,
             TopScores = user.BestScores,
             FriendList = user.Friends,
             AchievementList = user.Achievements,
         });
-    }
-
-    /// <summary>
-    ///     "Update" the score of a song.
-    /// </summary>
-    /// <param name="songId">Song ID</param>
-    [HttpPut("score/{songId:long}")]
-    [Authorize]
-    public async Task<ActionResult> SubmitScore(long songId)
-    {
-        return Ok();
     }
     
     /// <summary>
