@@ -232,7 +232,7 @@ function HistoryPage() {
           heatmapData.push({
             group: groups[index],
             variable: 'P',
-            value: (segment.perf / totalNotes) * 100,
+            value: (segment.bad / totalNotes) * 100,
           });
           heatmapData.push({
             group: groups[index],
@@ -252,7 +252,6 @@ function HistoryPage() {
       const data = testHeatmapData;
       const durationInSeconds = Math.floor(data.stats.duration / 1000);
       const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
-      const variables = ['CP', 'P', 'G', 'B', 'M'];
       const heatmapData = [];
   
       data.partial.forEach((segment, index) => {
@@ -275,7 +274,7 @@ function HistoryPage() {
         heatmapData.push({
           group: groups[index],
           variable: 'P',
-          value: (segment.perf / totalNotes) * 100,
+          value: (segment.bad / totalNotes) * 100,
         });
         heatmapData.push({
           group: groups[index],
@@ -368,12 +367,14 @@ function HistoryPage() {
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
+      /*
       .style("background-color", "white")
       .style("border", "solid")
       .style("border-width", "2px")
       .style("border-radius", "5px")
       .style("padding", "5px")
-      .style("position", "absolute");
+      .style("position", "absolute")*/
+
   
     const mouseover = function (event, d) {
       tooltip.style("opacity", 1);
@@ -382,7 +383,7 @@ function HistoryPage() {
   
     const mousemove = function (event, d) {
       tooltip
-        .html(`Beat Accuracy: ${d.value.toFixed(2)}%`)
+        .html(`Beat Accuracy: ${Math.floor(d.value) || 0}%`)
         .style("left", `${event.pageX + 20}px`)
         .style("top", `${event.pageY - 20}px`);
     };
@@ -410,7 +411,9 @@ function HistoryPage() {
       .style("opacity", 0.8)
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave);
+      .on("mouseleave", mouseleave)
+      .append("title")
+      .text((d) => `Beat Accuracy: ${Math.floor(d.value) || 0}%`);
   
     if (isFallback) {
       svg.append("text")
