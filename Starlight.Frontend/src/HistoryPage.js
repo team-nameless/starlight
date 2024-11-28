@@ -367,15 +367,7 @@ function HistoryPage() {
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
-      /*
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "2px")
-      .style("border-radius", "5px")
-      .style("padding", "5px")
-      .style("position", "absolute")*/
-
-  
+      
     const mouseover = function (event, d) {
       tooltip.style("opacity", 1);
       d3.select(this).style("stroke", "black").style("opacity", 1);
@@ -412,8 +404,6 @@ function HistoryPage() {
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
-      .append("title")
-      .text((d) => `Beat Accuracy: ${Math.floor(d.value) || 0}%`);
   
     if (isFallback) {
       svg.append("text")
@@ -438,24 +428,6 @@ function HistoryPage() {
       await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all", currentSong?.id);
     };
     renderHeatmap2();
-  }, [renderHeatmap, currentSong]);
-  
-  useEffect(() => {
-    const handlePageRefresh = () => {
-      const renderHeatmap1 = async () => {
-        await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent", currentSong?.id);
-      };
-      const renderHeatmap2 = async () => {
-        await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all", currentSong?.id);
-      };
-      renderHeatmap1();
-      renderHeatmap2();
-    };
-  
-    window.addEventListener('load', handlePageRefresh);
-    return () => {
-      window.removeEventListener('load', handlePageRefresh);
-    };
   }, [renderHeatmap, currentSong]);
   
   return (
