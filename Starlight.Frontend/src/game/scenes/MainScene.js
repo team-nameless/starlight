@@ -34,6 +34,9 @@ class MainScene extends Phaser.Scene {
     errorText;
 
     // buttons
+    replayKey;
+    pauseKey;
+    isPauseKeyHandled;
     noteOuter1Key;
     noteInner1Key;
     noteInner2Key;
@@ -63,6 +66,11 @@ class MainScene extends Phaser.Scene {
 
     // yes?
     inGameTimeInMs;
+    isScenePaused;
+    bgMusic;
+    pauseDimBg;
+    pauseText;
+    pauseHint;
 
     // keybind locking
     key1locked;
@@ -92,13 +100,18 @@ class MainScene extends Phaser.Scene {
         this.gameData = data.gameData;
         this.duration = data.gameData["metadata"]["duration"];
         this.rawNoteList = this.gameData.notes;
-        this.gameStartTime = new Date(Date.now());
+        this.isScenePaused = false;
+        this.isPauseKeyHandled = false;
 
         // input
-        this.noteOuter1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.noteInner1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON);
-        this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.QUOTES);
+        this.noteOuter1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.noteInner1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+        this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+
+        // misc. keys
+        this.replayKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
+        this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // input lock
         this.key1locked = false;
@@ -130,36 +143,54 @@ class MainScene extends Phaser.Scene {
 
         // Setup texts
         this.scoreText = this.add.text(1410, 100, "0000000", {
-            fontFamily: "sans-serif",
+            fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "80px"
         }).setOrigin(0, 0);
 
         this.comboText = this.add.text(200, 900, "0x", {
-            fontFamily: "sans-serif",
+            fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
         }).setOrigin(0, 0);
 
         this.accuracyText = this.add.text(1480, 180, "100.00%", {
-            fontFamily: "sans-serif",
+            fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
         }).setOrigin(0, 0);
 
-        this.judgementText = this.add.text(this.judgementPrintX, this.judgementPrintY, ".", {
-            fontFamily: "sans-serif",
+        this.judgementText = this.add.text(this.judgementPrintX, this.judgementPrintY, "", {
+            fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
         }).setOrigin(0, 0);
 
-        this.errorText = this.add.text(this.errorPrintX, this.errorPrintY, ".", {
-            fontFamily: "sans-serif",
+        this.errorText = this.add.text(this.errorPrintX, this.errorPrintY, "", {
+            fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
+        }).setOrigin(0, 0);
+
+        this.pauseText = this.add.text(780, 221, "", {
+            fontFamily: "Inter",
+            color: "#ffffff",
+            fontSize: "100px"
+        }).setOrigin(0, 0);
+
+        this.pauseHint = this.add.text(730, 318, "", {
+            fontFamily: "Inter",
+            color: "#ffffff",
+            fontSize: "50px"
         }).setOrigin(0, 0);
 
         this.totalNotes = this.rawNoteList.length;
+
+        // Pause dimmer
+        this.pauseDimBg = this.add.rectangle(0, 0, 1920, 1080, 0x110034);
+        this.pauseDimBg.setAlpha(0);
+        this.pauseDimBg.setOrigin(0, 0);
+        this.pauseDimBg.setDepth(10);
 
         this.rawNoteList.forEach((note) => {
             this.time.delayedCall(
@@ -185,10 +216,10 @@ class MainScene extends Phaser.Scene {
             callback: () => this.endGame()
         });
 
-        let bgMusic = this.sound.add("music");
+        this.bgMusic = this.sound.get("music") || this.sound.add("music");
         this.scene.resume();
         this.gameStartTime = new Date(Date.now());
-        bgMusic.play();
+        this.bgMusic.play();
     }
 
     calculateSpawnTime(targetTime) {
@@ -219,7 +250,14 @@ class MainScene extends Phaser.Scene {
             "noteInner",
             "noteInner",
             "noteOuter",
-        ]
+        ];
+
+        const colorSelection = [
+            0xb4befe,
+            0xf2cdcd,
+            0xf2cdcd,
+            0xb4befe
+        ];
 
         const noteObject = this.add.image(xPosition, 0, noteSelection[pos]);
 
@@ -235,12 +273,16 @@ class MainScene extends Phaser.Scene {
             const startTime = note["time"];
             const endTime = note["lastUntil"];
             const duration = endTime - startTime;
-            const height = (duration / 1000) * this.noteSpeed * this.noteScale;
+            const height = Math.max(
+                0,
+                Math.floor((duration / 1000) * this.noteSpeed * this.noteScale) - 60
+            );
 
-            const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, 0x0000ff);
+            const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, colorSelection[pos]);
             longNoteBody.setOrigin(0.5, 1);
             longNoteBody.setData("lnBody", true);
             longNoteBody.setDepth(1);
+            longNoteBody.setAlpha(0.5);
 
             this.notes.add(longNoteBody);
         }
@@ -396,8 +438,6 @@ class MainScene extends Phaser.Scene {
         Highlights the key being pressed.
      */
     drawInputIndicator(keyPosition) {
-        // I sleep again.
-        keyPosition -= 1;
         const xPosition = this.getLanePositionX(keyPosition);
 
         let indicator = this.add.image(xPosition, 845, "indicator");
@@ -405,7 +445,54 @@ class MainScene extends Phaser.Scene {
         setTimeout((x) => { x.destroy(); }, 20, indicator);
     }
 
+    /*
+        Toggle pause status of the game.
+     */
+    togglePause() {
+        this.isScenePaused = !this.isScenePaused;
+
+        if (this.isScenePaused) {
+            this.physics.pause();
+            this.time.paused = true;
+            this.notes.setVelocityY(0);
+            this.bgMusic.pause();
+            this.pauseDimBg.setAlpha(0.5);
+            this.pauseText.setText("PAUSED");
+            this.pauseText.setDepth(15);
+            this.pauseHint.setText("Press ESC to resume.");
+            this.pauseHint.setDepth(15);
+        } else {
+            this.physics.resume();
+            this.time.paused = false;
+            this.notes.setVelocityY(this.noteSpeed * this.noteScale);
+            this.bgMusic.resume();
+            this.pauseDimBg.setAlpha(0);
+            this.pauseText.setText("");
+            this.pauseHint.setText("");
+        }
+    }
+
+    /*
+        Restart the scene.
+     */
+    restartScene() {
+        this.time.paused = false;
+        this.scene.restart();
+    }
+
     update(time, delta) {
+        if (this.pauseKey.isDown && !this.isPauseKeyHandled) {
+            this.togglePause();
+            this.isPauseKeyHandled = true;
+        } else if (!this.pauseKey.isDown) {
+            this.isPauseKeyHandled = false;
+        }
+
+        if (this.replayKey.isDown) this.restartScene();
+
+        // only do stuffs when the game is not paused
+        if (this.isScenePaused) return;
+
         this.inGameTimeInMs += delta;
 
         if (this.noteOuter1Key.isDown) {
