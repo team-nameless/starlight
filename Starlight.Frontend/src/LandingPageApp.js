@@ -594,7 +594,7 @@ const LandingPageApp = () => {
                       required
                     />
                     <EyeIcon onClick={toggleLoginPasswordVisibility}>
-                      {showLoginPassword ? '👁️' : '👁️‍🗨️'}
+                      {showLoginPassword ? '🙉' : '🙈'}
                     </EyeIcon>
                   </div>
                   {loginPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{loginPasswordError}</span>}
