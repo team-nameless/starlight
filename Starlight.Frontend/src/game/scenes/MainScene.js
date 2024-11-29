@@ -9,7 +9,7 @@ class MainScene extends Phaser.Scene {
     rawNoteList;
 
     // gameplay properties
-    noteSpeed = 200;
+    noteSpeed = 150;
     noteScale = 10;
     gameData;
 
@@ -162,11 +162,10 @@ class MainScene extends Phaser.Scene {
         this.totalNotes = this.rawNoteList.length;
 
         this.rawNoteList.forEach((note) => {
-            const screenHeight = 845;
-            const timeToScroll = (screenHeight / (this.noteSpeed * this.noteScale)) * 1000;
-            const spawnTime = Math.max(0, note.time - timeToScroll);
-
-            this.time.delayedCall(spawnTime, () => { this.spawnNote(note); });
+            this.time.delayedCall(
+                this.calculateSpawnTime(note.time),
+                () => { this.spawnNote(note); }
+            );
         });
     }
 
@@ -181,15 +180,21 @@ class MainScene extends Phaser.Scene {
 
         // game end
         this.time.addEvent({
-            delay: this.duration + 100,
-           callbackScope: this,
-           callback: () => this.endGame()
+            delay: this.duration + 5000,
+            callbackScope: this,
+            callback: () => this.endGame()
         });
 
         let bgMusic = this.sound.add("music");
         this.scene.resume();
         this.gameStartTime = new Date(Date.now());
         bgMusic.play();
+    }
+
+    calculateSpawnTime(targetTime) {
+        const screenHeight = 845;
+        const timeToScroll = (screenHeight / (this.noteSpeed * this.noteScale)) * 1000;
+        return Math.max(0, targetTime - timeToScroll);
     }
 
     partialDataFinalize() {
@@ -206,15 +211,8 @@ class MainScene extends Phaser.Scene {
         Spawns the note, isn't that obvious?
      */
     spawnNote(note) {
-        // I sleep
-        let pos = note.position -= 1;
-
-        const xPositions = [
-            this.noteOuter1PositionX,
-            this.noteInner1PositionX,
-            this.noteInner2PositionX,
-            this.noteOuter2PositionX
-        ];
+        const pos = note["position"];
+        const xPosition = this.getLanePositionX(pos);
 
         const noteSelection = [
             "noteOuter",
@@ -223,14 +221,44 @@ class MainScene extends Phaser.Scene {
             "noteOuter",
         ]
 
-        const noteObject = this.add.image(xPositions[pos], 0, noteSelection[pos]);
+        const noteObject = this.add.image(xPosition, 0, noteSelection[pos]);
 
-        noteObject.setData("time", note.time);
+        noteObject.setData("time", note["time"]);
         noteObject.setData("position", pos);
-        noteObject.setData("type", note.type);
+        noteObject.setData("type", note["type"]);
+        noteObject.setData("lastUntil", note["lastUntil"]);
+        noteObject.setData("lnBody", false);
+        noteObject.setDepth(2);
+
+        // we also draw the body for LN start
+        if (note["type"] === 1) {
+            const startTime = note["time"];
+            const endTime = note["lastUntil"];
+            const duration = endTime - startTime;
+            const height = (duration / 1000) * this.noteSpeed * this.noteScale;
+
+            const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, 0x0000ff);
+            longNoteBody.setOrigin(0.5, 1);
+            longNoteBody.setData("lnBody", true);
+            longNoteBody.setDepth(1);
+
+            this.notes.add(longNoteBody);
+        }
 
         this.notes.add(noteObject);
         this.notes.setVelocityY(this.noteSpeed * this.noteScale);
+    }
+
+    /*
+        Get X coordinate of the lane.
+     */
+    getLanePositionX(keyPosition) {
+        return [
+            this.noteOuter1PositionX,
+            this.noteInner1PositionX,
+            this.noteInner2PositionX,
+            this.noteOuter2PositionX
+        ][keyPosition];
     }
 
     /*
@@ -243,25 +271,46 @@ class MainScene extends Phaser.Scene {
         }, [], this);
     }
 
+    /*
+        Draw judgement text
+     */
+    drawJudgementText(judgement, error) {
+        this.judgementText.setText(judgement);
+        this.errorText.setText(error);
+    }
+
+    /*
+        Process key lock.
+     */
+    processKeyLock(keyPosition, locker) {
+        switch (keyPosition) {
+            case 0:
+                this.key1locked = locker;
+                break;
+            case 1:
+                this.key2locked = locker;
+                break;
+            case 2:
+                this.key3locked = locker;
+                break;
+            case 3:
+                this.key4locked = locker;
+                break;
+            default:
+                break;
+        }
+    }
+
     handleInput(keyPosition) {
         const now = this.inGameTimeInMs;
 
-        // I sleep again.
-        keyPosition -= 1;
-
-        const xPositions = [
-            this.noteOuter1PositionX,
-            this.noteInner1PositionX,
-            this.noteInner2PositionX,
-            this.noteOuter2PositionX
-        ];
-
+        const xPosition = this.getLanePositionX(keyPosition);
         const noteList = this.notes.getChildren();
 
         // filter notes that are in the needed lane
         // and near the judgement box
         let notesAtWantedLanes = noteList
-            .filter(note => note.x === xPositions[keyPosition])
+            .filter(note => note.x === xPosition)
             .filter(note => Math.abs(note.y - 845) <= 150);
 
         if (notesAtWantedLanes.length === 0) return;
@@ -287,8 +336,12 @@ class MainScene extends Phaser.Scene {
                 return acceptedNote;
             });
 
-        // welp, no note I guess?
+        // well, no note I guess?
         if (theChosenOne === null) return;
+
+        // if the note is a long note body, ignore it.
+        // I will handle it with my spaghetti code later.
+        if (theChosenOne.getData("lnBody")) return;
 
         const noteObj = theChosenOne;
 
@@ -303,9 +356,6 @@ class MainScene extends Phaser.Scene {
         const isEarly = hitTime < expectedTime;
         const isLate = hitTime > expectedTime;
 
-        console.log(`Current time: ${now}, Hit time: ${hitTime}, Expected: ${expectedTime}`);
-        console.log(offset);
-
         let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
         let shouldLockKey = false;
 
@@ -316,50 +366,30 @@ class MainScene extends Phaser.Scene {
 
         if (offset <= critWindow) {
             ++this.totalCrit;
-            this.judgementText.setText("Nice!");
-            this.errorText.setText("");
             shouldLockKey = true;
+            this.drawJudgementText("Nice!", "");
             this.makeJudgementTextDisappear();
         }
         else if (critWindow < offset && offset <= perfWindow) {
             ++this.totalPerf;
-            this.judgementText.setText("Perfect");
-            this.errorText.setText(errTxt);
             shouldLockKey = true;
+            this.drawJudgementText("Perfect", errTxt);
             this.makeJudgementTextDisappear();
         }
         else if (perfWindow < offset && offset <= goodWindow) {
             ++this.totalGood;
-            this.judgementText.setText("Fine");
-            this.errorText.setText(errTxt);
             shouldLockKey = true;
+            this.drawJudgementText("Fine", errTxt);
             this.makeJudgementTextDisappear();
         }
         else if (goodWindow < offset && offset <= badWindow) {
             ++this.totalBad;
-            this.judgementText.setText("Meh.");
-            this.errorText.setText(errTxt);
             shouldLockKey = true;
+            this.drawJudgementText("Meh.", errTxt);
             this.makeJudgementTextDisappear();
         }
 
-        // lock the key
-        switch (keyPosition) {
-            case 0:
-                this.key1locked = shouldLockKey;
-                break;
-            case 1:
-                this.key2locked = shouldLockKey;
-                break;
-            case 2:
-                this.key3locked = shouldLockKey;
-                break;
-            case 3:
-                this.key4locked = shouldLockKey;
-                break;
-            default:
-                break;
-        }
+        this.processKeyLock(keyPosition, shouldLockKey);
     }
 
     /*
@@ -368,15 +398,9 @@ class MainScene extends Phaser.Scene {
     drawInputIndicator(keyPosition) {
         // I sleep again.
         keyPosition -= 1;
+        const xPosition = this.getLanePositionX(keyPosition);
 
-        const xPositions = [
-            this.noteOuter1PositionX,
-            this.noteInner1PositionX,
-            this.noteInner2PositionX,
-            this.noteOuter2PositionX
-        ];
-
-        let indicator = this.add.image(xPositions[keyPosition], 845, "indicator");
+        let indicator = this.add.image(xPosition, 845, "indicator");
 
         setTimeout((x) => { x.destroy(); }, 20, indicator);
     }
@@ -385,31 +409,31 @@ class MainScene extends Phaser.Scene {
         this.inGameTimeInMs += delta;
 
         if (this.noteOuter1Key.isDown) {
-            if (!this.key1locked) this.handleInput(1);
-            this.drawInputIndicator(1);
+            if (!this.key1locked) this.handleInput(0);
+            this.drawInputIndicator(0);
         } else {
-            this.key1locked = false;
+            this.processKeyLock(0, false);
         }
 
         if (this.noteInner1Key.isDown) {
-            if (!this.key2locked) this.handleInput(2);
-            this.drawInputIndicator(2);
+            if (!this.key2locked) this.handleInput(1);
+            this.drawInputIndicator(1);
         } else {
-            this.key2locked = false;
+            this.processKeyLock(1, false);
         }
 
         if (this.noteInner2Key.isDown) {
-            if (!this.key3locked) this.handleInput(3);
-            this.drawInputIndicator(3);
+            if (!this.key3locked) this.handleInput(2);
+            this.drawInputIndicator(2);
         } else {
-            this.key3locked = false;
+            this.processKeyLock(2, false);
         }
 
         if (this.noteOuter2Key.isDown) {
-            if (!this.key4locked) this.handleInput(4);
-            this.drawInputIndicator(4);
+            if (!this.key4locked) this.handleInput(3);
+            this.drawInputIndicator(3);
         } else {
-            this.key4locked = false;
+            this.processKeyLock(3, false);
         }
 
         // noinspection PointlessArithmeticExpressionJS
@@ -421,17 +445,18 @@ class MainScene extends Phaser.Scene {
                   0 * this.totalMiss
             ) / (350.00 * this.totalNotes) * 100.0;
 
-        // handle MISS judgement
         this.notes.getChildren().forEach((note) => {
+            if (note instanceof Phaser.GameObjects.Rectangle) return;
+
             const noteObj = note;
             const noteY = noteObj.y;
 
+            // handle MISS judgement
             if (noteY > 845 + 200) {
                 noteObj.destroy();
                 this.combo = 0;
                 ++this.totalMiss;
-                this.judgementText.setText("Missed.");
-                this.errorText.setText("");
+                this.drawJudgementText("Missed.", "");
                 this.makeJudgementTextDisappear();
             }
         });
