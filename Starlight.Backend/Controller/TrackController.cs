@@ -41,9 +41,9 @@ public class TrackController : ControllerBase
                 Duration = track.Duration,
                 Difficulty = track.Difficulty,
                 DifficultyFavorText = track.DifficultyFavorText,
-                BackgroundUrl = $"{scheme}://{authorityUrl}{track.BackgroundFileLocation}",
-                AudioUrl = $"{scheme}://{authorityUrl}{track.AudioFileLocation}",
-                DataUrl = $"{scheme}://{authorityUrl}{track.DataFileLocation}",
+                BackgroundUrl = $"{scheme}://{authorityUrl}/{track.BackgroundFileLocation}",
+                AudioUrl = $"{scheme}://{authorityUrl}/{track.AudioFileLocation}",
+                DataUrl = $"{scheme}://{authorityUrl}/{track.DataFileLocation}",
             });
         }
         

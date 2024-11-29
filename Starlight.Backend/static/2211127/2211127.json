@@ -58,1933 +58,2319 @@
     "notes": [
         {
             "time": 581,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 1251
         },
         {
             "time": 1251,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 1251
+        },
+        {
+            "time": 1251,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 1251
         },
         {
             "time": 1251,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 1251,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 1251
         },
         {
             "time": 1580,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 1580
         },
         {
             "time": 1910,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 1910
         },
         {
             "time": 2240,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 2240
         },
         {
             "time": 2404,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 2734
         },
         {
             "time": 2734,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 2734
         },
         {
             "time": 2734,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 2734
         },
         {
             "time": 2899,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 2899
         },
         {
             "time": 3064,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 3064
         },
         {
             "time": 3229,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 3888
         },
         {
             "time": 3888,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 3888
         },
         {
             "time": 3888,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 3888
         },
         {
             "time": 4218,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 4218
         },
         {
             "time": 4547,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 4547
         },
         {
             "time": 4877,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 5042,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 5371,
-            "position": 3,
-            "type": 3
-        },
-        {
-            "time": 5042,
-            "position": 4,
-            "type": 0
-        },
-        {
-            "time": 5371,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 4877
+        },
+        {
+            "time": 5042,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 5371
+        },
+        {
+            "time": 5371,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 5371
+        },
+        {
+            "time": 5042,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 5042
+        },
+        {
+            "time": 5371,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 5371
         },
         {
             "time": 5536,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 5866
         },
         {
             "time": 5866,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 5866
         },
         {
             "time": 5866,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 6196,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 6196,
-            "position": 1,
-            "type": 2
-        },
-        {
-            "time": 6525,
-            "position": 1,
-            "type": 3
-        },
-        {
-            "time": 6525,
             "position": 3,
-            "type": 0
+            "type": 1,
+            "lastUntil": 6196
+        },
+        {
+            "time": 6196,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 6196
+        },
+        {
+            "time": 6196,
+            "position": 0,
+            "type": 1,
+            "lastUntil": 6525
+        },
+        {
+            "time": 6525,
+            "position": 0,
+            "type": 2,
+            "lastUntil": 6525
+        },
+        {
+            "time": 6525,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 6525
         },
         {
             "time": 6855,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 6855
         },
         {
             "time": 7185,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 7185
         },
         {
             "time": 7514,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 7514
         },
         {
             "time": 7844,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 7844
         },
         {
             "time": 8174,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 8174
         },
         {
             "time": 8503,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 8833
+        },
+        {
+            "time": 8833,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 8833
         },
         {
             "time": 8833,
             "position": 3,
-            "type": 3
-        },
-        {
-            "time": 8833,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 8833
         },
         {
             "time": 8998,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 9327
         },
         {
             "time": 9327,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 9327
         },
         {
             "time": 9327,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 9327
         },
         {
             "time": 9492,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 9492
         },
         {
             "time": 9822,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 9822
         },
         {
             "time": 9987,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 9987
         },
         {
             "time": 10316,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 10316
         },
         {
             "time": 10646,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 10646
         },
         {
             "time": 10811,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 11800,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 10811
         },
         {
             "time": 11800,
-            "position": 4,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 11800
+        },
+        {
+            "time": 11800,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 11800
         },
         {
             "time": 12130,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 12130
         },
         {
             "time": 12459,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 12459
         },
         {
             "time": 12789,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 12789
         },
         {
             "time": 13119,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 13119
         },
         {
             "time": 13448,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 13448
         },
         {
             "time": 13778,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 13778
         },
         {
             "time": 14108,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 14108
         },
         {
             "time": 14437,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 14437
         },
         {
             "time": 14767,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 14767
         },
         {
             "time": 15097,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 15097
         },
         {
             "time": 15426,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 15426
         },
         {
             "time": 15756,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 15756
         },
         {
             "time": 16086,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 16086
         },
         {
             "time": 16415,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 16745,
-            "position": 2,
-            "type": 3
-        },
-        {
-            "time": 16745,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 17075,
-            "position": 3,
-            "type": 3
-        },
-        {
-            "time": 17075,
             "position": 1,
-            "type": 0
+            "type": 1,
+            "lastUntil": 16745
+        },
+        {
+            "time": 16745,
+            "position": 1,
+            "type": 2,
+            "lastUntil": 16745
+        },
+        {
+            "time": 16745,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 17075
+        },
+        {
+            "time": 17075,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 17075
+        },
+        {
+            "time": 17075,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 17075
         },
         {
             "time": 17404,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 17404
         },
         {
             "time": 17734,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 17734
         },
         {
             "time": 18064,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 18064
         },
         {
             "time": 18393,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 18393
         },
         {
             "time": 18723,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 18723
         },
         {
             "time": 19053,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 19053
         },
         {
             "time": 19382,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 19382
         },
         {
             "time": 19712,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 19712
         },
         {
             "time": 20042,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 20042
         },
         {
             "time": 20371,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 20371
         },
         {
             "time": 20701,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 20701
         },
         {
             "time": 21031,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 21690
         },
         {
             "time": 21690,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 21690
         },
         {
             "time": 21690,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 21690
         },
         {
             "time": 21855,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 21855
+        },
+        {
+            "time": 22185,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 22185
         },
         {
             "time": 22185,
             "position": 1,
-            "type": 0
-        },
-        {
-            "time": 22185,
-            "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 22185
         },
         {
             "time": 22679,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 22679
         },
         {
             "time": 23009,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 23009
         },
         {
             "time": 23338,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 23338
         },
         {
             "time": 23668,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 23668
         },
         {
             "time": 23998,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 23998
         },
         {
             "time": 24327,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 24327
         },
         {
             "time": 24492,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 24492
         },
         {
             "time": 24657,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 24657
         },
         {
             "time": 24822,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 25152
+        },
+        {
+            "time": 25152,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 25152
         },
         {
             "time": 25152,
             "position": 3,
-            "type": 3
-        },
-        {
-            "time": 25152,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 25152
         },
         {
             "time": 25316,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 25316
         },
         {
             "time": 25646,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 25646
         },
         {
             "time": 25976,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 25976
         },
         {
             "time": 26305,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 26305
         },
         {
             "time": 26470,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 26470
         },
         {
             "time": 26635,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 26635
         },
         {
             "time": 26800,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 26800
         },
         {
             "time": 27130,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 27130
         },
         {
             "time": 27294,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 27294
         },
         {
             "time": 27459,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 27954
         },
         {
             "time": 27954,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 27954
         },
         {
             "time": 27954,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 27954
         },
         {
             "time": 28283,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 28283
         },
         {
             "time": 28613,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 28613
         },
         {
             "time": 28943,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 28943
         },
         {
             "time": 29272,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 29272
         },
         {
             "time": 29602,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 29602
         },
         {
             "time": 29767,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 29767
         },
         {
             "time": 29932,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 29932
+        },
+        {
+            "time": 30261,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 30261
+        },
+        {
+            "time": 30261,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 30261,
-            "position": 1,
-            "type": 0
-        },
-        {
-            "time": 30261,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 30261
         },
         {
             "time": 30756,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 30756
         },
         {
             "time": 30921,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 30921
         },
         {
             "time": 31086,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 31086
         },
         {
             "time": 31251,
-            "position": 4,
-            "type": 0
-        },
-        {
-            "time": 31415,
-            "position": 1,
-            "type": 0
-        },
-        {
-            "time": 31415,
             "position": 3,
-            "type": 0
+            "type": 0,
+            "lastUntil": 31251
+        },
+        {
+            "time": 31415,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 31415
+        },
+        {
+            "time": 31415,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 31415
         },
         {
             "time": 31745,
+            "position": 1,
+            "type": 0,
+            "lastUntil": 31745
+        },
+        {
+            "time": 31910,
             "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 31910
         },
         {
             "time": 31910,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 31910,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 31910
         },
         {
             "time": 32240,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 32569
         },
         {
             "time": 32569,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 32569
         },
         {
             "time": 32569,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 32899,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 32899,
-            "position": 1,
-            "type": 0
-        },
-        {
-            "time": 32899,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 33229,
-            "position": 2,
-            "type": 3
-        },
-        {
-            "time": 33229,
             "position": 3,
-            "type": 0
+            "type": 1,
+            "lastUntil": 32899
         },
         {
-            "time": 33558,
+            "time": 32899,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 32899
+        },
+        {
+            "time": 32899,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 32899
+        },
+        {
+            "time": 32899,
             "position": 1,
-            "type": 0
+            "type": 1,
+            "lastUntil": 33229
+        },
+        {
+            "time": 33229,
+            "position": 1,
+            "type": 2,
+            "lastUntil": 33229
+        },
+        {
+            "time": 33229,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 33229
         },
         {
             "time": 33558,
-            "position": 4,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 33558
+        },
+        {
+            "time": 33558,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 33558
         },
         {
             "time": 33888,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 34218,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 33888
         },
         {
             "time": 34218,
-            "position": 3,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 34218
+        },
+        {
+            "time": 34218,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 34218
         },
         {
             "time": 34547,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 34547
         },
         {
             "time": 34877,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 35207
         },
         {
             "time": 35207,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 35207
         },
         {
             "time": 35207,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 35536,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 1,
+            "lastUntil": 35536
         },
         {
             "time": 35536,
             "position": 2,
-            "type": 2
-        },
-        {
-            "time": 35866,
-            "position": 2,
-            "type": 3
+            "type": 2,
+            "lastUntil": 35536
         },
         {
             "time": 35536,
-            "position": 4,
-            "type": 0
+            "position": 1,
+            "type": 1,
+            "lastUntil": 35866
         },
         {
             "time": 35866,
             "position": 1,
-            "type": 0
+            "type": 2,
+            "lastUntil": 35866
+        },
+        {
+            "time": 35536,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 35536
+        },
+        {
+            "time": 35866,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 35866
+        },
+        {
+            "time": 36196,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 36196
         },
         {
             "time": 36196,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 36196,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 36196
         },
         {
             "time": 36525,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 36855,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 36525
         },
         {
             "time": 36855,
-            "position": 4,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 36855
+        },
+        {
+            "time": 36855,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 36855
         },
         {
             "time": 37185,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 37185
         },
         {
             "time": 37514,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 37844
         },
         {
             "time": 37844,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 37844
         },
         {
             "time": 37844,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 38174
         },
         {
             "time": 38174,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 38174
+        },
+        {
+            "time": 38174,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 38174
         },
         {
             "time": 38174,
             "position": 1,
-            "type": 0
-        },
-        {
-            "time": 38174,
-            "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 38174
         },
         {
             "time": 38503,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 38503
+        },
+        {
+            "time": 38833,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 38833
+        },
+        {
+            "time": 38833,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 38833,
-            "position": 1,
-            "type": 0
-        },
-        {
-            "time": 38833,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 38833
         },
         {
             "time": 39163,
+            "position": 1,
+            "type": 0,
+            "lastUntil": 39163
+        },
+        {
+            "time": 39492,
             "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 39492
         },
         {
             "time": 39492,
             "position": 3,
-            "type": 0
-        },
-        {
-            "time": 39492,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 39492
         },
         {
             "time": 39822,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 39822
         },
         {
             "time": 40152,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 40481,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 1,
+            "lastUntil": 40481
         },
         {
             "time": 40481,
             "position": 2,
-            "type": 2
+            "type": 2,
+            "lastUntil": 40481
         },
         {
-            "time": 40811,
-            "position": 2,
-            "type": 3
+            "time": 40481,
+            "position": 1,
+            "type": 1,
+            "lastUntil": 40811
         },
         {
             "time": 40811,
             "position": 1,
-            "type": 0
+            "type": 2,
+            "lastUntil": 40811
         },
         {
             "time": 40811,
-            "position": 4,
-            "type": 2
+            "position": 0,
+            "type": 0,
+            "lastUntil": 40811
         },
         {
-            "time": 41141,
-            "position": 4,
-            "type": 3
+            "time": 40811,
+            "position": 3,
+            "type": 1,
+            "lastUntil": 41141
         },
         {
             "time": 41141,
             "position": 3,
-            "type": 0
+            "type": 2,
+            "lastUntil": 41141
+        },
+        {
+            "time": 41141,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 41141
         },
         {
             "time": 41470,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 41470
         },
         {
             "time": 41470,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 41470
         },
         {
             "time": 41800,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 42130,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 41800
         },
         {
             "time": 42130,
-            "position": 3,
-            "type": 2
+            "position": 0,
+            "type": 0,
+            "lastUntil": 42130
+        },
+        {
+            "time": 42130,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 42459
+        },
+        {
+            "time": 42459,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 42459
         },
         {
             "time": 42459,
             "position": 3,
-            "type": 3
-        },
-        {
-            "time": 42459,
-            "position": 4,
-            "type": 0
+            "type": 0,
+            "lastUntil": 42459
         },
         {
             "time": 42789,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 42789
         },
         {
             "time": 43009,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 43009
         },
         {
             "time": 43119,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 43119
+        },
+        {
+            "time": 43448,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 43448
         },
         {
             "time": 43448,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 43448,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 43448
         },
         {
             "time": 43778,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 43778
         },
         {
             "time": 44108,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 44108
         },
         {
             "time": 44437,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 44437
         },
         {
             "time": 44767,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 44767
         },
         {
             "time": 45097,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 45097
         },
         {
             "time": 45426,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 45426
         },
         {
             "time": 45591,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 45591
         },
         {
             "time": 45756,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 45756
         },
         {
             "time": 45921,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 45921
         },
         {
             "time": 46086,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 46086
         },
         {
             "time": 46415,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 46415
         },
         {
             "time": 46745,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 46745
         },
         {
             "time": 47075,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 47075
         },
         {
             "time": 47404,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 47404
         },
         {
             "time": 47734,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 47734
         },
         {
             "time": 48064,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 48064
         },
         {
             "time": 48229,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 48229
         },
         {
             "time": 48393,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 48393
         },
         {
             "time": 48558,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 48558
         },
         {
             "time": 48723,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 49053,
-            "position": 3,
-            "type": 3
-        },
-        {
-            "time": 49053,
-            "position": 1,
-            "type": 2
-        },
-        {
-            "time": 49382,
-            "position": 1,
-            "type": 3
-        },
-        {
-            "time": 49382,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 49712,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 49712,
             "position": 2,
-            "type": 0
+            "type": 1,
+            "lastUntil": 49053
+        },
+        {
+            "time": 49053,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 49053
+        },
+        {
+            "time": 49053,
+            "position": 0,
+            "type": 1,
+            "lastUntil": 49382
+        },
+        {
+            "time": 49382,
+            "position": 0,
+            "type": 2,
+            "lastUntil": 49382
+        },
+        {
+            "time": 49382,
+            "position": 3,
+            "type": 1,
+            "lastUntil": 49712
+        },
+        {
+            "time": 49712,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 49712
+        },
+        {
+            "time": 49712,
+            "position": 1,
+            "type": 0,
+            "lastUntil": 49712
         },
         {
             "time": 49877,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 50371
         },
         {
             "time": 50371,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 2,
+            "lastUntil": 50371
         },
         {
             "time": 50371,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 50701
         },
         {
             "time": 50701,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 50701
         },
         {
             "time": 50701,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 51360
         },
         {
             "time": 51360,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 51360
+        },
+        {
+            "time": 51360,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 51360
         },
         {
             "time": 51360,
             "position": 1,
-            "type": 0
-        },
-        {
-            "time": 51360,
-            "position": 2,
-            "type": 2
+            "type": 1,
+            "lastUntil": 52349
         },
         {
             "time": 52349,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 52349
         },
         {
             "time": 52349,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 52349
         },
         {
             "time": 52514,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 52514
         },
         {
             "time": 52844,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 52844
         },
         {
             "time": 53009,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 53009
         },
         {
             "time": 53338,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 53668
+        },
+        {
+            "time": 53668,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 53668
         },
         {
             "time": 53668,
             "position": 3,
-            "type": 3
-        },
-        {
-            "time": 53668,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 53998,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 53998,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 54327,
-            "position": 2,
-            "type": 3
+            "type": 1,
+            "lastUntil": 53998
         },
         {
             "time": 53998,
             "position": 3,
-            "type": 0
+            "type": 2,
+            "lastUntil": 53998
+        },
+        {
+            "time": 53998,
+            "position": 1,
+            "type": 1,
+            "lastUntil": 54327
         },
         {
             "time": 54327,
             "position": 1,
-            "type": 2
+            "type": 2,
+            "lastUntil": 54327
+        },
+        {
+            "time": 53998,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 53998
+        },
+        {
+            "time": 54327,
+            "position": 0,
+            "type": 1,
+            "lastUntil": 54657
         },
         {
             "time": 54657,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 54657
         },
         {
             "time": 54657,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 54987,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 1,
+            "lastUntil": 54987
         },
         {
             "time": 54987,
             "position": 2,
-            "type": 0
+            "type": 2,
+            "lastUntil": 54987
+        },
+        {
+            "time": 54987,
+            "position": 1,
+            "type": 0,
+            "lastUntil": 54987
         },
         {
             "time": 55152,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 55152
         },
         {
             "time": 55481,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 55481
         },
         {
             "time": 55646,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 55646
         },
         {
             "time": 55976,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 56305
         },
         {
             "time": 56305,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 56305
         },
         {
             "time": 56305,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 56635
         },
         {
             "time": 56635,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 56635
         },
         {
             "time": 56635,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 56965
         },
         {
             "time": 56965,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 56965
         },
         {
             "time": 56965,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 57294,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 1,
+            "lastUntil": 57294
         },
         {
             "time": 57294,
             "position": 2,
-            "type": 2
+            "type": 2,
+            "lastUntil": 57294
+        },
+        {
+            "time": 57294,
+            "position": 1,
+            "type": 1,
+            "lastUntil": 57624
         },
         {
             "time": 57624,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 57624
         },
         {
             "time": 57624,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 57624
         },
         {
             "time": 57789,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 57789
         },
         {
             "time": 58119,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 58119
         },
         {
             "time": 58283,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 58283
         },
         {
             "time": 58613,
-            "position": 4,
-            "type": 2
+            "position": 3,
+            "type": 1,
+            "lastUntil": 58943
         },
         {
             "time": 58943,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 58943
         },
         {
             "time": 58943,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 59272
+        },
+        {
+            "time": 59272,
+            "position": 0,
+            "type": 2,
+            "lastUntil": 59272
         },
         {
             "time": 59272,
             "position": 1,
-            "type": 3
-        },
-        {
-            "time": 59272,
-            "position": 2,
-            "type": 2
+            "type": 1,
+            "lastUntil": 59602
         },
         {
             "time": 59602,
-            "position": 2,
-            "type": 3
-        },
-        {
-            "time": 59602,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 59932,
-            "position": 3,
-            "type": 3
-        },
-        {
-            "time": 59932,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 60261,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 60261,
             "position": 1,
-            "type": 0
+            "type": 2,
+            "lastUntil": 59602
+        },
+        {
+            "time": 59602,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 59932
+        },
+        {
+            "time": 59932,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 59932
+        },
+        {
+            "time": 59932,
+            "position": 3,
+            "type": 1,
+            "lastUntil": 60261
+        },
+        {
+            "time": 60261,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 60261
+        },
+        {
+            "time": 60261,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 60261
         },
         {
             "time": 60426,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 60426
         },
         {
             "time": 60756,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 60756
         },
         {
             "time": 60921,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 60921
         },
         {
             "time": 61251,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 61251
         },
         {
             "time": 61580,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 61580
         },
         {
             "time": 61910,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 62240
         },
         {
             "time": 62240,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 62240
         },
         {
             "time": 62240,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 62240
         },
         {
             "time": 62404,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 62899
+        },
+        {
+            "time": 62899,
+            "position": 0,
+            "type": 2,
+            "lastUntil": 62899
         },
         {
             "time": 62899,
             "position": 1,
-            "type": 3
-        },
-        {
-            "time": 62899,
-            "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 62899
         },
         {
             "time": 63064,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 63393,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 1,
+            "lastUntil": 63393
         },
         {
             "time": 63393,
             "position": 3,
-            "type": 0
+            "type": 2,
+            "lastUntil": 63393
+        },
+        {
+            "time": 63393,
+            "position": 2,
+            "type": 0,
+            "lastUntil": 63393
         },
         {
             "time": 63558,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 63558
         },
         {
             "time": 63723,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 63723
         },
         {
             "time": 63888,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 64218,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 1,
+            "lastUntil": 64218
         },
         {
             "time": 64218,
             "position": 2,
-            "type": 2
+            "type": 2,
+            "lastUntil": 64218
+        },
+        {
+            "time": 64218,
+            "position": 1,
+            "type": 1,
+            "lastUntil": 64547
         },
         {
             "time": 64547,
+            "position": 1,
+            "type": 2,
+            "lastUntil": 64547
+        },
+        {
+            "time": 64547,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 64547
+        },
+        {
+            "time": 64547,
+            "position": 3,
+            "type": 1,
+            "lastUntil": 64877
+        },
+        {
+            "time": 64877,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 64877
+        },
+        {
+            "time": 64877,
             "position": 2,
-            "type": 3
-        },
-        {
-            "time": 64547,
-            "position": 1,
-            "type": 0
-        },
-        {
-            "time": 64547,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 64877,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 64877,
-            "position": 3,
-            "type": 2
+            "type": 1,
+            "lastUntil": 65207
         },
         {
             "time": 65207,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 2,
+            "lastUntil": 65207
         },
         {
             "time": 65207,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 65536
         },
         {
             "time": 65536,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 65536
         },
         {
             "time": 65536,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 65536
         },
         {
             "time": 65701,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 65701
         },
         {
             "time": 66031,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 66031
         },
         {
             "time": 66196,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 66196
         },
         {
             "time": 66525,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 66525
         },
         {
             "time": 66690,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 66690
         },
         {
             "time": 66855,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 67185
+        },
+        {
+            "time": 67185,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 67185
         },
         {
             "time": 67185,
             "position": 3,
-            "type": 3
-        },
-        {
-            "time": 67185,
-            "position": 4,
-            "type": 2
+            "type": 1,
+            "lastUntil": 67514
         },
         {
             "time": 67514,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 2,
+            "lastUntil": 67514
         },
         {
             "time": 67514,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 67844,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 1,
+            "lastUntil": 67844
         },
         {
             "time": 67844,
             "position": 1,
-            "type": 0
+            "type": 2,
+            "lastUntil": 67844
+        },
+        {
+            "time": 67844,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 67844
         },
         {
             "time": 68009,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 68009
         },
         {
             "time": 68174,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 68174
         },
         {
             "time": 68338,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 68668
         },
         {
             "time": 68668,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 68668
         },
         {
             "time": 68668,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 68668
         },
         {
             "time": 68833,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 69163,
-            "position": 2,
-            "type": 3
-        },
-        {
-            "time": 69163,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 69657,
-            "position": 4,
-            "type": 3
-        },
-        {
-            "time": 69657,
             "position": 1,
-            "type": 0
+            "type": 1,
+            "lastUntil": 69163
+        },
+        {
+            "time": 69163,
+            "position": 1,
+            "type": 2,
+            "lastUntil": 69163
+        },
+        {
+            "time": 69163,
+            "position": 3,
+            "type": 1,
+            "lastUntil": 69657
+        },
+        {
+            "time": 69657,
+            "position": 3,
+            "type": 2,
+            "lastUntil": 69657
+        },
+        {
+            "time": 69657,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 69657
         },
         {
             "time": 69822,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 70976
         },
         {
             "time": 70976,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 2,
+            "lastUntil": 70976
         },
         {
             "time": 70481,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 70481
         },
         {
             "time": 70976,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 70976
         },
         {
             "time": 71141,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 71635
         },
         {
             "time": 71635,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 71635
         },
         {
             "time": 71635,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 71635
         },
         {
             "time": 71800,
-            "position": 2,
-            "type": 2
+            "position": 1,
+            "type": 1,
+            "lastUntil": 72130
         },
         {
             "time": 72130,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 72130
         },
         {
             "time": 72130,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 72459,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 1,
+            "lastUntil": 72459
         },
         {
             "time": 72459,
             "position": 3,
-            "type": 2
+            "type": 2,
+            "lastUntil": 72459
         },
         {
-            "time": 72789,
-            "position": 3,
-            "type": 3
+            "time": 72459,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 72789
         },
         {
             "time": 72789,
             "position": 2,
-            "type": 0
+            "type": 2,
+            "lastUntil": 72789
+        },
+        {
+            "time": 72789,
+            "position": 1,
+            "type": 0,
+            "lastUntil": 72789
         },
         {
             "time": 72954,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 73448
         },
         {
             "time": 73448,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 73448
         },
         {
             "time": 73448,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 73448
         },
         {
             "time": 73613,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 73613
         },
         {
             "time": 73778,
-            "position": 2,
-            "type": 2
-        },
-        {
-            "time": 74272,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 1,
+            "lastUntil": 74272
         },
         {
             "time": 74272,
             "position": 1,
-            "type": 0
+            "type": 2,
+            "lastUntil": 74272
+        },
+        {
+            "time": 74272,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 74272
         },
         {
             "time": 74437,
-            "position": 3,
-            "type": 2
+            "position": 2,
+            "type": 1,
+            "lastUntil": 75097
         },
         {
             "time": 75097,
-            "position": 3,
-            "type": 3
+            "position": 2,
+            "type": 2,
+            "lastUntil": 75097
         },
         {
             "time": 75097,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 76415
         },
         {
             "time": 76415,
-            "position": 1,
-            "type": 3
+            "position": 0,
+            "type": 2,
+            "lastUntil": 76415
         },
         {
             "time": 76415,
-            "position": 4,
-            "type": 2
-        },
-        {
-            "time": 76745,
-            "position": 4,
-            "type": 3
+            "position": 3,
+            "type": 1,
+            "lastUntil": 76745
         },
         {
             "time": 76745,
             "position": 3,
-            "type": 2
+            "type": 2,
+            "lastUntil": 76745
         },
         {
-            "time": 77075,
-            "position": 3,
-            "type": 3
+            "time": 76745,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 77075
         },
         {
             "time": 77075,
             "position": 2,
-            "type": 2
+            "type": 2,
+            "lastUntil": 77075
+        },
+        {
+            "time": 77075,
+            "position": 1,
+            "type": 1,
+            "lastUntil": 77734
         },
         {
             "time": 77734,
-            "position": 2,
-            "type": 3
+            "position": 1,
+            "type": 2,
+            "lastUntil": 77734
         },
         {
             "time": 77404,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 77404
         },
         {
             "time": 77734,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 77734
         },
         {
             "time": 78064,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 78064
         },
         {
             "time": 78393,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 78393
         },
         {
             "time": 78723,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 78723
         },
         {
             "time": 78888,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 78888
         },
         {
             "time": 79218,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 79218
         },
         {
             "time": 79382,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 79382
         },
         {
             "time": 79547,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 79547
         },
         {
             "time": 79877,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 79877
         },
         {
             "time": 80042,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 80042
         },
         {
             "time": 80371,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 80371
         },
         {
             "time": 80701,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 80701
         },
         {
             "time": 81031,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 81031
         },
         {
             "time": 81196,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 81196
         },
         {
             "time": 81360,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 81360
         },
         {
             "time": 81690,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 81690
         },
         {
             "time": 81855,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 81855
         },
         {
             "time": 82020,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 82020
         },
         {
             "time": 82185,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 82185
         },
         {
             "time": 82514,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 82514
         },
         {
             "time": 82679,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 82844,
-            "position": 3,
-            "type": 2
-        },
-        {
-            "time": 83503,
-            "position": 3,
-            "type": 3
-        },
-        {
-            "time": 82844,
-            "position": 4,
-            "type": 0
-        },
-        {
-            "time": 83503,
             "position": 1,
-            "type": 0
+            "type": 0,
+            "lastUntil": 82679
+        },
+        {
+            "time": 82844,
+            "position": 2,
+            "type": 1,
+            "lastUntil": 83503
+        },
+        {
+            "time": 83503,
+            "position": 2,
+            "type": 2,
+            "lastUntil": 83503
+        },
+        {
+            "time": 82844,
+            "position": 3,
+            "type": 0,
+            "lastUntil": 82844
+        },
+        {
+            "time": 83503,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 83503
         },
         {
             "time": 83668,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 83668
         },
         {
             "time": 83998,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 83998
         },
         {
             "time": 84163,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 84163
         },
         {
             "time": 84492,
-            "position": 1,
-            "type": 0
+            "position": 0,
+            "type": 0,
+            "lastUntil": 84492
         },
         {
             "time": 84657,
-            "position": 2,
-            "type": 0
+            "position": 1,
+            "type": 0,
+            "lastUntil": 84657
         },
         {
             "time": 84987,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 84987
         },
         {
             "time": 85316,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 85316
         },
         {
             "time": 85481,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 85481
         },
         {
             "time": 85646,
-            "position": 1,
-            "type": 2
+            "position": 0,
+            "type": 1,
+            "lastUntil": 86141
+        },
+        {
+            "time": 86141,
+            "position": 0,
+            "type": 2,
+            "lastUntil": 86141
         },
         {
             "time": 86141,
             "position": 1,
-            "type": 3
+            "type": 0,
+            "lastUntil": 86141
         },
         {
             "time": 86141,
-            "position": 2,
-            "type": 0
-        },
-        {
-            "time": 86141,
-            "position": 4,
-            "type": 0
+            "position": 3,
+            "type": 0,
+            "lastUntil": 86141
         },
         {
             "time": 86470,
-            "position": 3,
-            "type": 0
+            "position": 2,
+            "type": 0,
+            "lastUntil": 86470
+        },
+        {
+            "time": 86800,
+            "position": 0,
+            "type": 0,
+            "lastUntil": 86800
         },
         {
             "time": 86800,
             "position": 1,
-            "type": 0
-        },
-        {
-            "time": 86800,
-            "position": 2,
-            "type": 0
+            "type": 0,
+            "lastUntil": 86800
         }
     ]
 }
