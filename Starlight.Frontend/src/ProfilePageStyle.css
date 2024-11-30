@@ -170,6 +170,62 @@
     font-size: 20px;
   }
   
+  .profile-account-setting {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+
+  .update-password, .update-email {
+    flex: 1;
+    margin: 10px;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+
+  .update-password h2, .update-email h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #FFF5F5;
+    text-align: center;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px; /* Increase margin for padding between fields */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+
+  .update-button {
+    background-color: #841EFC;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+
+  .update-button:hover {
+    background-color: #a135ff;
+  }
+
+  .update-message {
+    color: red;
+    margin-top: 10px;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
+  }
+  
   .chat-container {
     width: 23%; 
     height: 95%;
@@ -590,4 +646,13 @@
 
   .level:nth-of-type(2) {
     margin-top: 35px; 
+  }
+
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    z-index: 10; /* Ensure it is above other elements */
+    position: relative; /* Ensure it is positioned relative */
   }

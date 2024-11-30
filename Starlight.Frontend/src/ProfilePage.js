@@ -53,7 +53,14 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState('scoreRecord');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [levelData, setLevelData] = useState({ level: 1, exp: 0, expNeededForNextLevel: 100 });
+  const [passwordUpdate, setPasswordUpdate] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
+  const [emailUpdate, setEmailUpdate] = useState({ email: '', password: '', newEmail: '' });
+  const [popupMessage, setPopupMessage] = useState('');
+  const [passwordError, setPasswordError] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
+  const [showPopupUpdate, setShowPopupUpdate] = useState(false);
   const navigate = useNavigate();
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,6 +124,62 @@ function ProfilePage() {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPasswordUpdate({ ...passwordUpdate, [e.target.name]: e.target.value });
+  };
+
+  const handleEmailChange = (e) => {
+    setEmailUpdate({ ...emailUpdate, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordUpdate = async () => {
+    setPasswordError({ email: '', newPassword: '', confirmNewPassword: '' });
+    if (!passwordUpdate.email) {
+      setPasswordError((prev) => ({ ...prev, email: 'The email is not matching' }));
+      return;
+    }
+    if (!passwordRegex.test(passwordUpdate.newPassword)) {
+      setPasswordError((prev) => ({ ...prev, newPassword: 'Your passwords should be at least 8 characters in length, uppercase, number, and special characters' }));
+      return;
+    }
+    if (passwordUpdate.newPassword !== passwordUpdate.confirmNewPassword) {
+      setPasswordError((prev) => ({ ...prev, confirmNewPassword: 'New Passwords do not match' }));
+      return;
+    }
+    try {
+      const response = await axios.patch(`${rootUrl}/api/user/profile`, {
+        email: passwordUpdate.email,
+        newPassword: passwordUpdate.newPassword,
+      });
+      if (response.status === 200) {
+        setPopupMessage('Password updated successfully');
+      } else {
+        setPopupMessage('Error updating password');
+      }
+    } catch (error) {
+      setPopupMessage('Error updating password');
+    }
+    setShowPopupUpdate(true);
+  };
+
+  const handleEmailUpdate = async () => {
+    try {
+      const response = await axios.patch(`${rootUrl}/api/user/profile`, {
+        email: emailUpdate.email,
+        password: emailUpdate.password,
+        newEmail: emailUpdate.newEmail,
+      });
+      if (response.status === 200) {
+        setPopupMessage('Email updated successfully');
+      } else {
+        setPopupMessage('Error updating email');
+      }
+    } catch (error) {
+      setPopupMessage('Error updating email');
+    }
+    setShowPopupUpdate(true);
   };
 
   return (
@@ -207,6 +270,66 @@ function ProfilePage() {
               )}
               {activeTab === 'accountSetting' && (
                 <div className="profile-account-setting">
+                  <div className="update-password">
+                    <h2>Update Password</h2>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={passwordUpdate.email}
+                      onChange={handlePasswordChange}
+                      className="input-field"
+                    />
+                    {passwordError.email && <div className="error-message">{passwordError.email}</div>}
+                    <input
+                      type="password"
+                      name="newPassword"
+                      placeholder="New Password"
+                      value={passwordUpdate.newPassword}
+                      onChange={handlePasswordChange}
+                      className="input-field"
+                    />
+                    {passwordError.newPassword && <div className="error-message">{passwordError.newPassword}</div>}
+                    <input
+                      type="password"
+                      name="confirmNewPassword"
+                      placeholder="Confirm New Password"
+                      value={passwordUpdate.confirmNewPassword}
+                      onChange={handlePasswordChange}
+                      className="input-field"
+                    />
+                    {passwordError.confirmNewPassword && <div className="error-message">{passwordError.confirmNewPassword}</div>}
+                    <button onClick={handlePasswordUpdate} className="update-button">Update</button>
+                  </div>
+
+                  <div className="update-email">
+                    <h2>Update Email Address</h2>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Current Email"
+                      value={emailUpdate.email}
+                      onChange={handleEmailChange}
+                      className="input-field"
+                    />
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Current Password"
+                      value={emailUpdate.password}
+                      onChange={handleEmailChange}
+                      className="input-field"
+                    />
+                    <input
+                      type="email"
+                      name="newEmail"
+                      placeholder="New Email"
+                      value={emailUpdate.newEmail}
+                      onChange={handleEmailChange}
+                      className="input-field"
+                    />
+                    <button onClick={handleEmailUpdate} className="update-button">Update</button>
+                  </div>
                 </div>
               )}
             </div>
@@ -256,6 +379,15 @@ function ProfilePage() {
 
         
 
+        {showPopupUpdate && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h2>{popupMessage.includes('Error') ? 'Error' : 'Success'}</h2>
+              <p>{popupMessage}</p>
+              <button className="stay-button" onClick={() => setShowPopupUpdate(false)}>Close</button>
+            </div>
+          </div>
+        )}
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup-content">
