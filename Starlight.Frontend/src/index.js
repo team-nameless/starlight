@@ -17,7 +17,7 @@ const GameApp = lazy(() => import('./game/GameApp'));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
@@ -31,5 +31,4 @@ root.render(
         </Routes>
       </Suspense>
     </BrowserRouter>
-  </React.StrictMode>
 );

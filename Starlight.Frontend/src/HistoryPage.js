@@ -523,9 +523,9 @@ function HistoryPage() {
           </div>
 
           {/* Song Name and Artist */}
-          <div className="song-info">
-            <div className="song-name">{currentSong?.title}</div>
-            <div className="artist-name">- {currentSong?.artist} -</div>
+          <div className="song-info-history">
+            <div className="song-name-history">{currentSong?.title}</div>
+            <div className="artist-name-history">- {currentSong?.artist} -</div>
           </div>
 
           {/* Next/Previous Buttons */}

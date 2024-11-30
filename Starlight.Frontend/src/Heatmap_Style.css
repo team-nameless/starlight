@@ -113,21 +113,21 @@
   height: 270px;  
 }
 
-.song-info {
+.song-info-history {
   position: absolute;
   top: 20px;
   right: 20px;
   text-align: right;
 }
 
-.song-name {
+.song-name-history {
   font-family: 'Lemon', sans-serif;
   font-weight: 400;
   color: white;
   font-size: 24px;
 }
 
-.artist-name {
+.artist-name-history {
   font-family: 'Artifika', serif;
   font-weight: 400;
   color: orange;
