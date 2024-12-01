@@ -57,6 +57,7 @@ public class UserController : ControllerBase
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
+            Email = user.Email,
             Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
@@ -88,11 +89,14 @@ public class UserController : ControllerBase
 
         if (!string.IsNullOrEmpty(profileUpdate.Handle))
         {
-            nameChangeResult = await userManager.SetUserNameAsync(player!, profileUpdate.Handle);
+            var desiredUser = await _gameDatabase.Users.FirstAsync(x => x.SequenceNumber == player!.SequenceNumber);
+            desiredUser.DisplayName = profileUpdate.Handle;
         }
 
         if (!string.IsNullOrEmpty(profileUpdate.Email))
-        { 
+        {
+            // blame Microsoft as usual
+            nameChangeResult = await userManager.SetUserNameAsync(player!, profileUpdate.Email);
             emailChangeResult = await userManager.SetEmailAsync(player!, profileUpdate.Email);
         }
 
