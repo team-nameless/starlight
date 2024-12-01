@@ -59,6 +59,7 @@ function ProfilePage() {
   const [passwordError, setPasswordError] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
   const [emailError, setEmailError] = useState({ email: '', password: '' });
   const [showPopupUpdate, setShowPopupUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
@@ -76,7 +77,7 @@ function ProfilePage() {
           const userData = userResponse.data;
           setUserProfile({
             id: userData.id || 123456,
-            name: userData.name || 'Sanraku',
+            name: userData.name || 'Anonymous',
             profilePic: userData.avatar || profilePicPlaceholder
           });
           setLevelData({
@@ -137,6 +138,7 @@ function ProfilePage() {
 
   const handlePasswordUpdate = async () => {
     setPasswordError({ email: '', newPassword: '', confirmNewPassword: '' });
+    setIsLoading(true);
   
     // Check for empty fields
     if (!passwordUpdate.email || !passwordUpdate.newPassword || !passwordUpdate.confirmNewPassword) {
@@ -146,6 +148,7 @@ function ProfilePage() {
         newPassword: !passwordUpdate.newPassword ? 'New Password is required' : prev.newPassword,
         confirmNewPassword: !passwordUpdate.confirmNewPassword ? 'Confirm New Password is required' : prev.confirmNewPassword,
       }));
+      setIsLoading(false);
       return;
     }
   
@@ -160,6 +163,7 @@ function ProfilePage() {
         const userData = userResponse.data;
         if (userData.email !== passwordUpdate.email) {
           setPasswordError((prev) => ({ ...prev, email: 'Entered email does not match your account email' }));
+          setIsLoading(false);
           return;
         }
       } else {
@@ -168,22 +172,27 @@ function ProfilePage() {
     } catch (error) {
       console.error('API error:', error);
       setPasswordError((prev) => ({ ...prev, email: 'Unable to verify email. Please try again later.' }));
+      setIsLoading(false);
       return;
     }
   
     // Validate new password
     if (!passwordRegex.test(passwordUpdate.newPassword)) {
       setPasswordError((prev) => ({ ...prev, newPassword: 'Password must be 8+ characters with uppercase, number, and special characters' }));
+      setIsLoading(false);
       return;
     }
     if (passwordUpdate.newPassword !== passwordUpdate.confirmNewPassword) {
       setPasswordError((prev) => ({ ...prev, confirmNewPassword: 'Passwords do not match' }));
+      setIsLoading(false);
       return;
     }
   
     // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
+        email: passwordUpdate.email,
+        password: passwordUpdate.oldPassword, // Old password
         newPassword: passwordUpdate.newPassword, // New password
       }, {
         withCredentials: true
@@ -191,19 +200,23 @@ function ProfilePage() {
   
       if (response.status === 200) {
         setPopupMessage('Password updated successfully');
+        setShowPopupUpdate(true);
       } else {
         setPopupMessage('Error updating password');
+        setShowPopupUpdate(true);
       }
     } catch (error) {
       console.error('Update error:', error);
       setPopupMessage('Error updating password. Please try again.');
+      setShowPopupUpdate(true);
+    } finally {
+      setIsLoading(false);
     }
-  
-    setShowPopupUpdate(true);
   };
   
   const handleEmailUpdate = async () => {
     setEmailError({ email: '', password: '' });
+    setIsLoading(true);
   
     // Check for empty fields
     if (!emailUpdate.email || !emailUpdate.password || !emailUpdate.newEmail) {
@@ -213,6 +226,7 @@ function ProfilePage() {
         password: !emailUpdate.password ? 'Password is required' : prev.password,
         newEmail: !emailUpdate.newEmail ? 'New email is required' : prev.newEmail,
       }));
+      setIsLoading(false);
       return;
     }
   
@@ -230,6 +244,7 @@ function ProfilePage() {
             ...prev,
             email: 'Entered email does not match your account email',
           }));
+          setIsLoading(false);
           return;
         }
       } else {
@@ -238,6 +253,7 @@ function ProfilePage() {
     } catch (error) {
       console.error('API error:', error);
       setEmailError((prev) => ({ ...prev, email: 'Unable to verify email. Please try again later.' }));
+      setIsLoading(false);
       return;
     }
   
@@ -256,11 +272,13 @@ function ProfilePage() {
           ...prev,
           password: 'Wrong password',
         }));
+        setIsLoading(false);
         return;
       }
     } catch (error) {
       console.error('Login error:', error);
       setEmailError((prev) => ({ ...prev, password: 'Wrong password' }));
+      setIsLoading(false);
       return;
     }
   
@@ -275,19 +293,28 @@ function ProfilePage() {
   
       if (response.status === 200) {
         setPopupMessage('Email updated successfully');
+        setShowPopupUpdate(true);
       } else {
         setPopupMessage('Error updating email');
+        setShowPopupUpdate(true);
       }
     } catch (error) {
       console.error('Update error:', error);
       setPopupMessage('Error updating email. Please try again.');
+      setShowPopupUpdate(true);
+    } finally {
+      setIsLoading(false);
     }
-  
-    setShowPopupUpdate(true);
   };
 
   return (
     <div>
+      {isLoading && (
+        <div className="loader">
+          <div className="one"></div>
+          <div className="two"></div>
+        </div>
+      )}
       <Routes>
         <Route path="/SongPage" element={<SongPage />} />
         <Route path="/HistoryPage" element={<HistoryPage />} />
@@ -335,7 +362,7 @@ function ProfilePage() {
             <div className="avatar-indicator"></div> 
             <div className="profile-avatar-section">
               <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-avatar" />
-              <div className="profile-username-avatar">{userProfile.name || 'Sanraku'}</div>
+              <div className="profile-username-avatar">{userProfile.name || 'Anonymous'}</div>
               <div className="profile-userid-avatar">ID: {userProfile.id || '12345'}</div>
             </div>
             <div className="profile-tabs-section">
@@ -446,7 +473,7 @@ function ProfilePage() {
             <tbody>
               <tr>
                 <td>
-                  <div className="username">{userProfile.name || 'Sanraku'}</div>
+                  <div className="username">{userProfile.name || 'Anonymous'}</div>
                   <div className="userid">ID: {userProfile.id || '12345'}</div>
                 </td>
                 <td>

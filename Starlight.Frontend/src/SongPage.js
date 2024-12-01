@@ -89,7 +89,7 @@ function SongPage() {
           const userData = userResponse.data;
           setUserProfile({
             id: userData.id || 123456,
-            name: userData.name || 'Sanraku',
+            name: userData.name || 'Anonymous',
             profilePic: userData.avatar || profilePicPlaceholder
           });
         } else {
