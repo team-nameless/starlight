@@ -184,8 +184,6 @@ function ProfilePage() {
     // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
-        email: passwordUpdate.email,
-        currentPassword: passwordUpdate.password, // Current password
         newPassword: passwordUpdate.newPassword, // New password
       }, {
         withCredentials: true
@@ -228,20 +226,10 @@ function ProfilePage() {
       if (userResponse.status === 200) {
         const userData = userResponse.data;
         if (userData.email !== emailUpdate.email) {
-          setEmailError((prev) => ({ ...prev, email: 'Entered email does not match your account email' }));
-          return;
-        }
-  
-        // Validate password
-        const loginResponse = await axios.post(`${rootUrl}/api/login`, {
-          email: emailUpdate.email,
-          password: emailUpdate.password,
-        }, {
-          withCredentials: true
-        });
-  
-        if (loginResponse.status !== 200) {
-          setEmailError((prev) => ({ ...prev, password: 'Incorrect password' }));
+          setEmailError((prev) => ({
+            ...prev,
+            email: 'Entered email does not match your account email',
+          }));
           return;
         }
       } else {
@@ -253,13 +241,35 @@ function ProfilePage() {
       return;
     }
   
+    // Validate password
+    try {
+      const loginResponse = await axios.post(`${rootUrl}/api/login`, {
+        email: emailUpdate.email,
+        password: emailUpdate.password,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+  
+      if (loginResponse.status !== 200) {
+        setEmailError((prev) => ({
+          ...prev,
+          password: 'Wrong password',
+        }));
+        return;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setEmailError((prev) => ({ ...prev, password: 'Wrong password' }));
+      return;
+    }
+  
     // Patch new email
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
-        email: emailUpdate.email,
-        currentPassword: emailUpdate.password, // Current password
-        newEmail: emailUpdate.newEmail, 
+        email: emailUpdate.newEmail,
       }, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       });
   
