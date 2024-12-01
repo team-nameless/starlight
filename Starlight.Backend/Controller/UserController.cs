@@ -93,11 +93,20 @@ public class UserController : ControllerBase
             desiredUser.DisplayName = profileUpdate.Handle;
         }
 
-        if (!string.IsNullOrEmpty(profileUpdate.Email))
+        if (!string.IsNullOrEmpty(profileUpdate.Email) && !string.IsNullOrEmpty(profileUpdate.Password))
         {
-            // blame Microsoft as usual
-            nameChangeResult = await userManager.SetUserNameAsync(player!, profileUpdate.Email);
-            emailChangeResult = await userManager.SetEmailAsync(player!, profileUpdate.Email);
+            var validateResult = await userManager.CheckPasswordAsync(player!, profileUpdate.Password);
+
+            if (validateResult)
+            {
+                // blame Microsoft as usual
+                nameChangeResult = await userManager.SetUserNameAsync(player!, profileUpdate.Email);
+                emailChangeResult = await userManager.SetEmailAsync(player!, profileUpdate.Email);
+            }
+            else
+            {
+                return BadRequest("You messed up something.");
+            }
         }
 
         if (!string.IsNullOrEmpty(profileUpdate.Password) && !string.IsNullOrEmpty(profileUpdate.NewPassword))
