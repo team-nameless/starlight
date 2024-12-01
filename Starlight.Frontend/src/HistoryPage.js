@@ -62,7 +62,8 @@ function HistoryPage() {
         const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          withCredentials: true
         });
         const fetchedSongs = songsResponse.data;
         setSongs(fetchedSongs);
@@ -202,7 +203,9 @@ function HistoryPage() {
 
   const fetchHeatmapData = async (url) => {
     try {
-      const response = await axios.get(`${rootUrl}${url}`);
+      const response = await axios.get(`${rootUrl}${url}`, {
+        withCredentials: true
+      });
       const data = response.data;
   
       // Validate the response and structure (adjust this as per your API's response format)
@@ -289,7 +292,9 @@ function HistoryPage() {
 
   const fetchOverallScore = async (url) => {
     try {
-      const response = await axios.get(`${rootUrl}${url}`);
+      const response = await axios.get(`${rootUrl}${url}`, {
+        withCredentials: true
+      });
       const data = response.data;
       return data.stats.score || 100000; // Adjust this based on your API response structure
     } catch (error) {

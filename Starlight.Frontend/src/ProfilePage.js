@@ -57,6 +57,7 @@ function ProfilePage() {
   const [emailUpdate, setEmailUpdate] = useState({ email: '', password: '', newEmail: '' });
   const [popupMessage, setPopupMessage] = useState('');
   const [passwordError, setPasswordError] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
+  const [emailError, setEmailError] = useState({ email: '', password: '' });
   const [showPopupUpdate, setShowPopupUpdate] = useState(false);
   const navigate = useNavigate();
 
@@ -136,49 +137,142 @@ function ProfilePage() {
 
   const handlePasswordUpdate = async () => {
     setPasswordError({ email: '', newPassword: '', confirmNewPassword: '' });
-    if (!passwordUpdate.email) {
-      setPasswordError((prev) => ({ ...prev, email: 'The email is not matching' }));
+  
+    // Check for empty fields
+    if (!passwordUpdate.email || !passwordUpdate.newPassword || !passwordUpdate.confirmNewPassword) {
+      setPasswordError((prev) => ({
+        ...prev,
+        email: !passwordUpdate.email ? 'Email is required' : prev.email,
+        newPassword: !passwordUpdate.newPassword ? 'New Password is required' : prev.newPassword,
+        confirmNewPassword: !passwordUpdate.confirmNewPassword ? 'Confirm New Password is required' : prev.confirmNewPassword,
+      }));
       return;
     }
+  
+    // Validate email against API
+    try {
+      const userResponse = await axios.get(`${rootUrl}/api/user`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+  
+      if (userResponse.status === 200) {
+        const userData = userResponse.data;
+        if (userData.email !== passwordUpdate.email) {
+          setPasswordError((prev) => ({ ...prev, email: 'Entered email does not match your account email' }));
+          return;
+        }
+      } else {
+        throw new Error('Error fetching user data');
+      }
+    } catch (error) {
+      console.error('API error:', error);
+      setPasswordError((prev) => ({ ...prev, email: 'Unable to verify email. Please try again later.' }));
+      return;
+    }
+  
+    // Validate new password
     if (!passwordRegex.test(passwordUpdate.newPassword)) {
-      setPasswordError((prev) => ({ ...prev, newPassword: 'Your passwords should be at least 8 characters in length, uppercase, number, and special characters' }));
+      setPasswordError((prev) => ({ ...prev, newPassword: 'Password must be 8+ characters with uppercase, number, and special characters' }));
       return;
     }
     if (passwordUpdate.newPassword !== passwordUpdate.confirmNewPassword) {
-      setPasswordError((prev) => ({ ...prev, confirmNewPassword: 'New Passwords do not match' }));
+      setPasswordError((prev) => ({ ...prev, confirmNewPassword: 'Passwords do not match' }));
       return;
     }
+  
+    // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
         email: passwordUpdate.email,
-        newPassword: passwordUpdate.newPassword,
+        currentPassword: passwordUpdate.password, // Current password
+        newPassword: passwordUpdate.newPassword, // New password
+      }, {
+        withCredentials: true
       });
+  
       if (response.status === 200) {
         setPopupMessage('Password updated successfully');
       } else {
         setPopupMessage('Error updating password');
       }
     } catch (error) {
-      setPopupMessage('Error updating password');
+      console.error('Update error:', error);
+      setPopupMessage('Error updating password. Please try again.');
     }
+  
     setShowPopupUpdate(true);
   };
-
+  
   const handleEmailUpdate = async () => {
+    setEmailError({ email: '', password: '' });
+  
+    // Check for empty fields
+    if (!emailUpdate.email || !emailUpdate.password || !emailUpdate.newEmail) {
+      setEmailError((prev) => ({
+        ...prev,
+        email: !emailUpdate.email ? 'Current email is required' : prev.email,
+        password: !emailUpdate.password ? 'Password is required' : prev.password,
+        newEmail: !emailUpdate.newEmail ? 'New email is required' : prev.newEmail,
+      }));
+      return;
+    }
+  
+    // Validate current email and password against API
+    try {
+      const userResponse = await axios.get(`${rootUrl}/api/user`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+  
+      if (userResponse.status === 200) {
+        const userData = userResponse.data;
+        if (userData.email !== emailUpdate.email) {
+          setEmailError((prev) => ({ ...prev, email: 'Entered email does not match your account email' }));
+          return;
+        }
+  
+        // Validate password
+        const loginResponse = await axios.post(`${rootUrl}/api/login`, {
+          email: emailUpdate.email,
+          password: emailUpdate.password,
+        }, {
+          withCredentials: true
+        });
+  
+        if (loginResponse.status !== 200) {
+          setEmailError((prev) => ({ ...prev, password: 'Incorrect password' }));
+          return;
+        }
+      } else {
+        throw new Error('Error fetching user data');
+      }
+    } catch (error) {
+      console.error('API error:', error);
+      setEmailError((prev) => ({ ...prev, email: 'Unable to verify email. Please try again later.' }));
+      return;
+    }
+  
+    // Patch new email
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
         email: emailUpdate.email,
-        password: emailUpdate.password,
-        newEmail: emailUpdate.newEmail,
+        currentPassword: emailUpdate.password, // Current password
+        newEmail: emailUpdate.newEmail, 
+      }, {
+        withCredentials: true
       });
+  
       if (response.status === 200) {
         setPopupMessage('Email updated successfully');
       } else {
         setPopupMessage('Error updating email');
       }
     } catch (error) {
-      setPopupMessage('Error updating email');
+      console.error('Update error:', error);
+      setPopupMessage('Error updating email. Please try again.');
     }
+  
     setShowPopupUpdate(true);
   };
 
@@ -232,7 +326,7 @@ function ProfilePage() {
             <div className="profile-avatar-section">
               <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-avatar" />
               <div className="profile-username-avatar">{userProfile.name || 'Sanraku'}</div>
-              <div className="profile-userid-avatar">ID: #{userProfile.id || '12345'}</div>
+              <div className="profile-userid-avatar">ID: {userProfile.id || '12345'}</div>
             </div>
             <div className="profile-tabs-section">
               <div className="profile-tabs">
@@ -312,6 +406,7 @@ function ProfilePage() {
                       onChange={handleEmailChange}
                       className="input-field"
                     />
+                    {emailError.email && <div className="error-message">{emailError.email}</div>}
                     <input
                       type="password"
                       name="password"
@@ -320,6 +415,7 @@ function ProfilePage() {
                       onChange={handleEmailChange}
                       className="input-field"
                     />
+                    {emailError.password && <div className="error-message">{emailError.password}</div>}
                     <input
                       type="email"
                       name="newEmail"
@@ -341,7 +437,7 @@ function ProfilePage() {
               <tr>
                 <td>
                   <div className="username">{userProfile.name || 'Sanraku'}</div>
-                  <div className="userid">ID: #{userProfile.id || '12345'}</div>
+                  <div className="userid">ID: {userProfile.id || '12345'}</div>
                 </td>
                 <td>
                   <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profileimg" />
