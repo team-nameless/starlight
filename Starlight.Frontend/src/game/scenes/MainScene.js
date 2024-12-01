@@ -195,7 +195,9 @@ class MainScene extends Phaser.Scene {
         this.rawNoteList.forEach((note) => {
             this.time.delayedCall(
                 this.calculateSpawnTime(note.time),
-                () => { this.spawnNote(note); }
+                () => {
+                    this.spawnNote(note);
+                }
             );
         });
     }
@@ -211,7 +213,7 @@ class MainScene extends Phaser.Scene {
 
         // game end
         this.time.addEvent({
-            delay: this.duration + 5000,
+            delay: this.duration + 2000,
             callbackScope: this,
             callback: () => this.endGame()
         });
@@ -411,20 +413,17 @@ class MainScene extends Phaser.Scene {
             shouldLockKey = true;
             this.drawJudgementText("Nice!", "");
             this.makeJudgementTextDisappear();
-        }
-        else if (critWindow < offset && offset <= perfWindow) {
+        } else if (critWindow < offset && offset <= perfWindow) {
             ++this.totalPerf;
             shouldLockKey = true;
             this.drawJudgementText("Perfect", errTxt);
             this.makeJudgementTextDisappear();
-        }
-        else if (perfWindow < offset && offset <= goodWindow) {
+        } else if (perfWindow < offset && offset <= goodWindow) {
             ++this.totalGood;
             shouldLockKey = true;
             this.drawJudgementText("Fine", errTxt);
             this.makeJudgementTextDisappear();
-        }
-        else if (goodWindow < offset && offset <= badWindow) {
+        } else if (goodWindow < offset && offset <= badWindow) {
             ++this.totalBad;
             shouldLockKey = true;
             this.drawJudgementText("Meh.", errTxt);
@@ -442,7 +441,9 @@ class MainScene extends Phaser.Scene {
 
         let indicator = this.add.image(xPosition, 845, "indicator");
 
-        setTimeout((x) => { x.destroy(); }, 20, indicator);
+        setTimeout((x) => {
+            x.destroy();
+        }, 20, indicator);
     }
 
     /*
@@ -525,12 +526,12 @@ class MainScene extends Phaser.Scene {
 
         // noinspection PointlessArithmeticExpressionJS
         this.accuracy = (
-                350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
-                // 300 * this.totalPerf +
-                200 * this.totalGood +
-                 50 * this.totalBad  +
-                  0 * this.totalMiss
-            ) / (350.00 * this.totalNotes) * 100.0;
+            350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
+            // 300 * this.totalPerf +
+            200 * this.totalGood +
+            50 * this.totalBad +
+            0 * this.totalMiss
+        ) / (350.00 * this.totalNotes) * 100.0;
 
         this.notes.getChildren().forEach((note) => {
             if (note instanceof Phaser.GameObjects.Rectangle) return;

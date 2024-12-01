@@ -38,4 +38,16 @@ public class GameController : ControllerBase
         await _gameDatabase.SaveChangesAsync();
         return Ok();
     }
+
+    /// <summary>
+    ///     Ends the game session. This endpoint simply redirect to you to the result page.
+    ///     This endpoint is intended for working inside the game.
+    /// </summary>
+    /// <returns></returns> 
+    [HttpGet("end")]
+    [Authorize]
+    public ActionResult EndGame(ulong songId)
+    {
+        return Redirect($"https://starlight.swyrin.id.vn/history/{songId}");
+    }
 }

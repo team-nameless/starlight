@@ -131,7 +131,7 @@ public class UserController : ControllerBase
     {
         // 10 MB
         const int maxImageSize = 10 * 1024 * 1024;
-        string[] allowedExtensions = [".png", ".jpg", "jpeg "];
+        string[] allowedExtensions = [".png", ".jpg", ".jpeg", ".webp"];
         
         if (string.IsNullOrEmpty(file.FileName)) return BadRequest("How did we get here?");
         if (file.Length == 0) return BadRequest("File is empty");
