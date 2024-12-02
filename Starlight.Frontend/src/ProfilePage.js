@@ -191,7 +191,6 @@ function ProfilePage() {
     // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
-        email: passwordUpdate.email,
         password: passwordUpdate.oldPassword, // Old password
         newPassword: passwordUpdate.newPassword, // New password
       }, {
@@ -286,6 +285,7 @@ function ProfilePage() {
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
         email: emailUpdate.newEmail,
+        password: emailUpdate.password,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
