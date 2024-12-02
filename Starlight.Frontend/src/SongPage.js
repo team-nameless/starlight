@@ -269,7 +269,14 @@ function SongPage() {
   const handleSongClick = (song) => {
     const index = songs.findIndex(s => s.id === song.id);
     if (index !== -1) {
-      setCurrentSongIndex(index);
+      const imgElement = document.querySelector('.background-image img');
+      if (imgElement) {
+        imgElement.classList.add('fade-out');
+        imgElement.addEventListener('transitionend', () => {
+          setCurrentSongIndex(index);
+          imgElement.classList.remove('fade-out');
+        }, { once: true });
+      }
     }
   };
 

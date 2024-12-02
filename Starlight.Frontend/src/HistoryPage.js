@@ -512,7 +512,16 @@ function HistoryPage() {
             </div>
             <ul>
               {filteredSongs.map((song, index) => (
-                <li key={index} className="song-item" onClick={() => setCurrentSong(song)}>
+                <li key={index} className="song-item" onClick={() => {
+                  const imgElement = document.querySelector('.background-image img');
+                  if (imgElement) {
+                    imgElement.classList.add('fade-out');
+                    imgElement.addEventListener('transitionend', () => {
+                      setCurrentSong(song);
+                      imgElement.classList.remove('fade-out');
+                    }, { once: true });
+                  }
+                }}>
                   <div className="song-info-sidebar">
                     <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                     <span className="sidebar-song">
