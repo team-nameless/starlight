@@ -221,26 +221,36 @@ function HistoryPage() {
             group: groups[index],
             variable: 'M',
             value: (segment.miss / totalNotes) * 100,
+            segment: segment.miss,
+            totalNotes: totalNotes
           });
           heatmapData.push({
             group: groups[index],
             variable: 'B',
             value: (segment.bad / totalNotes) * 100,
+            segment: segment.bad,
+            totalNotes: totalNotes
           });
           heatmapData.push({
             group: groups[index],
             variable: 'G',
             value: (segment.good / totalNotes) * 100,
+            segment: segment.good,
+            totalNotes: totalNotes
           });
           heatmapData.push({
             group: groups[index],
             variable: 'P',
             value: (segment.bad / totalNotes) * 100,
+            segment: segment.bad,
+            totalNotes: totalNotes
           });
           heatmapData.push({
             group: groups[index],
             variable: 'CP',
             value: (segment.crit / totalNotes) * 100,
+            segment: segment.crit,
+            totalNotes: totalNotes
           });
         });
   
@@ -254,7 +264,7 @@ function HistoryPage() {
       // Use test_heatmap.json data
       const data = testHeatmapData;
       const durationInSeconds = Math.floor(data.stats.duration / 1000);
-      const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
+      const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.round(durationInSeconds / 30));
       const heatmapData = [];
   
       data.partial.forEach((segment, index) => {
@@ -263,26 +273,36 @@ function HistoryPage() {
           group: groups[index],
           variable: 'M',
           value: (segment.miss / totalNotes) * 100,
+          segment: segment.miss,
+          totalNotes: totalNotes
         });
         heatmapData.push({
           group: groups[index],
           variable: 'B',
           value: (segment.bad / totalNotes) * 100,
+          segment: segment.bad,
+          totalNotes: totalNotes
         });
         heatmapData.push({
           group: groups[index],
           variable: 'G',
           value: (segment.good / totalNotes) * 100,
+          segment: segment.good,
+          totalNotes: totalNotes
         });
         heatmapData.push({
           group: groups[index],
           variable: 'P',
           value: (segment.bad / totalNotes) * 100,
+          segment: segment.bad,
+          totalNotes: totalNotes
         });
         heatmapData.push({
           group: groups[index],
           variable: 'CP',
           value: (segment.crit / totalNotes) * 100,
+          segment: segment.crit,
+          totalNotes: totalNotes
         });
       });
   
@@ -387,7 +407,7 @@ function HistoryPage() {
   
     const mousemove = function (event, d) {
       tooltip
-        .html(`Beat Accuracy: ${Math.floor(d.value) || 0}%`)
+        .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}, Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
         .style("left", `${event.pageX + 20}px`)
         .style("top", `${event.pageY - 20}px`);
     };
