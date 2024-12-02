@@ -20,18 +20,18 @@ import { useNavigate } from 'react-router-dom';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
-const ProgressBar = ({ current, total }) => {
+const ProgressBar = ({ current, total, level }) => {
   const percentage = (current / total) * 100;
-
+ 
   return (
     <div className="level-container">
       <div className="level">
-        <span>Level 1</span>
+        <span>Level {level}</span>
         <span id="progress-text">{`${current}/${total}`}</span>
       </div>
       <div className="level">
         <span>Next Level</span>
-        <span>Level 2</span>
+        <span>Level {level + 1}</span>
       </div>
       <div className="progress-bar">
         <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
@@ -371,7 +371,7 @@ function ProfilePage() {
                 <span className={`profile-tab ${activeTab === 'achievements' ? 'active' : ''}`} onClick={() => handleTabClick('achievements')}>Achievements</span>
                 <span className={`profile-tab ${activeTab === 'accountSetting' ? 'active' : ''}`} onClick={() => handleTabClick('accountSetting')}>Account Setting</span>
               </div>
-              <ProgressBar current={levelData.exp} total={levelData.expNeededForNextLevel} />
+              <ProgressBar current={levelData.exp} total={levelData.expNeededForNextLevel} level={levelData.level} />
             </div>
             <div className="profile-playtime-section">
               <div>Play time:</div>
@@ -509,8 +509,6 @@ function ProfilePage() {
             <button onClick={handleSendMessage}>Send</button>
           </div>
         </div>
-
-        
 
         {showPopupUpdate && (
           <div className="popup-overlay">
