@@ -407,7 +407,7 @@ function HistoryPage() {
   
     const mousemove = function (event, d) {
       tooltip
-        .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}, Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
+        .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
         .style("left", `${event.pageX + 20}px`)
         .style("top", `${event.pageY - 20}px`);
     };
