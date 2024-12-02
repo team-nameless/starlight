@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useRef } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Link, useLocation } from 'react-router-dom';
@@ -303,15 +303,22 @@ function HistoryPage() {
     }
   };
   
-  const renderHeatmap = useCallback(async (url, selector, scoreUrl, songId) => {
-    const container = document.querySelector(selector);
+  const heatmapContainer1Ref = useRef(null);
+  const heatmapContainer2Ref = useRef(null);
+  const hasRenderedHeatmap1 = useRef(false);
+  const hasRenderedHeatmap2 = useRef(false);
+
+  const renderHeatmap = useCallback(async (url, containerRef, scoreUrl, songId) => {
+    const container = containerRef.current;
     if (!container) {
-      console.error(`Container with selector "${selector}" not found.`);
+      console.error(`Container not found.`);
       return;
     }
   
     // Clear existing content
-    container.innerHTML = ""; // Ensure the container is cleared before rendering
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
   
     // Fetch overall score
     const overallScore = await fetchOverallScore(scoreUrl);
@@ -423,14 +430,20 @@ function HistoryPage() {
   
   useEffect(() => {
     const renderHeatmap1 = async () => {
-      await renderHeatmap('/api/score/recent', "#heatmap-container-1", "/api/score/recent", currentSong?.id);
+      if (!hasRenderedHeatmap1.current) {
+        hasRenderedHeatmap1.current = true;
+        await renderHeatmap('/api/score/recent', heatmapContainer1Ref, "/api/score/recent", currentSong?.id);
+      }
     };
     renderHeatmap1();
   }, [renderHeatmap, currentSong]);
   
   useEffect(() => {
     const renderHeatmap2 = async () => {
-      await renderHeatmap(`/api/score/${currentSong?.id}`, "#heatmap-container-2", "/api/score/all", currentSong?.id);
+      if (!hasRenderedHeatmap2.current) {
+        hasRenderedHeatmap2.current = true;
+        await renderHeatmap(`/api/score/${currentSong?.id}`, heatmapContainer2Ref, "/api/score/all", currentSong?.id);
+      }
     };
     renderHeatmap2();
   }, [renderHeatmap, currentSong]);
@@ -545,9 +558,9 @@ function HistoryPage() {
 
           {/* Render Heatmaps */}
           <h3 className="heatmap-title">Latest Score</h3>
-          <div id="heatmap-container-1" className="heatmap-container"></div>
+          <div id="heatmap-container-1" className="heatmap-container" ref={heatmapContainer1Ref}></div>
           <h3 className="heatmap-title">Best Score</h3>
-          <div id="heatmap-container-2" className="heatmap-container"></div>
+          <div id="heatmap-container-2" className="heatmap-container" ref={heatmapContainer2Ref}></div>
           
         </div>
 
