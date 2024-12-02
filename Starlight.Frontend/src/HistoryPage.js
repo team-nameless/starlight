@@ -141,7 +141,7 @@ function HistoryPage() {
       }
     };
 
-    playAudio(); // Play audio immediately on page load
+    playAudio(); 
 
     return () => {
       if (audio) {
@@ -316,13 +316,26 @@ function HistoryPage() {
         withCredentials: true
       });
       const data = response.data;
-      return data.stats.score || 100000; // Adjust this based on your API response structure
+      return data.stats.score || 100000;
     } catch (error) {
       console.error('Error fetching overall score:', error);
-      return testHeatmapData.stats.score; // Return score from test_heatmap.json if there's an error
+      return testHeatmapData.stats.score;
     }
   };
   
+  const fetchGrade = async (url) => {
+    try {
+      const response = await axios.get(`${rootUrl}${url}`, {
+        withCredentials: true
+      });
+      const data = response.data;
+      return data.stats.grade || 'A'; 
+    } catch (error) {
+      console.error('Error fetching grade:', error);
+      return testHeatmapData.stats.grade;
+    }
+  };
+
   const heatmapContainer1Ref = useRef(null);
   const heatmapContainer2Ref = useRef(null);
   const hasRenderedHeatmap1 = useRef(false);
@@ -340,14 +353,21 @@ function HistoryPage() {
       container.removeChild(container.firstChild);
     }
   
-    // Fetch overall score
+    // Fetch overall score and grade
     const overallScore = await fetchOverallScore(scoreUrl);
+    const grade = await fetchGrade(scoreUrl);
   
     // Add overall score
     const scoreElement = document.createElement('div');
     scoreElement.textContent = `✨${overallScore}✨`;
     scoreElement.className = 'overall-score';
     container.appendChild(scoreElement);
+  
+    // Add grade
+    const gradeElement = document.createElement('div');
+    gradeElement.textContent = `- Grade: ${grade} -`;
+    gradeElement.className = 'grade';
+    container.appendChild(gradeElement);
   
     // Fetch data for the heatmap
     const { data, isFallback } = await fetchHeatmapData(url);
