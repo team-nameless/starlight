@@ -508,7 +508,7 @@ const LandingPageApp = () => {
                     id="playerName"
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
-                    maxLength={25}
+                    maxLength={14}
                     required
                   />
                   {handleError && <span style={{ color: 'red', fontSize: '10px' }}>{handleError}</span>}
