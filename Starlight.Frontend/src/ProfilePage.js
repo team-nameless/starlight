@@ -16,6 +16,7 @@ import eventsIcon from './assets/Header_Items/events-icon.png';
 import storeIcon from './assets/Header_Items/store-icon.png'; 
 import chatimage from './assets/modal-image/chat.png'; 
 import girlImage from './assets/modal-image/girlimage.png'; 
+import cameraIcon from './assets/camera-icon.png';
 import { useNavigate } from 'react-router-dom';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
@@ -307,6 +308,57 @@ function ProfilePage() {
     }
   };
 
+  const handleProfilePicChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+  
+      try {
+        const response = await axios.put(`${rootUrl}/api/user/profile/image`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
+        });
+  
+        if (response.status === 200) {
+          const updatedImage = URL.createObjectURL(file);
+          setUserProfile((prevProfile) => ({
+            ...prevProfile,
+            profilePic: updatedImage
+          }));
+          // Update local storage to ensure the image is updated in other components
+          localStorage.setItem('userProfilePic', updatedImage);
+        } else {
+          console.error('Error updating profile image:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error updating profile image:', error);
+      }
+    }
+  };
+  
+  const handleCameraIconClick = () => {
+    const inputElement = document.getElementById('profilePicInput');
+    if (inputElement) {
+      inputElement.click();
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error('Error attempting to enable full-screen mode:', err);
+      });
+    }
+  };
+
+  useEffect(() => {
+    const storedProfilePic = localStorage.getItem('userProfilePic');
+    if (storedProfilePic) {
+      setUserProfile((prevProfile) => ({
+        ...prevProfile,
+        profilePic: storedProfilePic
+      }));
+    }
+  }, []);
+
   return (
     <div>
       {isLoading && (
@@ -362,6 +414,18 @@ function ProfilePage() {
             <div className="avatar-indicator"></div> 
             <div className="profile-avatar-section">
               <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-avatar" />
+              <input
+                type="file"
+                id="profilePicInput"
+                style={{ display: 'none' }}
+                onChange={handleProfilePicChange}
+              />
+              <img
+                src={cameraIcon}
+                alt="Change Profile"
+                className="camera-icon"
+                onClick={handleCameraIconClick}
+              />
               <div className="profile-username-avatar">{userProfile.name || 'Anonymous'}</div>
               <div className="profile-userid-avatar">ID: {userProfile.id || '12345'}</div>
             </div>
@@ -477,7 +541,7 @@ function ProfilePage() {
                   <div className="userid">ID: {userProfile.id || '12345'}</div>
                 </td>
                 <td>
-                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profileimg" />
+                  <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-table" />
                 </td>
               </tr>
             </tbody>

@@ -285,6 +285,15 @@ body {
   flex-direction: row;
   align-items: flex-end;
 }
+
+.profile-img-table {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
 /* Navigation Buttons */
 .song-navigation {
   display: flex;

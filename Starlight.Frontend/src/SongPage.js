@@ -87,10 +87,11 @@ function SongPage() {
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
+          const storedProfilePic = localStorage.getItem('userProfilePic');
           setUserProfile({
             id: userData.id || 123456,
             name: userData.name || 'Anonymous',
-            profilePic: userData.avatar || profilePicPlaceholder
+            profilePic: storedProfilePic || userData.avatar || profilePicPlaceholder
           });
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
@@ -390,12 +391,12 @@ function SongPage() {
               <table>
                 <tr>
                   <td>
-                    <div className="user-name">{userProfile.name }</div>
-                    <div className="user-id">ID: {userProfile.id }</div>
+                    <div className="user-name">{userProfile.name}</div>
+                    <div className="user-id">ID: {userProfile.id}</div>
                   </td>
                   <td>
                     <Link to="/ProfilePage">
-                      <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img" />
+                      <img src={userProfile.profilePic || profilePicPlaceholder} alt="Profile" className="profile-img-table" />
                     </Link>
                   </td>
                 </tr>
