@@ -57,6 +57,7 @@
     justify-content: center;
     border-right: 2px solid #FF9C33; 
     padding-right: 15px; 
+    position: relative; /* Ensure it is positioned relative */
   }
 
   .profile-tabs-section {
@@ -101,8 +102,8 @@
   }
 
   .profile-img-avatar {
-    width: 110px; 
-    height: 110px; 
+    width: 120px; 
+    height: 120px; 
     margin-left: 5px;
     border-radius: 50%; 
     z-index: 5; 
@@ -118,7 +119,7 @@
     font-family: 'Koho', sans-serif;
     font-weight: 600;
     color: #FFF5F5; 
-    margin-top: 70px; 
+    margin-top: 90px; 
     margin-bottom: 5px; 
     font-size: 20px;
     text-align: center; 
@@ -660,8 +661,9 @@
 
   .camera-icon {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    top: 50%;
+    left: 65%; 
+    transform: translate(-50%, -50%);
     width: 30px;
     height: 30px;
     z-index: 10;
