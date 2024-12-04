@@ -68,6 +68,13 @@ const LogoImage2 = styled.img`
   width: 75px; 
   height: 95px;
   z-index: 0; 
+
+  &.forgot-password, &.enter-code {
+    top: 195px; 
+    width: 50px; 
+    height: 65px; 
+    left: 478px; 
+  }
 `;
 
 
@@ -162,6 +169,10 @@ const TextFieldContainer = styled.div`
   label {
     display: flex; 
     margin-bottom: 10px; 
+  }
+
+  &.email-field, &.code-field {
+    margin-bottom: 70px; 
   }
 `;
 
@@ -310,7 +321,19 @@ const LandingPageApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [showCodeModal, setShowCodeModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [forgotPasswordCode, setForgotPasswordCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [forgotPasswordError, setForgotPasswordError] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const [resetPasswordError, setResetPasswordError] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
   useEffect(() => {
     if (showSuccessModal) {
@@ -344,7 +367,6 @@ const LandingPageApp = () => {
       formHasError = true;
     }
   
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
     if (!passwordRegex.test(password)) {
       setSignUpPasswordError('Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character (@, !, #, $, %, *)');
 
@@ -434,6 +456,9 @@ const LandingPageApp = () => {
     setShowNotificationModal(false);
     setShowSuccessModal(false);
     setShowLoginSuccessModal(false); 
+    setShowForgotPasswordModal(false);
+    setShowCodeModal(false);
+    setShowResetPasswordModal(false);
   };
 
   const FormWrapper = styled.div`
@@ -460,6 +485,92 @@ const LandingPageApp = () => {
   const toggleLoginPasswordVisibility = () => {
     setShowLoginPassword(!showLoginPassword);
   };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotPasswordError('');
+    setIsLoading(true);
+  
+    if (forgotPasswordEmail.trim() === '') {
+      setForgotPasswordError('Please fill in email');
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      const response = await axios.post(`${rootUrl}/api/forgotPassword`, { email: forgotPasswordEmail }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
+      if (response.status === 200) {
+        closeModal();
+        setShowCodeModal(true);
+      }
+    } catch (error) {
+      setForgotPasswordError('Failed to send reset code. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const openForgotPasswordModal = () => {
+    closeModal();
+    setShowForgotPasswordModal(true);
+  };
+  
+  const handleCodeSubmit = async (e) => {
+    e.preventDefault();
+    setCodeError('');
+    setIsLoading(true);
+  
+    try {
+      const encodedCode = encodeURIComponent(forgotPasswordCode); 
+      const response = await axios.post(`${rootUrl}/api/verifyCode`, { email: forgotPasswordEmail, code: encodedCode }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
+      if (response.status === 200) {
+        setShowCodeModal(false);
+        setShowResetPasswordModal(true);
+      }
+    } catch (error) {
+      setCodeError('Invalid code. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setResetPasswordError('');
+    setIsLoading(true);
+  
+    if (!passwordRegex.test(newPassword)) {
+      setResetPasswordError('Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character.');
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      const response = await axios.post(`${rootUrl}/api/resetPassword`, { email: forgotPasswordEmail, code: forgotPasswordCode, newPassword }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
+      if (response.status === 200) {
+        setShowResetPasswordModal(false);
+        setShowSuccessModal(true);
+      }
+    } catch (error) {
+      setResetPasswordError('Failed to reset password. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+  
 
   return (
     <AppContainer>
@@ -534,7 +645,7 @@ const LandingPageApp = () => {
                       required
                     />
                     <EyeIcon onClick={togglePasswordVisibility}>
-                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                      {showPassword ? '🙉' : '🙈'}
                     </EyeIcon>
                   </div>
                   {signUpPasswordError && (
@@ -611,7 +722,7 @@ const LandingPageApp = () => {
                     Don't have an account? <span style={{ cursor: 'pointer', color: '#0090AA' }} onClick={switchToSignUp}>Sign Up</span>.
                   </p>
                   <p style={{ margin: '0', display: 'block', opacity: 0.5, marginTop: '-125px', textAlign: 'right', fontStyle: 'italic', marginRight: '-220px' }}>
-                    <a href="/forgot-password" style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }}>Forgot your password?</a>
+                    <span style={{ color: '#686161', textDecoration: 'underline', cursor: 'pointer' }} onClick={openForgotPasswordModal}>Forgot your password?</span>
                   </p>
                 </div>
               </FormWrapper>
@@ -649,6 +760,99 @@ const LandingPageApp = () => {
           </div>
         </div>
       )}
+      {showForgotPasswordModal && (
+        <Modal>
+          <ModalContent style={{ maxWidth: '750px', height:'350px', top: '100px' }}>  
+            <ModalBackground2 />
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <GirlImage2 src={GirlImage} alt="Girl" />
+            <LogoImage2 src={LogoImage} alt="Logo" className="forgot-password" /> 
+            <ModalTitle>Forgot Password</ModalTitle>
+            <FormContainer>
+              <form onSubmit={handleForgotPassword}>
+                <TextFieldContainer className="email-field">
+                  <label htmlFor="forgotPasswordEmail">Email:</label>
+                  <TextField
+                    id="forgotPasswordEmail"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    required
+                  />
+                  {forgotPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{forgotPasswordError}</span>}
+                </TextFieldContainer>
+                <ButtonContainer>
+                  <SubmitButton type="submit">Send</SubmitButton>
+                </ButtonContainer>
+              </form>
+            </FormContainer>
+          </ModalContent>
+        </Modal>
+      )}
+    
+      {showCodeModal && (
+        <Modal>
+          <ModalContent style={{ maxWidth: '750px', height:'350px', top: '100px' }}> 
+            <ModalBackground2 />
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <GirlImage2 src={GirlImage} alt="Girl" />
+            <LogoImage2 src={LogoImage} alt="Logo" className="enter-code" /> 
+            <ModalTitle>Enter Code</ModalTitle>
+            <FormContainer>
+              <form onSubmit={handleCodeSubmit}>
+                <TextFieldContainer className="code-field">
+                  <label htmlFor="forgotPasswordCode">Code:</label>
+                  <TextField
+                    id="forgotPasswordCode"
+                    value={forgotPasswordCode}
+                    onChange={(e) => setForgotPasswordCode(e.target.value)}
+                    required
+                  />
+                  {codeError && <span style={{ color: 'red', fontSize: '10px' }}>{codeError}</span>}
+                </TextFieldContainer>
+                <ButtonContainer>
+                  <SubmitButton type="submit">Send</SubmitButton>
+                </ButtonContainer>
+              </form>
+            </FormContainer>
+          </ModalContent>
+        </Modal>
+      )}
+    
+      {showResetPasswordModal && (
+        <Modal>
+          <ModalContent>
+            <ModalBackground2 />
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <GirlImage2 src={GirlImage} alt="Girl" />
+            <LogoImage2 src={LogoImage} alt="Logo" />
+            <ModalTitle>Reset Password</ModalTitle>
+            <FormContainer>
+              <form onSubmit={handleResetPassword}>
+                <TextFieldContainer>
+                  <label htmlFor="newPassword">Create New Password:</label>
+                  <div className="password-container">
+                    <TextField
+                      id="newPassword"
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                    <EyeIcon onClick={toggleNewPasswordVisibility}>
+                      {showNewPassword ? '🙉' : '🙈'}
+                    </EyeIcon>
+                  </div>
+                </TextFieldContainer>
+                {resetPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{resetPasswordError}</span>}
+                <ButtonContainer>
+                  <SubmitButton type="submit">Send</SubmitButton>
+                </ButtonContainer>
+              </form>
+            </FormContainer>
+          </ModalContent>
+        </Modal>
+      )}
+    
       {data && <div>{JSON.stringify(data)}</div>}
     </AppContainer>
   );
