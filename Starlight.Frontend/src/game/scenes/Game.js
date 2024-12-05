@@ -3,10 +3,15 @@ import Phaser from "phaser";
 /*
  *  The game.
  */
-class MainScene extends Phaser.Scene {
+class Game extends Phaser.Scene {
     // note groups
     notes;
-    rawNoteList;
+
+    // timing window in ms
+    critWindow = 40;
+    perfWindow = 80;
+    goodWindow = 120;
+    badWindow = 180;
 
     // gameplay properties
     noteSpeed = 150;
@@ -21,11 +26,7 @@ class MainScene extends Phaser.Scene {
     noteInner2PositionX = this.notePositionBase + this.notePositionGaps * 2;
     noteOuter2PositionX = this.notePositionBase + this.notePositionGaps * 3;
 
-    // gameplay elements
-    judgementPrintX = 1500;
-    judgementPrintY = 500;
-    errorPrintX = 1500;
-    errorPrintY = 600;
+    // UI elements
     gameStartTime;
     scoreText;
     comboText;
@@ -36,7 +37,6 @@ class MainScene extends Phaser.Scene {
     // buttons
     replayKey;
     pauseKey;
-    isPauseKeyHandled;
     noteOuter1Key;
     noteInner1Key;
     noteInner2Key;
@@ -57,6 +57,7 @@ class MainScene extends Phaser.Scene {
     totalMiss;
 
     // partial stats
+    collectedGameData;
     partialNotes;
     partialCrit;
     partialPerf;
@@ -72,14 +73,20 @@ class MainScene extends Phaser.Scene {
     pauseText;
     pauseHint;
 
-    // keybind locking
-    key1locked;
-    key2locked;
-    key3locked;
-    key4locked;
+    // input lock status
+    key1_locked;
+    key2_locked;
+    key3_locked;
+    key4_locked;
+
+    // long note active status
+    key1_LN_active;
+    key2_LN_active;
+    key3_LN_active;
+    key4_LN_active;
 
     constructor() {
-        super("MainScene");
+        super("Game");
     }
 
     init(data) {
@@ -99,41 +106,57 @@ class MainScene extends Phaser.Scene {
         this.accuracy = 100;
         this.gameData = data.gameData;
         this.duration = data.gameData["metadata"]["duration"];
-        this.rawNoteList = this.gameData.notes;
+        this.totalNotes = data.gameData["notes"].length;
         this.isScenePaused = false;
-        this.isPauseKeyHandled = false;
 
         // input
         this.noteOuter1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.noteInner1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
-        this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-
-        // misc. keys
+        this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
         this.replayKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
         this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
-        // input lock
-        this.key1locked = false;
-        this.key2locked = false;
-        this.key3locked = false;
-        this.key4locked = false;
+        // for firefox only
+        // since quote key will enable search
+        // this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.QUOTES);
+
+        // long note status
+        this.key1_LN_active = false;
+        this.key2_LN_active = false;
+        this.key3_LN_active = false;
+        this.key4_LN_active = false;
+
+        // key lock
+        this.key1_locked = false;
+        this.key2_locked = false;
+        this.key3_locked = false;
+        this.key4_locked = false;
+
+        this.collectedGameData = {
+            trackId: 0,
+            stats: {},
+            partial: []
+        }
 
         // notes
         this.notes = this.physics.add.group();
 
         // pause the game to wait for music
+        this.time.paused = true;
         this.scene.pause();
     }
 
     preload() {
-        // Set background image
-        const bgImage = this.add.image(0, 0, "background");
-        bgImage.setOrigin(0, 0);
+        if (this.gameData["mapId"] !== 0) {
+            // Set background image
+            const bgImage = this.add.image(0, 0, "background");
+            bgImage.setOrigin(0, 0);
 
-        // Dim the background a little bit
-        const darkScreen = this.add.rectangle(0, 0, 1920, 1080, 0x000000, 0.7);
-        darkScreen.setOrigin(0, 0);
+            // Dim the background a little bit
+            const darkScreen = this.add.rectangle(0, 0, 1920, 1080, 0x000000, 0.4);
+            darkScreen.setOrigin(0, 0);
+        }
 
         // Create the timing ring (the real visual)
         this.add.image(this.noteOuter1PositionX, 845, "noteRing");
@@ -141,7 +164,73 @@ class MainScene extends Phaser.Scene {
         this.add.image(this.noteInner2PositionX, 845, "noteRing");
         this.add.image(this.noteOuter2PositionX, 845, "noteRing");
 
-        // Setup texts
+        // Pause dimmer
+        this.pauseDimBg = this.add.rectangle(0, 0, 1920, 1080, 0x110034);
+        this.pauseDimBg.setAlpha(0);
+        this.pauseDimBg.setOrigin(0, 0);
+        this.pauseDimBg.setDepth(10);
+
+        this.gameData["notes"].forEach((note) => {
+            this.time.delayedCall(
+                this.calculateSpawnTime(note.time),
+                () => {
+                    this.spawnNote(note);
+                }
+            );
+        });
+
+        this.prepareUIText();
+        this.prepareInputEvent();
+    }
+
+    create() {
+        // partial data collection event
+        this.time.addEvent({
+            loop: true,
+            callbackScope: this,
+            callback: () => this.partialDataFinalize(),
+            delay: this.duration / 30
+        });
+
+        // game end
+        this.time.addEvent({
+            delay: this.duration,
+            callbackScope: this,
+            callback: () => this.endGame()
+        });
+
+        this.bgMusic = this.gameData["mapId"] !== 0 ? this.sound.get("music") || this.sound.add("music") : null;
+        this.scene.resume();
+        this.gameStartTime = new Date(Date.now());
+        this.time.paused = false;
+        this.bgMusic.play();
+    }
+
+    calculateSpawnTime(targetTime) {
+        const screenHeight = 845;
+        const timeToScroll = (screenHeight / (this.noteSpeed * this.noteScale)) * 1000;
+        return Math.max(0, targetTime - timeToScroll);
+    }
+
+    partialDataFinalize() {
+        this.collectedGameData.partial.push({
+            totalNotes: this.partialNotes,
+            crit: this.partialCrit,
+            perf: this.partialPerf,
+            bad: this.partialBad,
+            good: this.partialGood,
+            miss: this.partialMiss,
+        });
+
+        this.partialNotes = 0;
+        this.partialCrit = 0;
+        this.partialPerf = 0;
+        this.partialGood = 0;
+        this.partialBad = 0;
+        this.partialMiss = 0;
+    }
+
+    prepareUIText() {
         this.scoreText = this.add.text(1410, 100, "0000000", {
             fontFamily: "Inter",
             color: "#ffffff",
@@ -160,13 +249,13 @@ class MainScene extends Phaser.Scene {
             fontSize: "60px"
         }).setOrigin(0, 0);
 
-        this.judgementText = this.add.text(this.judgementPrintX, this.judgementPrintY, "", {
+        this.judgementText = this.add.text(1500, 500, "", {
             fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
         }).setOrigin(0, 0);
 
-        this.errorText = this.add.text(this.errorPrintX, this.errorPrintY, "", {
+        this.errorText = this.add.text(1500, 600, "", {
             fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
@@ -183,61 +272,57 @@ class MainScene extends Phaser.Scene {
             color: "#ffffff",
             fontSize: "50px"
         }).setOrigin(0, 0);
-
-        this.totalNotes = this.rawNoteList.length;
-
-        // Pause dimmer
-        this.pauseDimBg = this.add.rectangle(0, 0, 1920, 1080, 0x110034);
-        this.pauseDimBg.setAlpha(0);
-        this.pauseDimBg.setOrigin(0, 0);
-        this.pauseDimBg.setDepth(10);
-
-        this.rawNoteList.forEach((note) => {
-            this.time.delayedCall(
-                this.calculateSpawnTime(note.time),
-                () => {
-                    this.spawnNote(note);
-                }
-            );
-        });
     }
 
-    create() {
-        // partial data collection event
-        this.time.addEvent({
-            loop: true,
-            callbackScope: this,
-            callback: () => this.partialDataFinalize(),
-            delay: this.duration / 30
+    prepareInputEvent() {
+        const gameKeys = [
+            this.noteOuter1Key,
+            this.noteInner1Key,
+            this.noteInner2Key,
+            this.noteOuter2Key
+        ];
+
+        gameKeys.forEach((key, index) => {
+            key.on("down", () => {
+                this.handleInput(index);
+                // this.drawInputIndicator(index);
+            });
+
+            key.on("up", () => {
+                this.handleInput(index, true);
+                this.setLongNoteActivity(index, false);
+                this.setInputLockActivity(index, false)
+            });
         });
 
-        // game end
-        this.time.addEvent({
-            delay: this.duration + 2000,
-            callbackScope: this,
-            callback: () => this.endGame()
-        });
-
-        this.bgMusic = this.sound.get("music") || this.sound.add("music");
-        this.scene.resume();
-        this.gameStartTime = new Date(Date.now());
-        this.bgMusic.play();
-    }
-
-    calculateSpawnTime(targetTime) {
-        const screenHeight = 845;
-        const timeToScroll = (screenHeight / (this.noteSpeed * this.noteScale)) * 1000;
-        return Math.max(0, targetTime - timeToScroll);
-    }
-
-    partialDataFinalize() {
+        this.replayKey.on("down", () => this.restartScene());
+        this.pauseKey.on("down", () => this.togglePause());
     }
 
     /*
         End this game session and move to game finalizer.
      */
     endGame() {
-        this.scene.switch("GameFinalizer");
+        this.collectedGameData.trackId = this.gameData["metadata"]["map_set_id"];
+
+        this.collectedGameData.stats =
+            {
+                duration: this.duration,
+                crit: this.totalCrit,
+                perf: this.totalPerf,
+                good: this.totalGood,
+                bad: this.totalBad,
+                miss: this.totalMiss,
+                // TODO: rework on score calculation
+                score: 0,
+                accuracy: this.accuracy / 100,
+                // TODO: if/else spam
+                grade : "S+"
+            };
+
+        this.collectedGameData.partial = this.collectedGameData.partial.slice(0, 30);
+
+        console.log(this.collectedGameData);
     }
 
     /*
@@ -277,7 +362,7 @@ class MainScene extends Phaser.Scene {
             const duration = endTime - startTime;
             const height = Math.max(
                 0,
-                Math.floor((duration / 1000) * this.noteSpeed * this.noteScale) - 60
+                Math.floor((duration / 1000) * this.noteSpeed * this.noteScale) - 30
             );
 
             const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, colorSelection[pos]);
@@ -306,9 +391,12 @@ class MainScene extends Phaser.Scene {
     }
 
     /*
-        Make judgement texts (right-hand side) disappears after 200ms.
+        Draw judgement text and set a fade time.
      */
-    makeJudgementTextDisappear() {
+    drawJudgementText(judgement, error) {
+        this.judgementText.setText(judgement);
+        this.errorText.setText(error);
+
         this.time.delayedCall(200, () => {
             this.judgementText.setText("");
             this.errorText.setText("");
@@ -316,44 +404,85 @@ class MainScene extends Phaser.Scene {
     }
 
     /*
-        Draw judgement text
+        Get long note activity
      */
-    drawJudgementText(judgement, error) {
-        this.judgementText.setText(judgement);
-        this.errorText.setText(error);
+    getLongNoteActivity(keyPosition) {
+        return [
+            this.key1_LN_active,
+            this.key2_LN_active,
+            this.key3_LN_active,
+            this.key4_LN_active
+        ][keyPosition];
     }
 
     /*
-        Process key lock.
+        Set long note activity.
      */
-    processKeyLock(keyPosition, locker) {
+    setLongNoteActivity(keyPosition, isHolding) {
         switch (keyPosition) {
             case 0:
-                this.key1locked = locker;
+                this.key1_LN_active = isHolding;
                 break;
             case 1:
-                this.key2locked = locker;
+                this.key2_LN_active = isHolding;
                 break;
             case 2:
-                this.key3locked = locker;
+                this.key3_LN_active = isHolding;
                 break;
             case 3:
-                this.key4locked = locker;
+                this.key4_LN_active = isHolding;
                 break;
             default:
                 break;
         }
     }
 
-    handleInput(keyPosition) {
-        const now = this.inGameTimeInMs;
+    /*
+        Get key lock.
+     */
+    getInputLockActivity(keyPosition) {
+        return [
+            this.key1_locked,
+            this.key2_locked,
+            this.key3_locked,
+            this.key4_locked,
+        ][keyPosition];
+    }
 
+    /*
+        Set key lock.
+     */
+    setInputLockActivity(keyPosition, isLocked) {
+        switch (keyPosition) {
+            case 0:
+                this.key1_locked = isLocked;
+                break;
+            case 1:
+                this.key2_locked = isLocked;
+                break;
+            case 2:
+                this.key3_locked = isLocked;
+                break;
+            case 3:
+                this.key4_locked = isLocked;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /*
+        Handle game input.
+     */
+    handleInput(keyPosition, isKeyUp = false) {
+        const hitTime = this.inGameTimeInMs;
         const xPosition = this.getLanePositionX(keyPosition);
         const noteList = this.notes.getChildren();
 
         // filter notes that are in the needed lane
         // and near the judgement box
         let notesAtWantedLanes = noteList
+            .filter(note => note.getData("lnBody") === false)
             .filter(note => note.x === xPosition)
             .filter(note => Math.abs(note.y - 845) <= 150);
 
@@ -362,75 +491,75 @@ class MainScene extends Phaser.Scene {
         // get notes that lies the furthest,
         // but not exceeding the "judgement bound".
         const theChosenOne = notesAtWantedLanes
-            .reduce((previousValue, currentValue) => {
+            .reduce((previousNote, currentNote) => {
                 const judgePoint = 845;
                 const judgeRange = 100;
 
                 const upperPoint = judgePoint - judgeRange
                 const chokePoint = judgePoint + judgeRange;
 
-                const currentNoteObj = currentValue;
-                const lastNoteObj = previousValue;
-
-                const acceptedNote =
-                    (upperPoint <= currentNoteObj.y && currentNoteObj.y <= chokePoint) && (currentNoteObj.y < lastNoteObj.y)
-                        ? currentValue
-                        : previousValue;
-
-                return acceptedNote;
+                return (upperPoint <= currentNote.y && currentNote.y <= chokePoint) && (currentNote.y < previousNote.y)
+                    ? currentNote
+                    : previousNote;
             });
 
         // well, no note I guess?
         if (theChosenOne === null) return;
 
-        // if the note is a long note body, ignore it.
-        // I will handle it with my spaghetti code later.
-        if (theChosenOne.getData("lnBody")) return;
-
         const noteObj = theChosenOne;
+        const noteType = noteObj.getData("type");
 
-        const hitTime = now;
+        if (noteType === 0) {
+            this.processNote(noteObj, hitTime, keyPosition);
+        } else if (noteType === 1) {
+            this.processNote(noteObj, hitTime, keyPosition, true);
+        } else if (isKeyUp && this.getLongNoteActivity(keyPosition) && noteType === 2) {
+            // we only process long note end iff we ACK-ed the LN start
+            this.processNote(noteObj, hitTime, keyPosition, false);
+        }
+    }
+
+    /*
+        Process single note and LN start, they are technically the same.
+     */
+    processNote(noteObj, hitTime, keyPosition, isLnStart = false) {
         const expectedTime = noteObj.getData("time");
 
         noteObj.destroy();
         ++this.combo;
 
-        const phaserError = 30;
-        const offset = Math.abs(hitTime - expectedTime - phaserError);
+        const offset = Math.abs(hitTime - expectedTime);
         const isEarly = hitTime < expectedTime;
         const isLate = hitTime > expectedTime;
 
         let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
-        let shouldLockKey = false;
 
-        let critWindow = 40,
-            perfWindow = 80,
-            goodWindow = 120,
-            badWindow = 180;
-
-        if (offset <= critWindow) {
+        if (offset <= this.critWindow) {
             ++this.totalCrit;
-            shouldLockKey = true;
+            ++this.partialCrit;
+            ++this.partialNotes;
             this.drawJudgementText("Nice!", "");
-            this.makeJudgementTextDisappear();
-        } else if (critWindow < offset && offset <= perfWindow) {
+        } else if (this.critWindow < offset && offset <= this.perfWindow) {
             ++this.totalPerf;
-            shouldLockKey = true;
+            ++this.partialPerf;
+            ++this.partialNotes;
             this.drawJudgementText("Perfect", errTxt);
-            this.makeJudgementTextDisappear();
-        } else if (perfWindow < offset && offset <= goodWindow) {
+        } else if (this.perfWindow < offset && offset <= this.goodWindow) {
             ++this.totalGood;
-            shouldLockKey = true;
+            ++this.partialGood;
+            ++this.partialNotes;
             this.drawJudgementText("Fine", errTxt);
-            this.makeJudgementTextDisappear();
-        } else if (goodWindow < offset && offset <= badWindow) {
+        } else if (this.goodWindow < offset && offset <= this.badWindow) {
             ++this.totalBad;
-            shouldLockKey = true;
+            ++this.partialBad;
+            ++this.partialNotes;
             this.drawJudgementText("Meh.", errTxt);
-            this.makeJudgementTextDisappear();
+        } else {
+            this.drawJudgementText("What?", "Edge case!");
         }
 
-        this.processKeyLock(keyPosition, shouldLockKey);
+        this.setLongNoteActivity(keyPosition, isLnStart);
+        this.setInputLockActivity(true);
     }
 
     /*
@@ -453,8 +582,8 @@ class MainScene extends Phaser.Scene {
         this.isScenePaused = !this.isScenePaused;
 
         if (this.isScenePaused) {
-            this.physics.pause();
             this.time.paused = true;
+            this.physics.pause();
             this.notes.setVelocityY(0);
             this.bgMusic.pause();
             this.pauseDimBg.setAlpha(0.5);
@@ -463,8 +592,8 @@ class MainScene extends Phaser.Scene {
             this.pauseHint.setText("Press ESC to resume.");
             this.pauseHint.setDepth(15);
         } else {
-            this.physics.resume();
             this.time.paused = false;
+            this.physics.resume();
             this.notes.setVelocityY(this.noteSpeed * this.noteScale);
             this.bgMusic.resume();
             this.pauseDimBg.setAlpha(0);
@@ -481,48 +610,11 @@ class MainScene extends Phaser.Scene {
         this.scene.restart();
     }
 
-    update(time, delta) {
-        if (this.pauseKey.isDown && !this.isPauseKeyHandled) {
-            this.togglePause();
-            this.isPauseKeyHandled = true;
-        } else if (!this.pauseKey.isDown) {
-            this.isPauseKeyHandled = false;
-        }
-
-        if (this.replayKey.isDown) this.restartScene();
-
+    update(_, delta) {
         // only do stuffs when the game is not paused
         if (this.isScenePaused) return;
 
         this.inGameTimeInMs += delta;
-
-        if (this.noteOuter1Key.isDown) {
-            if (!this.key1locked) this.handleInput(0);
-            this.drawInputIndicator(0);
-        } else {
-            this.processKeyLock(0, false);
-        }
-
-        if (this.noteInner1Key.isDown) {
-            if (!this.key2locked) this.handleInput(1);
-            this.drawInputIndicator(1);
-        } else {
-            this.processKeyLock(1, false);
-        }
-
-        if (this.noteInner2Key.isDown) {
-            if (!this.key3locked) this.handleInput(2);
-            this.drawInputIndicator(2);
-        } else {
-            this.processKeyLock(2, false);
-        }
-
-        if (this.noteOuter2Key.isDown) {
-            if (!this.key4locked) this.handleInput(3);
-            this.drawInputIndicator(3);
-        } else {
-            this.processKeyLock(3, false);
-        }
 
         // noinspection PointlessArithmeticExpressionJS
         this.accuracy = (
@@ -534,18 +626,17 @@ class MainScene extends Phaser.Scene {
         ) / (350.00 * this.totalNotes) * 100.0;
 
         this.notes.getChildren().forEach((note) => {
-            if (note instanceof Phaser.GameObjects.Rectangle) return;
-
-            const noteObj = note;
-            const noteY = noteObj.y;
+            if (note.getData("lnBody")) return;
 
             // handle MISS judgement
-            if (noteY > 845 + 200) {
-                noteObj.destroy();
+            if (note.y > 845 + 200) {
+                note.destroy();
                 this.combo = 0;
                 ++this.totalMiss;
+                ++this.partialMiss;
+                ++this.partialNotes;
                 this.drawJudgementText("Missed.", "");
-                this.makeJudgementTextDisappear();
+                this.setLongNoteActivity(this.getLanePositionX(note.x), false);
             }
         });
 
@@ -555,4 +646,4 @@ class MainScene extends Phaser.Scene {
     }
 }
 
-export default MainScene;
+export default Game;

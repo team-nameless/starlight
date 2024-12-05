@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import MainScene from "./scenes/MainScene";
+import Game from "./scenes/Game";
 import DataLoader from "./scenes/DataLoader";
 import AssetLoader from "./scenes/AssetLoader";
 import GameFinalizer from "./scenes/GameFinalizer";
@@ -36,7 +36,7 @@ function GameApp() {
 
         game.scene.add("DataLoader", DataLoader, true, { song: songId });
         game.scene.add("AssetLoader", AssetLoader);
-        game.scene.add("MainScene", MainScene);
+        game.scene.add("Game", Game);
         game.scene.add("GameFinalizer", GameFinalizer);
 
         return () => {
