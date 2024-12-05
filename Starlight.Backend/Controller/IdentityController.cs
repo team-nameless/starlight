@@ -180,6 +180,7 @@ public class IdentityController : ControllerBase
         return result.Succeeded ? Ok() : BadRequest(result.ToString());
     }
 
+    /*
     /// <summary>
     ///     Create an email/account verification request.
     /// </summary>
@@ -223,4 +224,5 @@ public class IdentityController : ControllerBase
         
         return Ok();
     }
+    */
 }
