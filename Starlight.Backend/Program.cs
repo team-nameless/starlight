@@ -72,10 +72,24 @@ builder.Services
     {
         opt.Cookie.HttpOnly = true;
         opt.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        opt.Cookie.SameSite = SameSiteMode.Lax;
+        opt.Cookie.SameSite = SameSiteMode.None;
         
         opt.ExpireTimeSpan = TimeSpan.FromHours(480);
         opt.SlidingExpiration = true;
+    })
+    .Configure<CookiePolicyOptions>(opt =>
+    {
+        opt.OnAppendCookie = context =>
+        {
+            if (context.CookieOptions is { Secure: true, SameSite: SameSiteMode.None })
+            {
+                context.CookieOptions.Extensions.Add("Partitioned");
+            }
+        };
+    })
+    .Configure<ForwardedHeadersOptions>(opt =>
+    {
+        opt.KnownProxies.Add(IPAddress.Parse("163.47.8.41"));
     });
 
 var app = builder.Build();
