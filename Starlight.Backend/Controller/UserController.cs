@@ -46,6 +46,8 @@ public class UserController : ControllerBase
             : await userManager.GetUserAsync(User);
 
         if (user == null) return NotFound("Player not found");
+        
+        var isSameUser = userId == user.SequenceNumber;
 
         var scheme = HttpContext.Request.Scheme;
         var authorityUrl = HttpContext.Request.Host.Value;
@@ -57,7 +59,7 @@ public class UserController : ControllerBase
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
-            Email = user.Email,
+            Email = isSameUser ? user.Email : "",
             Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
@@ -66,7 +68,7 @@ public class UserController : ControllerBase
             LastSeen = user.LastSeenTime,
             TopScores = user.BestScores,
             FriendList = user.Friends,
-            AchievementList = user.Achievements,
+            AchievementList = user.Achievements
         });
     }
     
