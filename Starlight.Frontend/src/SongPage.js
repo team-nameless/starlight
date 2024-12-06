@@ -52,10 +52,10 @@ function SongPage() {
   };
   /*
   const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
-    loaderUrl: require("./game/unity/pkg/WebUnity.loader.js"),
-    dataUrl: require("./game/unity/pkg/WebUnity.data.br"),
-    frameworkUrl: require("./game/unity/pkg/WebUnity.framework.js.br"),
-    codeUrl: require("./game/unity/pkg/WebUnity.wasm.br"),
+    loaderUrl: require("./game/bundle/pkg/WebUnity.loader.js"),
+    dataUrl: require("./game/bundle/pkg/WebUnity.data.br"),
+    frameworkUrl: require("./game/bundle/pkg/WebUnity.framework.js.br"),
+    codeUrl: require("./game/bundle/pkg/WebUnity.wasm.br"),
   });*/
 
   const navigate = useNavigate();
