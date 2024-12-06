@@ -18,6 +18,7 @@ import { FaSearch } from 'react-icons/fa';
 import * as d3 from 'd3';
 import 'd3-scale-chromatic';
 import testHeatmapData from './test_heatmap.json';
+import sparkle from './assets/sparkle.png'; // Import the sparkle image
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
@@ -360,8 +361,18 @@ function HistoryPage() {
   
     // Add overall score
     const scoreElement = document.createElement('div');
-    scoreElement.textContent = `✨${overallScore}✨`;
     scoreElement.className = 'overall-score';
+    const sparkleLeft = document.createElement('img');
+    sparkleLeft.src = sparkle;
+    sparkleLeft.style.width = '32px';
+    sparkleLeft.style.height = '32px';
+    sparkleLeft.style.verticalAlign = 'middle';
+    sparkleLeft.style.display = 'inline';
+    sparkleLeft.style.marginBottom = '5px';
+    const sparkleRight = sparkleLeft.cloneNode();
+    scoreElement.appendChild(sparkleLeft);
+    scoreElement.appendChild(document.createTextNode(` ${overallScore} `));
+    scoreElement.appendChild(sparkleRight);
     container.appendChild(scoreElement);
   
     // Add grade
