@@ -23,31 +23,24 @@ public class UserController : ControllerBase
     /// <summary>
     ///     Look up a particular player account.
     /// </summary>
-    /// <param name="userId">Account ID, default to self if provided nothing.</param>
     [HttpGet]
     [Authorize]
     [Produces("application/json")]
-    public async Task<ActionResult> GetUser(ulong? userId = null)
+    public async Task<ActionResult> GetUser()
     {
-        // default to self.
-        userId ??= 0;
-        
         var services = HttpContext.RequestServices;
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
         var userManager = signInManager.UserManager;
 
-        var user = userId != 0
-            ? _gameDatabase.Users
-                .AsNoTracking()
-                .Include(p => p.Achievements)
-                .Include(p => p.Friends)
-                .Include(p => p.BestScores)
-                .FirstOrDefault(u => u.SequenceNumber == userId)
-            : await userManager.GetUserAsync(User);
+        var loggedInPlayer = await userManager.GetUserAsync(User);
+        var userId = loggedInPlayer!.SequenceNumber;
 
-        if (user == null) return NotFound("Player not found");
-        
-        var isSameUser = userId == user.SequenceNumber;
+        var user = _gameDatabase.Users
+            .AsNoTracking()
+            .Include(p => p.Achievements)
+            .Include(p => p.Friends)
+            .Include(p => p.BestScores)
+            .FirstOrDefault(u => u.SequenceNumber == userId);
 
         var scheme = HttpContext.Request.Scheme;
         var authorityUrl = HttpContext.Request.Host.Value;
@@ -59,14 +52,14 @@ public class UserController : ControllerBase
         {
             Id = user.SequenceNumber,
             Name = user.DisplayName,
-            Email = isSameUser ? user.Email : "",
+            Email = user.Email,
             Avatar = isAvatarAvailable ? $"{scheme}://{authorityUrl}/avatars/{user.SequenceNumber}.jpeg" : "",
             Level = user.CurrentLevel,
             Exp = user.TotalExp,
             ExpNeededForNextLevel = user.MaxExpForLevel,
             PlayTime = user.TotalPlayTime,
             LastSeen = user.LastSeenTime,
-            TopScores = user.BestScores,
+            TopScores = user.BestScores.OrderByDescending(s => s.TotalPoints),
             FriendList = user.Friends,
             AchievementList = user.Achievements
         });
