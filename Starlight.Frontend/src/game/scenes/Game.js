@@ -8,10 +8,10 @@ class Game extends Phaser.Scene {
     notes;
 
     // timing window in ms
-    critWindow = 40;
-    perfWindow = 80;
-    goodWindow = 120;
-    badWindow = 180;
+    critWindow = 60;
+    perfWindow = 100;
+    goodWindow = 150;
+    badWindow = 200;
 
     // gameplay properties
     noteSpeed = 150;
@@ -85,6 +85,10 @@ class Game extends Phaser.Scene {
     key3_LN_active;
     key4_LN_active;
 
+    //
+    dataCollectionEvent;
+    endGameEvent;
+
     constructor() {
         super("Game");
     }
@@ -143,8 +147,25 @@ class Game extends Phaser.Scene {
         this.notes = this.physics.add.group();
 
         // pause the game to wait for music
-        this.time.paused = true;
-        this.scene.pause();
+        // this.time.paused = true;
+
+        // partial data collection event
+        this.dataCollectionEvent = this.time.addEvent({
+            loop: true,
+            callbackScope: this,
+            callback: () => this.partialDataFinalize(),
+            delay: this.duration / 30
+        });
+
+        // game end
+        this.endGameEvent = this.time.addEvent({
+            delay: this.duration + 10,
+            callbackScope: this,
+            callback: () => this.endGame()
+        });
+
+        this.dataCollectionEvent.paused = true;
+        this.endGameEvent.paused = true;
     }
 
     preload() {
@@ -184,30 +205,17 @@ class Game extends Phaser.Scene {
     }
 
     create() {
-        // partial data collection event
-        this.time.addEvent({
-            loop: true,
-            callbackScope: this,
-            callback: () => this.partialDataFinalize(),
-            delay: this.duration / 30
-        });
-
-        // game end
-        this.time.addEvent({
-            delay: this.duration,
-            callbackScope: this,
-            callback: () => this.endGame()
-        });
-
         this.bgMusic = this.gameData["mapId"] !== 0 ? this.sound.get("music") || this.sound.add("music") : null;
         this.scene.resume();
         this.gameStartTime = new Date(Date.now());
         this.time.paused = false;
+        this.dataCollectionEvent.paused = false;
+        this.endGameEvent.paused = false;
         this.bgMusic.play();
     }
 
     calculateSpawnTime(targetTime) {
-        const screenHeight = 845;
+        const screenHeight = 900;
         const timeToScroll = (screenHeight / (this.noteSpeed * this.noteScale)) * 1000;
         return Math.max(0, targetTime - timeToScroll);
     }
@@ -303,8 +311,20 @@ class Game extends Phaser.Scene {
         End this game session and move to game finalizer.
      */
     endGame() {
-        this.collectedGameData.trackId = this.gameData["metadata"]["map_set_id"];
+        this.time.paused = true;
+        this.dataCollectionEvent.paused = true;
 
+        // grade calculation
+        let grade = "";
+        if (97 <= this.accuracy) grade = "S+";
+        else if (95 <= this.accuracy && this.accuracy < 97) grade = "S";
+        else if (90 <= this.accuracy && this.accuracy < 95) grade = "A";
+        else if (90 <= this.accuracy && this.accuracy < 95) grade = "A";
+        else if (80 <= this.accuracy && this.accuracy < 90) grade = "B";
+        else if (65 <= this.accuracy && this.accuracy < 80) grade = "C";
+        else grade = "D";
+
+        this.collectedGameData.trackId = this.gameData["metadata"]["map_set_id"];
         this.collectedGameData.stats =
             {
                 duration: this.duration,
@@ -313,16 +333,15 @@ class Game extends Phaser.Scene {
                 good: this.totalGood,
                 bad: this.totalBad,
                 miss: this.totalMiss,
-                // TODO: rework on score calculation
-                score: 0,
+                // TODO: Un-DJMAX this
+                score: Math.trunc((this.accuracy / 100) * 1_000_000),
                 accuracy: this.accuracy / 100,
-                // TODO: if/else spam
-                grade : "S+"
+                grade : grade
             };
 
         this.collectedGameData.partial = this.collectedGameData.partial.slice(0, 30);
 
-        console.log(this.collectedGameData);
+        this.scene.switch("GameFinalizer", { collectedData: this.collectedGameData });
     }
 
     /*
@@ -362,7 +381,7 @@ class Game extends Phaser.Scene {
             const duration = endTime - startTime;
             const height = Math.max(
                 0,
-                Math.floor((duration / 1000) * this.noteSpeed * this.noteScale) - 30
+                Math.ceil((duration / 1000) * this.noteSpeed * this.noteScale)
             );
 
             const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, colorSelection[pos]);
@@ -639,6 +658,9 @@ class Game extends Phaser.Scene {
                 this.setLongNoteActivity(this.getLanePositionX(note.x), false);
             }
         });
+
+        // TODO: Un-DJMAX this.
+        // this.score = (this.accuracy / 100) * 1_000_000;
 
         this.comboText.setText(`${this.combo}x`);
         this.scoreText.setText(`${this.score}`.padStart(7, "0"));
