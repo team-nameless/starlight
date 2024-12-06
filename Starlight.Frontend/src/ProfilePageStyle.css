@@ -329,20 +329,20 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 17px;
     transition: color 0.3s ease, transform 0.3s ease; 
   }
   
   .nav3 a span {
-    margin-left: 34px; 
+    margin-left: 14px; 
     transition: color 0.3s ease; 
   }
   
   .nav-iconh {
-    width: 27px;
-    height: 27px;
-    margin-top: 10px;
-    margin-right: -25px;
+    width: 22px;
+    height: 22px;
+    margin-top: 8px;
+    margin-left: -15px;
   }
   
   .nav3 {
@@ -363,8 +363,8 @@
   .nav3 a::after {
     content: '';
     position: absolute;
-    bottom: -5px; 
-    left: 50%;
+    bottom: -6px; 
+    left: 80%;
     width: 0;
     height: 2px; 
     background-color: white;
@@ -372,8 +372,8 @@
   }
   
   .nav3 a:hover::after {
-    width: 100%;
-    left: 0;
+    width: 120%;
+    left: -10px;
   }
   #nav-iconh {
     width: 50px;

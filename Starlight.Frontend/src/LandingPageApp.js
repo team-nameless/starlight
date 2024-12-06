@@ -322,7 +322,6 @@ const LandingPageApp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
-  const [showCodeModal, setShowCodeModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [forgotPasswordCode, setForgotPasswordCode] = useState('');
@@ -457,7 +456,6 @@ const LandingPageApp = () => {
     setShowSuccessModal(false);
     setShowLoginSuccessModal(false); 
     setShowForgotPasswordModal(false);
-    setShowCodeModal(false);
     setShowResetPasswordModal(false);
   };
 
@@ -495,6 +493,10 @@ const LandingPageApp = () => {
       setForgotPasswordError('Please fill in email');
       setIsLoading(false);
       return;
+    } else if (!/^[\w-]+(\.[\w-]+)*@gmail\.com$/.test(forgotPasswordEmail)) {
+      setForgotPasswordError('Please enter a valid Gmail address (e.g. example@gmail.com)');
+      setIsLoading(false);
+      return;
     }
   
     try {
@@ -504,7 +506,7 @@ const LandingPageApp = () => {
   
       if (response.status === 200) {
         closeModal();
-        setShowCodeModal(true);
+        setShowNotificationModal(true);
       }
     } catch (error) {
       setForgotPasswordError('Failed to send reset code. Please try again.');
@@ -516,28 +518,6 @@ const LandingPageApp = () => {
   const openForgotPasswordModal = () => {
     closeModal();
     setShowForgotPasswordModal(true);
-  };
-  
-  const handleCodeSubmit = async (e) => {
-    e.preventDefault();
-    setCodeError('');
-    setIsLoading(true);
-  
-    try {
-      const encodedCode = encodeURIComponent(forgotPasswordCode); 
-      const response = await axios.post(`${rootUrl}/api/verifyCode`, { email: forgotPasswordEmail, code: encodedCode }, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-  
-      if (response.status === 200) {
-        setShowCodeModal(false);
-        setShowResetPasswordModal(true);
-      }
-    } catch (error) {
-      setCodeError('Invalid code. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
   };
   
   const handleResetPassword = async (e) => {
@@ -744,9 +724,10 @@ const LandingPageApp = () => {
       {showNotificationModal && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <h2>Warning</h2>
-            <p>You need to log in to play the game.</p>
-            <button className="stay-button" onClick={closeModal}>Close</button>
+            <h2>Notification</h2>
+            <p>A temporary password has been sent to your email. Please use it to log in.</p>
+            <p>*Hint*: Change your new password in Profile is advised for increased security.</p>
+            <button className="stay-button" onClick={() => { closeModal(); setShowLoginModal(true); }}>Close</button>
           </div>
         </div>
       )}
@@ -780,70 +761,6 @@ const LandingPageApp = () => {
                   />
                   {forgotPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{forgotPasswordError}</span>}
                 </TextFieldContainer>
-                <ButtonContainer>
-                  <SubmitButton type="submit">Send</SubmitButton>
-                </ButtonContainer>
-              </form>
-            </FormContainer>
-          </ModalContent>
-        </Modal>
-      )}
-    
-      {showCodeModal && (
-        <Modal>
-          <ModalContent style={{ maxWidth: '750px', height:'350px', top: '100px' }}> 
-            <ModalBackground2 />
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <GirlImage2 src={GirlImage} alt="Girl" />
-            <LogoImage2 src={LogoImage} alt="Logo" className="enter-code" /> 
-            <ModalTitle>Enter Code</ModalTitle>
-            <FormContainer>
-              <form onSubmit={handleCodeSubmit}>
-                <TextFieldContainer className="code-field">
-                  <label htmlFor="forgotPasswordCode">Code:</label>
-                  <TextField
-                    id="forgotPasswordCode"
-                    value={forgotPasswordCode}
-                    onChange={(e) => setForgotPasswordCode(e.target.value)}
-                    required
-                  />
-                  {codeError && <span style={{ color: 'red', fontSize: '10px' }}>{codeError}</span>}
-                </TextFieldContainer>
-                <ButtonContainer>
-                  <SubmitButton type="submit">Send</SubmitButton>
-                </ButtonContainer>
-              </form>
-            </FormContainer>
-          </ModalContent>
-        </Modal>
-      )}
-    
-      {showResetPasswordModal && (
-        <Modal>
-          <ModalContent>
-            <ModalBackground2 />
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <GirlImage2 src={GirlImage} alt="Girl" />
-            <LogoImage2 src={LogoImage} alt="Logo" />
-            <ModalTitle>Reset Password</ModalTitle>
-            <FormContainer>
-              <form onSubmit={handleResetPassword}>
-                <TextFieldContainer>
-                  <label htmlFor="newPassword">Create New Password:</label>
-                  <div className="password-container">
-                    <TextField
-                      id="newPassword"
-                      type={showNewPassword ? "text" : "password"}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      required
-                    />
-                    <EyeIcon onClick={toggleNewPasswordVisibility}>
-                      {showNewPassword ? '🙉' : '🙈'}
-                    </EyeIcon>
-                  </div>
-                </TextFieldContainer>
-                {resetPasswordError && <span style={{ color: 'red', fontSize: '10px' }}>{resetPasswordError}</span>}
                 <ButtonContainer>
                   <SubmitButton type="submit">Send</SubmitButton>
                 </ButtonContainer>
