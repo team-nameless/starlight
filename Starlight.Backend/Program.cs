@@ -26,11 +26,12 @@ builder.Services
     .AddSwaggerGen()
     .AddIdentity<Player, Role>(opt =>
     {
-        opt.Password.RequiredLength = 8;
-        opt.Password.RequireDigit = true;
-        opt.Password.RequireLowercase = true;
-        opt.Password.RequireUppercase = true;
-        opt.Password.RequireNonAlphanumeric = true;
+        // Let the FE team handle this.
+        opt.Password.RequiredLength = 1;
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireLowercase = false;
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequireNonAlphanumeric = false;
         
         opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         opt.Lockout.MaxFailedAccessAttempts = 5;
@@ -68,7 +69,7 @@ builder.Services
     })
     .AddDbContext<GameDatabaseService>()
     .AddDbContext<TrackDatabaseService>()
-    .AddSingleton<IdentityEmailService>()
+    .AddSingleton<StarlightEmailService>()
     .AddSingleton(builder.Configuration)
     .ConfigureApplicationCookie(opt =>
     {

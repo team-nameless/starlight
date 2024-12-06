@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,9 +18,9 @@ namespace Starlight.Backend.Controller;
 public class IdentityController : ControllerBase
 {
     private GameDatabaseService _gameDatabase;
-    private IdentityEmailService _emailService;
+    private StarlightEmailService _emailService;
 
-    public IdentityController(GameDatabaseService gameDatabase, IdentityEmailService emailService)
+    public IdentityController(GameDatabaseService gameDatabase, StarlightEmailService emailService)
     {
         _gameDatabase = gameDatabase;
         _emailService = emailService;
@@ -150,79 +151,15 @@ public class IdentityController : ControllerBase
 
         // don't reveal the idiots that the user does not exist.
         if (user is null) return Ok();
+
+        var salt = $"Starlight,{passwordForgot.Email},{DateTime.UtcNow.Second}";
         
-        var code = await userManager.GeneratePasswordResetTokenAsync(user);
-        await _emailService.SendPasswordResetCodeAsync(user, passwordForgot.Email, code);
+        var newPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(salt));
+        var resetPasswordToken = await userManager.GeneratePasswordResetTokenAsync(user);
+        await userManager.ResetPasswordAsync(user, resetPasswordToken, newPassword);
+        
+        await _emailService.SendNewPasswordEmail(passwordForgot.Email, newPassword);
         
         return Ok();
     }
-    
-    /// <summary>
-    ///     Perform a password reset.
-    /// </summary>
-    /// <param name="passwordReset">Request body.</param>
-    [HttpPost("resetPassword")]
-    [AllowAnonymous]
-    public async Task<ActionResult> ResetPassword(
-        [FromBody] PasswordResetRequest passwordReset
-    )
-    {
-        var services = HttpContext.RequestServices;
-        var userManager = services.GetRequiredService<UserManager<Player>>();
-        
-        var user = await userManager.FindByEmailAsync(passwordReset.Email);
-
-        // don't reveal the idiots that the user does not exist.
-        if (user is null) return Ok();
-
-        var result = await userManager.ResetPasswordAsync(user, passwordReset.Code, passwordReset.NewPassword);
-        
-        return result.Succeeded ? Ok() : BadRequest(result.ToString());
-    }
-
-    /*
-    /// <summary>
-    ///     Create an email/account verification request.
-    /// </summary>
-    [HttpGet("createEmailConfirmation")]
-    [Authorize]
-    public async Task<ActionResult> ConfirmEmail()
-    {
-        var services = HttpContext.RequestServices;
-        var userManager = services.GetRequiredService<UserManager<Player>>();
-        var user = await userManager.GetUserAsync(User);
-        
-        // ok I guess?
-        if (await userManager.IsEmailConfirmedAsync(user!)) return Ok();
-
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user!);
-        
-        var scheme = HttpContext.Request.Scheme;
-        var authorityUrl = HttpContext.Request.Host.Value;
-        
-        var confirmationUrl = $"{scheme}://{authorityUrl}/api/verifyEmail?token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token))}";
-        
-        await _emailService.SendConfirmationLinkAsync(user!, user!.Email!, confirmationUrl);
-        
-        return Ok();
-    }
-
-    /// <summary>
-    ///     Verify email.
-    /// </summary>
-    [HttpGet("verifyEmail")]
-    [Authorize]
-    public async Task<ActionResult> VerifyEmail([Required] string token)
-    {
-        var services = HttpContext.RequestServices;
-        var userManager = services.GetRequiredService<UserManager<Player>>();
-        var user = await userManager.GetUserAsync(User);
-
-        var result = await userManager.ConfirmEmailAsync(user!, token);
-
-        if (!result.Succeeded) return BadRequest(result.ToString());
-        
-        return Ok();
-    }
-    */
 }
