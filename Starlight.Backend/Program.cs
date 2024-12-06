@@ -15,7 +15,9 @@ builder.Configuration
     .Build();
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 builder.Services.AddHealthChecks();
 
 builder.Services    
