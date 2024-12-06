@@ -176,7 +176,7 @@ function SongPage() {
       try {
         await axios.post(`${rootUrl}/api/game/start`, { songId: currentSong.id }, {withCredentials: true});
         requestFullScreen();
-        navigate(`/TestGame`, { state: { songId: currentSong.id } });
+        navigate(`/TestGame`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
       } catch (error) {
         console.error('Error starting game:', error);
       }

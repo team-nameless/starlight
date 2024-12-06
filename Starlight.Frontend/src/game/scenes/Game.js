@@ -166,6 +166,9 @@ class Game extends Phaser.Scene {
 
         this.dataCollectionEvent.paused = true;
         this.endGameEvent.paused = true;
+
+        // make game faster for testing
+        // this.time.timeScale = 10;
     }
 
     preload() {

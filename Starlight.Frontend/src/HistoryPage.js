@@ -28,8 +28,8 @@ const ProfilePage = lazy(() => import('./ProfilePage'));
 
 function HistoryPage() {
   const location = useLocation();
-  const currentSongFromLocation = location.state?.currentSong || null;
-  const currentSongIndexFromLocation = location.state?.currentSongIndex || 0;
+  const currentSongFromLocation = location.state.currentSong;
+  const currentSongIndexFromLocation = location.state.currentSongIndex;
   const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
   const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
   const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -206,8 +206,9 @@ function HistoryPage() {
       const response = await axios.get(`${rootUrl}${url}`, {
         withCredentials: true
       });
-      const data = response.data;
-  
+
+      const data = JSON.parse(response.data["rawJson"]);
+
       // Validate the response and structure (adjust this as per your API's response format)
       if (data && data.partial && Array.isArray(data.partial)) {
         const durationInSeconds = Math.floor(data.stats.duration / 1000);
@@ -315,7 +316,7 @@ function HistoryPage() {
       const response = await axios.get(`${rootUrl}${url}`, {
         withCredentials: true
       });
-      const data = response.data;
+      const data = JSON.parse(response.data["rawJson"]);
       return data.stats.score || 100000;
     } catch (error) {
       console.error('Error fetching overall score:', error);
@@ -328,7 +329,7 @@ function HistoryPage() {
       const response = await axios.get(`${rootUrl}${url}`, {
         withCredentials: true
       });
-      const data = response.data;
+      const data = JSON.parse(response.data["rawJson"]);
       return data.stats.grade || 'A'; 
     } catch (error) {
       console.error('Error fetching grade:', error);
@@ -472,7 +473,7 @@ function HistoryPage() {
     const renderHeatmap1 = async () => {
       if (!hasRenderedHeatmap1.current) {
         hasRenderedHeatmap1.current = true;
-        await renderHeatmap('/api/score/recent', heatmapContainer1Ref, "/api/score/recent", currentSong?.id);
+        await renderHeatmap(`/api/score/${currentSong.id}/recent`, heatmapContainer1Ref, `/api/score/${currentSong.id}/recent`, currentSong?.id);
       }
     };
     renderHeatmap1();
@@ -482,7 +483,7 @@ function HistoryPage() {
     const renderHeatmap2 = async () => {
       if (!hasRenderedHeatmap2.current) {
         hasRenderedHeatmap2.current = true;
-        await renderHeatmap(`/api/score/${currentSong?.id}`, heatmapContainer2Ref, "/api/score/all", currentSong?.id);
+        await renderHeatmap(`/api/score/${currentSong.id}/best`, heatmapContainer2Ref,  `/api/score/${currentSong.id}/best`, currentSong?.id);
       }
     };
     renderHeatmap2();
