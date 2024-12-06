@@ -33,9 +33,9 @@ function SongPage() {
   const [songs, setSongs] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [userName, setUserName] = useState();
-  const [score, setScore] = useState();
+  //const [isGameOver, setIsGameOver] = useState(false);
+  //const [userName, setUserName] = useState();
+  ///const [score, setScore] = useState();
   const [searchQuery, setSearchQuery] = useState('');
   const [bestScore, setBestScore] = useState(null);
 
@@ -101,7 +101,8 @@ function SongPage() {
         const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          withCredentials: true
         });
         if (songsResponse.status === 200) {
           const fetchedSongs = songsResponse.data;
@@ -120,18 +121,33 @@ function SongPage() {
     fetchData();
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedProfilePic = localStorage.getItem('userProfilePic');
+      setUserProfile((prevProfile) => ({
+        ...prevProfile,
+        profilePic: storedProfilePic || profilePicPlaceholder
+      }));
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+/*
+  useEffect(() => {
     const fetchBestScore = async () => {
       if (currentSong) {
         try {
-          const response = await axios.get(`${rootUrl}/api/user/score/${currentSong.id}`, {
+          const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'text/plain'
             },
             withCredentials: true
           });
           if (response.status === 200) {
-            setBestScore(response.data.bestScore);
+            setBestScore(response.data.totalPoints);
           } else {
             console.error('Error fetching best score:', response.statusText);
           }
@@ -422,7 +438,7 @@ function SongPage() {
               <div className="song-info">
                 <div className="song-name">{currentSong?.title }</div>
                 <div className="artist-name">- {currentSong?.artist } -</div>
-                <div className="best-score">Best Score{/*bestScore !== null ? bestScore : 'N/A'*/}</div>
+                <div className="best-score">{bestScore !== null ? bestScore : 'No record'}</div>
               </div>
               <div className="play-button-container">
                 <button className="play-button" onClick={handlePlayButtonClick}>

@@ -76,10 +76,11 @@ function ProfilePage() {
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
+          const storedProfilePic = localStorage.getItem('userProfilePic');
           setUserProfile({
             id: userData.id || 123456,
             name: userData.name || 'Anonymous',
-            profilePic: userData.avatar || profilePicPlaceholder
+            profilePic: storedProfilePic || userData.avatar || profilePicPlaceholder
           });
           setLevelData({
             level: userData.level || 1,
@@ -331,6 +332,7 @@ function ProfilePage() {
           }));
           // Update local storage to ensure the image is updated in other components
           localStorage.setItem('userProfilePic', updatedImage);
+          window.dispatchEvent(new Event('storage')); // Trigger storage event
         } else {
           console.error('Error updating profile image:', response.statusText);
         }
@@ -439,8 +441,8 @@ function ProfilePage() {
               <ProgressBar current={levelData.exp} total={levelData.expNeededForNextLevel} level={levelData.level} />
             </div>
             <div className="profile-playtime-section">
-              <div>Play time:</div>
-              <div>Last Played:</div>
+              <div>Play time:24h</div>
+              <div>Last Played:3h</div>
             </div>
         
           </div>
