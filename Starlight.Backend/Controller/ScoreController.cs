@@ -1,5 +1,13 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Starlight.Backend.Controller.Request;
+using Starlight.Backend.Database.Game;
+using Starlight.Backend.Service;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Starlight.Backend.Controller;
 
@@ -7,35 +15,67 @@ namespace Starlight.Backend.Controller;
 [ApiController]
 public class ScoreController : ControllerBase
 {
+    private GameDatabaseService _gameDatabase;
+    
+    public ScoreController(GameDatabaseService gameDatabase)
+    {
+        _gameDatabase = gameDatabase;
+    }
+    
     /// <summary>
     ///     Get the most recent score of this player.
     /// </summary>
     [HttpGet("recent")]
     [Authorize]
-    public ActionResult GetMostRecent()
+    public async Task<ActionResult<Score>> GetMostRecent()
     {
-        return Ok();
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+
+        var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+        var mostRecentScore = await _gameDatabase.Scores
+            .Include(s => s.Player)
+            .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
+            .AsNoTracking()
+            .OrderByDescending(score => score.SubmissionDate)
+            .FirstAsync();
+        
+        return Ok(mostRecentScore);
     }
-    
+
     /// <summary>
-    ///     Get the results of a specific song.
-    /// </summary>
-    /// <param name="songId">Song ID to retrieve.</param>
-    [HttpGet("{songId:long}")]
-    [Authorize]
-    public ActionResult GetScore(ulong songId)
-    {
-        return Ok();
-    }
-    
-    /// <summary>
-    ///     Upload the score.
+    ///     Upload the score. Reserved for in-game play.
     /// </summary>
     /// <param name="songId">Song ID to submit.</param>
-    [HttpPut("{songId:long}")]
+    /// <param name="submission">Submission object</param>
+    [HttpPost("{songId:long}")]
     [Authorize]
-    public ActionResult UploadScore(ulong songId)
+    public async Task<ActionResult> UploadScore(ulong songId, [FromBody] ScoreSubmissionRequest submission)
     {
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+
+        var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+        _gameDatabase.Scores.Add(new Score
+        {
+            Id = Convert.ToUInt64(DateTime.UtcNow.Second),
+            SubmissionDate = DateTime.UtcNow,
+            Player = player!,
+            TrackId = songId,
+            TotalPoints = submission.Statistics.Score,
+            Accuracy = submission.Statistics.Accuracy,
+            Critical = submission.Statistics.Critical,
+            Perfect = submission.Statistics.Perfect,
+            Good = submission.Statistics.Good,
+            Bad = submission.Statistics.Bad,
+            Miss = submission.Statistics.Miss,
+            RawJson = JsonConvert.SerializeObject(submission)
+        });
+        
+        await _gameDatabase.SaveChangesAsync();
+
         return Ok();
     }
     
@@ -45,9 +85,22 @@ public class ScoreController : ControllerBase
     /// <param name="songId">Song ID to retrieve.</param>
     [HttpGet("{songId:long}/best")]
     [Authorize]
-    public ActionResult GetSpecificBestScore(ulong songId)
+    public async Task<ActionResult<Score>> GetSpecificBestScore(ulong songId)
     {
-        return Ok();
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+
+        var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+        var bestScore = await _gameDatabase.Scores
+            .Include(s => s.Player)
+            .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
+            .Where(score => score.TrackId == songId)
+            .AsNoTracking()
+            .OrderByDescending(score => score.TotalPoints)
+            .FirstAsync();
+        
+        return Ok(bestScore);
     }
     
     /// <summary>
@@ -56,8 +109,21 @@ public class ScoreController : ControllerBase
     /// <param name="songId">Song ID to retrieve.</param>
     [HttpGet("{songId:long}/recent")]
     [Authorize]
-    public ActionResult GetSpecificRecentScore(ulong songId)
+    public async Task<ActionResult<Score>> GetSpecificRecentScore(ulong songId)
     {
-        return Ok();
+        var services = HttpContext.RequestServices;
+        var signInManager = services.GetRequiredService<SignInManager<Player>>();
+
+        var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+        var mostRecentScore = await _gameDatabase.Scores
+            .Include(s => s.Player)
+            .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
+            .Where(score => score.TrackId == songId)
+            .AsNoTracking()
+            .OrderByDescending(score => score.SubmissionDate)
+            .FirstAsync();
+        
+        return Ok(mostRecentScore);
     }
 }
