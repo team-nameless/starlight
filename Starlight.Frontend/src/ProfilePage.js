@@ -54,10 +54,10 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState('scoreRecord');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [levelData, setLevelData] = useState({ level: 1, exp: 0, expNeededForNextLevel: 100 });
-  const [passwordUpdate, setPasswordUpdate] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
+  const [passwordUpdate, setPasswordUpdate] = useState({ email: '', currentPassword: '', newPassword: '', confirmNewPassword: '' });
   const [emailUpdate, setEmailUpdate] = useState({ email: '', password: '', newEmail: '' });
   const [popupMessage, setPopupMessage] = useState('');
-  const [passwordError, setPasswordError] = useState({ email: '', newPassword: '', confirmNewPassword: '' });
+  const [passwordError, setPasswordError] = useState({ email: '', currentPassword: '', newPassword: '', confirmNewPassword: '' });
   const [emailError, setEmailError] = useState({ email: '', password: '' });
   const [showPopupUpdate, setShowPopupUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +138,7 @@ function ProfilePage() {
   };
 
   const handlePasswordUpdate = async () => {
-    setPasswordError({ email: '', newPassword: '', confirmNewPassword: '' });
+    setPasswordError({ email: '', currentPassword: '', newPassword: '', confirmNewPassword: '' });
     setIsLoading(true);
   
     // Check for empty fields
@@ -146,6 +146,7 @@ function ProfilePage() {
       setPasswordError((prev) => ({
         ...prev,
         email: !passwordUpdate.email ? 'Email is required' : prev.email,
+        currentPassword: !passwordUpdate.currentPassword ? 'Current Password is required' : prev.currentPassword,
         newPassword: !passwordUpdate.newPassword ? 'New Password is required' : prev.newPassword,
         confirmNewPassword: !passwordUpdate.confirmNewPassword ? 'Confirm New Password is required' : prev.confirmNewPassword,
       }));
@@ -192,7 +193,7 @@ function ProfilePage() {
     // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
-        password: passwordUpdate.oldPassword, // Old password
+        password: passwordUpdate.currentPassword, // Old password
         newPassword: passwordUpdate.newPassword, // New password
       }, {
         withCredentials: true
@@ -476,6 +477,15 @@ function ProfilePage() {
                       className="input-field"
                     />
                     {passwordError.email && <div className="error-message">{passwordError.email}</div>}
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      placeholder="Current Password"
+                      value={passwordUpdate.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="input-field"
+                    />
+                    {passwordError.currentPassword && <div className="error-message">{passwordError.currentPassword}</div>}
                     <input
                       type="password"
                       name="newPassword"
