@@ -57,18 +57,6 @@
     ],
     "notes": [
         {
-            "time": 32,
-            "position": 0,
-            "type": 1,
-            "lastUntil": 2791
-        },
-        {
-            "time": 2791,
-            "position": 0,
-            "type": 2,
-            "lastUntil": 2791
-        },
-        {
             "time": 5549,
             "position": 1,
             "type": 1,
