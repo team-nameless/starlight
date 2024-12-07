@@ -140,9 +140,9 @@ function SongPage() {
     const fetchBestScore = async () => {
       if (currentSong) {
         try {
-          const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
+          const response = await axios.get(`${rootUrl}/api/score/recent`, {
             headers: {
-              'Content-Type': 'text/plain'
+              'Content-Type': 'application/json'
             },
             withCredentials: true
           });
@@ -260,6 +260,9 @@ function SongPage() {
       } else if (event.keyCode === 37) { // Left arrow key
         handlePreviousSong();
         triggerButtonHoverEffect('.prev-btn');
+      } else if (event.keyCode === 13) { // Enter key
+        handlePlayButtonClick();
+        triggerButtonHoverEffect('.play-button');
       }
     };
 
@@ -267,7 +270,7 @@ function SongPage() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleNextSong, handlePreviousSong]);
+  }, [handleNextSong, handlePreviousSong, handlePlayButtonClick]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
