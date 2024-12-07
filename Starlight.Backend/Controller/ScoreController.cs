@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,6 @@ using Newtonsoft.Json;
 using Starlight.Backend.Controller.Request;
 using Starlight.Backend.Database.Game;
 using Starlight.Backend.Service;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Starlight.Backend.Controller;
 
@@ -34,14 +32,15 @@ public class ScoreController : ControllerBase
 
         var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
 
-        var mostRecentScore = await _gameDatabase.Scores
+        var mostRecentScore = _gameDatabase.Scores
             .Include(s => s.Player)
             .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
             .AsNoTracking()
-            .OrderByDescending(score => score.SubmissionDate)
-            .FirstAsync();
+            .OrderByDescending(score => score.SubmissionDate);
         
-        return Ok(mostRecentScore);
+        if (!mostRecentScore.Any()) return NoContent();
+        
+        return Ok(await mostRecentScore.FirstAsync());
     }
 
     /// <summary>
@@ -92,15 +91,16 @@ public class ScoreController : ControllerBase
 
         var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
 
-        var bestScore = await _gameDatabase.Scores
+        var bestScore =  _gameDatabase.Scores
             .Include(s => s.Player)
             .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
             .Where(score => score.TrackId == songId)
             .AsNoTracking()
-            .OrderByDescending(score => score.TotalPoints)
-            .FirstAsync();
+            .OrderByDescending(score => score.TotalPoints);
         
-        return Ok(bestScore);
+        if (!bestScore.Any()) return NoContent();
+        
+        return Ok(await bestScore.FirstAsync());
     }
     
     /// <summary>
@@ -116,14 +116,15 @@ public class ScoreController : ControllerBase
 
         var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
 
-        var mostRecentScore = await _gameDatabase.Scores
+        var mostRecentScore = _gameDatabase.Scores
             .Include(s => s.Player)
             .Where(score => score.Player.SequenceNumber == player!.SequenceNumber)
             .Where(score => score.TrackId == songId)
             .AsNoTracking()
-            .OrderByDescending(score => score.SubmissionDate)
-            .FirstAsync();
+            .OrderByDescending(score => score.SubmissionDate);
+
+        if (!mostRecentScore.Any()) return NoContent();
         
-        return Ok(mostRecentScore);
+        return Ok(await mostRecentScore.FirstAsync());
     }
 }
