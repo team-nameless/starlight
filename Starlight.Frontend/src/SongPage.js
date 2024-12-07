@@ -38,6 +38,7 @@ function SongPage() {
   ///const [score, setScore] = useState();
   const [searchQuery, setSearchQuery] = useState('');
   const [bestScore, setBestScore] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
 
@@ -194,6 +195,7 @@ function SongPage() {
   }, [songs]);
 
   const handlePlayButtonClick = async () => {
+    setIsLoading(true);
     const currentSong = songs[currentSongIndex];
     if (currentSong) {
       try {
@@ -202,6 +204,8 @@ function SongPage() {
         navigate(`/TestGame`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
       } catch (error) {
         console.error('Error starting game:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -268,6 +272,7 @@ function SongPage() {
         handlePreviousSong();
         triggerButtonHoverEffect('.prev-btn');
       } else if (event.keyCode === 13) { // Enter key
+        setIsLoading(true);
         handlePlayButtonClick();
         triggerButtonHoverEffect('.play-button');
       }
@@ -309,6 +314,12 @@ function SongPage() {
 
   return (
     <Fragment>
+      {isLoading && (
+        <div className="loader">
+          <div className="one"></div>
+          <div className="two"></div>
+        </div>
+      )}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/SongPage" element={<SongPage />} />
