@@ -133,3 +133,11 @@
   color: orange;
   font-size: 18px;
 }
+
+.latest-score-title {
+  color: #DDCE2C;
+}
+
+.best-score-title {
+  color: #DD2E44;
+}

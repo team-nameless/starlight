@@ -618,9 +618,9 @@ function HistoryPage() {
           </div>
 
           {/* Render Heatmaps */}
-          <h3 className="heatmap-title">Latest Score</h3>
+          <h3 className="heatmap-title latest-score-title">Latest Score</h3>
           <div id="heatmap-container-1" className="heatmap-container" ref={heatmapContainer1Ref}></div>
-          <h3 className="heatmap-title">Best Score</h3>
+          <h3 className="heatmap-title best-score-title">Best Score</h3>
           <div id="heatmap-container-2" className="heatmap-container" ref={heatmapContainer2Ref}></div>
           
         </div>
