@@ -88,11 +88,15 @@ function SongPage() {
         if (userResponse.status === 200) {
           const userData = userResponse.data;
           const storedProfilePic = localStorage.getItem('userProfilePic');
+          const profilePic = storedProfilePic || userData.avatar || profilePicPlaceholder;
           setUserProfile({
             id: userData.id || 123456,
             name: userData.name || 'Anonymous',
-            profilePic: storedProfilePic || userData.avatar || profilePicPlaceholder
+            profilePic: profilePic
           });
+          if (!storedProfilePic && userData.avatar) {
+            localStorage.setItem('userProfilePic', userData.avatar);
+          }
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
         }
@@ -140,7 +144,7 @@ function SongPage() {
     const fetchBestScore = async () => {
       if (currentSong) {
         try {
-          const response = await axios.get(`${rootUrl}/api/score/recent`, {
+          const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
             headers: {
               'Content-Type': 'application/json'
             },
@@ -148,11 +152,14 @@ function SongPage() {
           });
           if (response.status === 200) {
             setBestScore(response.data.totalPoints);
+          } else if (response.status === 204) {
+            setBestScore('No record');
           } else {
             console.error('Error fetching best score:', response.statusText);
           }
         } catch (error) {
           console.error('Error fetching best score:', error);
+          setBestScore('No record');
         }
       }
     };
