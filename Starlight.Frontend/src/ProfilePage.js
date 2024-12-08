@@ -80,17 +80,18 @@ function ProfilePage() {
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
-          const storedProfilePic = localStorage.getItem('userProfilePic');
+          const profilePic = userData.avatar || profilePicPlaceholder;
           setUserProfile({
             id: userData.id || 123456,
             name: userData.name || 'Anonymous',
-            profilePic: storedProfilePic || userData.avatar || profilePicPlaceholder
+            profilePic: profilePic
           });
           setLevelData({
             level: userData.level || 1,
             exp: userData.exp || 0,
             expNeededForNextLevel: userData.expNeededForNextLevel || 100
           });
+          localStorage.setItem('userProfilePic', profilePic);
           setIsLoggedIn(true); 
         } else {
           console.error('Error fetching user data:', userResponse.statusText);

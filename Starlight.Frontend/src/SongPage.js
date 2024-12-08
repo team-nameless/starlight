@@ -88,16 +88,13 @@ function SongPage() {
         });
         if (userResponse.status === 200) {
           const userData = userResponse.data;
-          const storedProfilePic = localStorage.getItem('userProfilePic');
-          const profilePic = storedProfilePic || userData.avatar || profilePicPlaceholder;
+          const profilePic = userData.avatar || profilePicPlaceholder;
           setUserProfile({
             id: userData.id || 123456,
             name: userData.name || 'Anonymous',
             profilePic: profilePic
           });
-          if (!storedProfilePic && userData.avatar) {
-            localStorage.setItem('userProfilePic', userData.avatar);
-          }
+          localStorage.setItem('userProfilePic', profilePic);
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
         }
