@@ -680,3 +680,27 @@
     object-fit: cover;
     object-position: center;
   }
+
+  .profile-achievements {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 30px;
+    align-items: start;
+    justify-items: start;
+    width: 90%;
+    height: 100%;
+    background-color: #1D2E38;
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .achievement-row {
+    display: contents;
+  }
+
+  .achievement-icon {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px; 
+  }

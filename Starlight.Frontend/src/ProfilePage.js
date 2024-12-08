@@ -17,6 +17,10 @@ import storeIcon from './assets/Header_Items/store-icon.png';
 import chatimage from './assets/modal-image/chat.png'; 
 import girlImage from './assets/modal-image/girlimage.png'; 
 import cameraIcon from './assets/camera-icon.png';
+import BeatAchieve from './assets/Achievement-icons/Beat_achieve.png';
+import CrownAchieve from './assets/Achievement-icons/Crown_achieve.png';
+import NonStopAchieve from './assets/Achievement-icons/Non-stop_achieve.png';
+
 import { useNavigate } from 'react-router-dom';
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
@@ -464,6 +468,22 @@ function ProfilePage() {
               )}
               {activeTab === 'achievements' && (
                 <div className="profile-achievements">
+                  <div className="achievement-row">
+                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
+                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
+                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                  </div>
+                  <div className="achievement-row">
+                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
+                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
+                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                  </div>
+                  <div className="achievement-row">
+                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
+                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
+                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                  </div>
+                  {/* ...add other rows here (max 3 rows)... */}
                 </div>
               )}
               {activeTab === 'accountSetting' && (
