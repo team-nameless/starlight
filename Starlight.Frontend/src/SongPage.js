@@ -51,15 +51,9 @@ function SongPage() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
   };
-  /*
-  const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
-    loaderUrl: require("./game/bundle/pkg/WebUnity.loader.js"),
-    dataUrl: require("./game/bundle/pkg/WebUnity.data.br"),
-    frameworkUrl: require("./game/bundle/pkg/WebUnity.framework.js.br"),
-    codeUrl: require("./game/bundle/pkg/WebUnity.wasm.br"),
-  });*/
 
   const navigate = useNavigate();
+  const currentSong = songs[currentSongIndex];
   /*
   const handleGameOver = useCallback((userName, score) => {
     setIsGameOver(true);
@@ -137,7 +131,7 @@ function SongPage() {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
-/*
+
   useEffect(() => {
     const fetchBestScore = async () => {
       if (currentSong) {
@@ -164,7 +158,7 @@ function SongPage() {
 
     fetchBestScore();
   }, [currentSong]);
-*/
+
   const toggleSongList = () => {
     setIsSongListOpen(!isSongListOpen);
   };
@@ -219,7 +213,6 @@ function SongPage() {
     setShowPopup(false);
   };
 
-  const currentSong = songs[currentSongIndex];
 
   useEffect(() => {
     let audio;
