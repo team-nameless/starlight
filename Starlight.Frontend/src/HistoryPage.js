@@ -95,6 +95,7 @@ function HistoryPage() {
 
   useEffect(() => {
     if (currentSongIndex >= songs.length) {
+      setCurrentSongIndex(0);
     }
   }, [currentSongIndex, songs.length]);
 
@@ -494,23 +495,28 @@ function HistoryPage() {
   
   useEffect(() => {
     const renderHeatmap1 = async () => {
-      if (!hasRenderedHeatmap1.current) {
+      if (currentSong) {
         hasRenderedHeatmap1.current = true;
-        await renderHeatmap(`/api/score/${currentSong.id}/recent`, heatmapContainer1Ref, `/api/score/${currentSong.id}/recent`, currentSong?.id);
+        await renderHeatmap(`/api/score/${currentSong.id}/recent`, heatmapContainer1Ref, `/api/score/${currentSong.id}/recent`, currentSong.id);
       }
     };
     renderHeatmap1();
-  }, [renderHeatmap, currentSong, currentSongIndex]);
+  }, [renderHeatmap, currentSong]);
 
   useEffect(() => {
     const renderHeatmap2 = async () => {
-      if (!hasRenderedHeatmap2.current) {
+      if (currentSong) {
         hasRenderedHeatmap2.current = true;
-        await renderHeatmap(`/api/score/${currentSong.id}/best`, heatmapContainer2Ref,  `/api/score/${currentSong.id}/best`, currentSong?.id);
+        await renderHeatmap(`/api/score/${currentSong.id}/best`, heatmapContainer2Ref, `/api/score/${currentSong.id}/best`, currentSong.id);
       }
     };
     renderHeatmap2();
-  }, [renderHeatmap, currentSong, currentSongIndex]);
+  }, [renderHeatmap, currentSong]);
+
+  useEffect(() => {
+    hasRenderedHeatmap1.current = false;
+    hasRenderedHeatmap2.current = false;
+  }, [songId]);
   
   return (
     <div className="historypage">
