@@ -46,8 +46,8 @@ function GameApp() {
             axios.get(url, {
                 withCredentials: true
             }).then((response) => {
-                navigate("/historypage", { state: { currentSong: response.data, currentSongIndex: songIndex } });
-            })
+                navigate(`/historypage/${songId}/${songIndex}`, { state: { currentSong: response.data, currentSongIndex: songIndex } });
+            });
         });
 
         return () => {

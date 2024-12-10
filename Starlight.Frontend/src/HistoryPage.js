@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback, useRef } from 'react';
 import axios from 'axios';
 import './Main_Menu_Style.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
 import songsIcon from './assets/Header_Items/songs-icon.png'; // Songs icon
@@ -28,11 +28,9 @@ const StorePage = lazy(() => import('./StorePage'));
 const ProfilePage = lazy(() => import('./ProfilePage'));
 
 function HistoryPage() {
-  const location = useLocation();
-  const currentSongFromLocation = location.state.currentSong;
-  const currentSongIndexFromLocation = location.state.currentSongIndex;
-  const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
-  const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
+  const { songId, songIndex } = useParams();
+  const [currentSong, setCurrentSong] = useState(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(songIndex);
   const [isSongListOpen, setIsSongListOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [songs, setSongs] = useState([]);
@@ -52,9 +50,23 @@ function HistoryPage() {
   };
 
   useEffect(() => {
-    setCurrentSong(currentSongFromLocation);
-    setCurrentSongIndex(currentSongIndexFromLocation);
-  }, [currentSongFromLocation, currentSongIndexFromLocation]);
+    const fetchSongData = async () => {
+      try {
+        const response = await axios.get(`${rootUrl}/api/track/${songId}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        });
+        setCurrentSong(response.data);
+        setCurrentSongIndex(songIndex);
+      } catch (error) {
+        console.error('Error fetching song data:', error);
+      }
+    };
+
+    fetchSongData();
+  }, [songId, songIndex]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,9 +80,10 @@ function HistoryPage() {
         });
         const fetchedSongs = songsResponse.data;
         setSongs(fetchedSongs);
-        if (fetchedSongs.length > 0) {
-          setCurrentSongIndex(0);
-          setCurrentSong(fetchedSongs[0]);
+        const songIndex = fetchedSongs.findIndex(song => song.id === parseInt(songId));
+        if (songIndex !== -1) {
+          setCurrentSongIndex(songIndex);
+          setCurrentSong(fetchedSongs[songIndex]);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -78,11 +91,10 @@ function HistoryPage() {
     };
 
     fetchData();
-  }, []);
+  }, [songId]);
 
   useEffect(() => {
     if (currentSongIndex >= songs.length) {
-      setCurrentSongIndex(0);
     }
   }, [currentSongIndex, songs.length]);
 
@@ -488,8 +500,8 @@ function HistoryPage() {
       }
     };
     renderHeatmap1();
-  }, [renderHeatmap, currentSong]);
-  
+  }, [renderHeatmap, currentSong, currentSongIndex]);
+
   useEffect(() => {
     const renderHeatmap2 = async () => {
       if (!hasRenderedHeatmap2.current) {
@@ -498,7 +510,7 @@ function HistoryPage() {
       }
     };
     renderHeatmap2();
-  }, [renderHeatmap, currentSong]);
+  }, [renderHeatmap, currentSong, currentSongIndex]);
   
   return (
     <div className="historypage">

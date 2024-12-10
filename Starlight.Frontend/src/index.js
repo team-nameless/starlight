@@ -23,7 +23,7 @@ root.render(
         <Routes>
             <Route path="/" element={<LandingPageApp />} />
             <Route path="/songpage" element={<SongPage />} />
-            <Route path="/historypage" element={<HistoryPage />} />
+            <Route path="/historypage/:songId/:songIndex" element={<HistoryPage />} />
             <Route path="/storepage" element={<StorePage />} />
             <Route path="/eventpage" element={<EventPage />} />
             <Route path="/ProfilePage" element={<ProfilePage />} />
