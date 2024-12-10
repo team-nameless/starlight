@@ -106,6 +106,7 @@ class Game extends Phaser.Scene {
         this.partialGood = 0;
         this.partialBad = 0;
         this.partialMiss = 0;
+        this.partialNotes = 0;
         this.inGameTimeInMs = 0;
         this.accuracy = 100;
         this.gameData = data.gameData;
