@@ -5,6 +5,7 @@ import Phaser from "phaser";
  */
 class DataLoader extends Phaser.Scene {
     mapId;
+    mapIndex;
 
     constructor() {
         super("DataLoader");
@@ -12,6 +13,7 @@ class DataLoader extends Phaser.Scene {
 
     init(data) {
         this.mapId = data["song"];
+        this.mapIndex = data["index"];
     }
 
     preload() {
@@ -21,7 +23,7 @@ class DataLoader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.switch("AssetLoader", {mapId: this.mapId});
+        this.scene.switch("AssetLoader", {mapId: this.mapId, mapIndex: this.mapIndex});
     }
 }
 

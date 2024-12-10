@@ -72,6 +72,7 @@ class Game extends Phaser.Scene {
     pauseDimBg;
     pauseText;
     pauseHint;
+    indexInSongPage;
 
     // input lock status
     key1_locked;
@@ -140,6 +141,7 @@ class Game extends Phaser.Scene {
 
         this.collectedGameData = {
             trackId: 0,
+            trackIndex: data["mapIndex"],
             stats: {},
             partial: []
         }
@@ -173,15 +175,13 @@ class Game extends Phaser.Scene {
     }
 
     preload() {
-        if (this.gameData["mapId"] !== 0) {
-            // Set background image
-            const bgImage = this.add.image(0, 0, "background");
-            bgImage.setOrigin(0, 0);
+        // Set background image
+        const bgImage = this.add.image(0, 0, "background");
+        bgImage.setOrigin(0, 0);
 
-            // Dim the background a little bit
-            const darkScreen = this.add.rectangle(0, 0, 1920, 1080, 0x000000, 0.4);
-            darkScreen.setOrigin(0, 0);
-        }
+        // Dim the background a little bit
+        const darkScreen = this.add.rectangle(0, 0, 1920, 1080, 0x000000, 0.4);
+        darkScreen.setOrigin(0, 0);
 
         // Create the timing ring (the real visual)
         this.add.image(this.noteOuter1PositionX, 845, "noteRing");
@@ -209,7 +209,7 @@ class Game extends Phaser.Scene {
     }
 
     create() {
-        this.bgMusic = this.gameData["mapId"] !== 0 ? this.sound.get("music") || this.sound.add("music") : null;
+        this.bgMusic = this.sound.get("music") || this.sound.add("music");
         this.scene.resume();
         this.gameStartTime = new Date(Date.now());
         this.time.paused = false;

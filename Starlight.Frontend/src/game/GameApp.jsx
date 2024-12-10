@@ -35,7 +35,7 @@ function GameApp() {
             antialias: true,
         });
 
-        game.scene.add("DataLoader", DataLoader, true, { song: songId });
+        game.scene.add("DataLoader", DataLoader, true, { song: songId, index: songIndex });
         game.scene.add("AssetLoader", AssetLoader);
         game.scene.add("Game", Game);
         game.scene.add("GameFinalizer", GameFinalizer);

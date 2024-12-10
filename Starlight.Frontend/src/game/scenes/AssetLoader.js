@@ -5,6 +5,7 @@ import Phaser from "phaser";
  */
 class AssetLoader extends Phaser.Scene {
     mapId;
+    mapIndex;
     gameData;
 
     constructor() {
@@ -13,6 +14,7 @@ class AssetLoader extends Phaser.Scene {
 
     init(data) {
         this.mapId = data["mapId"];
+        this.mapIndex = data["mapIndex"];
     }
 
     preload() {
@@ -33,7 +35,7 @@ class AssetLoader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.switch("Game", {gameData: this.gameData});
+        this.scene.switch("Game", {gameData: this.gameData, mapIndex: this.mapIndex});
     }
 }
 

@@ -17,9 +17,10 @@ class GameFinalizer extends Phaser.Scene {
 
     create() {
         const url = `https://cluster1.swyrin.id.vn/api/score/${this.trackId}`;
+        console.log(this.collectedGameData);
 
         axios.post(url, this.collectedGameData, { withCredentials: true })
-            .then(response => {
+            .then(_ => {
                 EventEmitter.emit("game-finished");
                 this.scene.stop("GameFinalizer");
             })
