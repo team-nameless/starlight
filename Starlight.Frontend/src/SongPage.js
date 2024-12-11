@@ -335,7 +335,7 @@ function SongPage() {
               <img src={songsIcon} alt="Songs" className="nav-icon" />
               <span>Songs</span>
             </Link>
-            <Link to="/HistoryPage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
+            <Link to={`/HistoryPage/${currentSong?.id ?? 586954}/${currentSongIndex ?? 0}`} state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
               <img src={historyIcon} alt="History" className="nav-icon" />
               <span>History</span>
             </Link>
