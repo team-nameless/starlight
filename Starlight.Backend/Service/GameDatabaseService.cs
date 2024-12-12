@@ -65,5 +65,16 @@ public class GameDatabaseService : IdentityDbContext<Player, Role, Guid>
         builder.Entity<IdentityUserLogin<Guid>>(entity => { entity.ToTable("PlayerLogins"); });
         builder.Entity<IdentityRoleClaim<Guid>>(entity => { entity.ToTable("RoleClaims"); });
         builder.Entity<IdentityUserToken<Guid>>(entity => { entity.ToTable("PlayerTokens"); });
+
+        builder.Entity<Achievement>()
+            .HasData(
+                new Achievement
+                {
+                    Id = 1,
+                    Name = "Baby Step",
+                    Detail = "Created an account.",
+                    FavorText = "It is just the beginning."
+                }
+            );
     }
 }

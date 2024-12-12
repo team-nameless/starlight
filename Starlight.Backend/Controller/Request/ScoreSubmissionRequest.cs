@@ -32,6 +32,9 @@ public class ScoreStatistics : PartialScoreStatistics
     [JsonProperty("duration")]
     public ulong Duration { get; set; }
     
+    [JsonProperty("maxCombo")]
+    public ulong MaxCombo { get; set; }
+    
     [JsonProperty("grade")]
     public required string Grade { get; set; }
 }

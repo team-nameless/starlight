@@ -55,11 +55,6 @@ public class Player : IdentityUser<Guid>
         }
         set => _ = value;
     }
-
-    /// <summary>
-    ///     Recent played song ID.
-    /// </summary>
-    public ulong RecentlyPlayedSong { get; set; }
     
     /// <summary>
     ///     Achievements of this user.

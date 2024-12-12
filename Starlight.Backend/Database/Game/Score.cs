@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Starlight.Backend.Database.Game;
 
 /// <summary>
-///     Represent a score of an user.
+///     Represent a score of a user.
 /// </summary>
 public class Score
 {
@@ -17,6 +17,12 @@ public class Score
     ///     Track associated with this score.
     /// </summary>
     public ulong TrackId { get; set; }
+    
+    /// <summary>
+    ///     Track name, to prevent from N+1 queries problem.
+    /// </summary>
+    [MaxLength(16384)]
+    public required string TrackName { get; set; }
 
     /// <summary>
     ///     Total points of this score.
@@ -32,6 +38,17 @@ public class Score
     ///     Crit. Perfect count.
     /// </summary>
     public ulong Critical { get; set; }
+    
+    /// <summary>
+    ///     Maximum achieved combo of this score.
+    /// </summary>
+    public ulong MaxCombo { get; set; }
+    
+    /// <summary>
+    ///     Letter grade of this score.
+    /// </summary>
+    [MaxLength(10)]
+    public required string Grade { get; set; }
     
     /// <summary>
     ///     Perfect count.

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace Starlight.Backend.Database.Game;
 
@@ -39,5 +40,6 @@ public class Achievement
     /// <summary>
     ///     Owners of this achievement.
     /// </summary>
+    [JsonIgnore]
     public List<Player> Owners { get; set; } = [];
 }
