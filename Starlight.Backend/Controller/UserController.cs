@@ -45,8 +45,12 @@ public class UserController : ControllerBase
         var scheme = HttpContext.Request.Scheme;
         var authorityUrl = HttpContext.Request.Host.Value;
 
-        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user.SequenceNumber}.jpeg");
+        var avatarsPath = Path.Combine(Directory.GetCurrentDirectory(), "avatars", $"{user!.SequenceNumber}.jpeg");
         var isAvatarAvailable = System.IO.File.Exists(avatarsPath);
+
+        var topScores = user.BestScores
+            .GroupBy(x => x.TrackId)
+            .Select(sc => sc.OrderByDescending(x => x.TotalPoints).First());
 
         return Ok(new
         {
@@ -59,7 +63,7 @@ public class UserController : ControllerBase
             ExpNeededForNextLevel = user.MaxExpForLevel,
             PlayTime = user.TotalPlayTime,
             LastSeen = user.LastSeenTime,
-            TopScores = user.BestScores.OrderByDescending(s => s.TotalPoints),
+            TopScores = topScores,
             FriendList = user.Friends,
             AchievementList = user.Achievements
         });
