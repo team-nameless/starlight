@@ -55,6 +55,7 @@ class Game extends Phaser.Scene {
     totalGood;
     totalBad;
     totalMiss;
+    maxCombo;
 
     // partial stats
     collectedGameData;
@@ -108,6 +109,7 @@ class Game extends Phaser.Scene {
         this.partialBad = 0;
         this.partialMiss = 0;
         this.partialNotes = 0;
+        this.maxCombo = 0;
         this.inGameTimeInMs = 0;
         this.accuracy = 100;
         this.gameData = data.gameData;
@@ -340,7 +342,8 @@ class Game extends Phaser.Scene {
                 // TODO: Un-DJMAX this
                 score: Math.trunc((this.accuracy / 100) * 1_000_000),
                 accuracy: this.accuracy / 100,
-                grade : grade
+                grade : grade,
+                maxCombo: this.maxCombo
             };
 
         this.collectedGameData.partial = this.collectedGameData.partial.slice(0, 30);
@@ -642,7 +645,6 @@ class Game extends Phaser.Scene {
         // noinspection PointlessArithmeticExpressionJS
         this.accuracy = (
             350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
-            // 300 * this.totalPerf +
             200 * this.totalGood +
             50 * this.totalBad +
             0 * this.totalMiss
@@ -654,6 +656,7 @@ class Game extends Phaser.Scene {
             // handle MISS judgement
             if (note.y > 845 + 200) {
                 note.destroy();
+                this.maxCombo = Math.max(this.maxCombo, this.combo);
                 this.combo = 0;
                 ++this.totalMiss;
                 ++this.partialMiss;
