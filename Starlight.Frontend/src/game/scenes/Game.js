@@ -321,7 +321,7 @@ class Game extends Phaser.Scene {
         this.dataCollectionEvent.paused = true;
 
         // grade calculation
-        let grade = "";
+        let grade;
         if (97 <= this.accuracy) grade = "S+";
         else if (95 <= this.accuracy && this.accuracy < 97) grade = "S";
         else if (90 <= this.accuracy && this.accuracy < 95) grade = "A";
@@ -339,8 +339,7 @@ class Game extends Phaser.Scene {
                 good: this.totalGood,
                 bad: this.totalBad,
                 miss: this.totalMiss,
-                // TODO: Un-DJMAX this
-                score: Math.trunc((this.accuracy / 100) * 1_000_000),
+                score: this.score,
                 accuracy: this.accuracy / 100,
                 grade : grade,
                 maxCombo: this.maxCombo
@@ -541,6 +540,7 @@ class Game extends Phaser.Scene {
             this.processNote(noteObj, hitTime, keyPosition, true);
         } else if (isKeyUp && this.getLongNoteActivity(keyPosition) && noteType === 2) {
             // we only process long note end iff we ACK-ed the LN start
+            // otherwise the update() will treat it as a BAD.
             this.processNote(noteObj, hitTime, keyPosition, false);
         }
     }
@@ -559,30 +559,44 @@ class Game extends Phaser.Scene {
         const isLate = hitTime > expectedTime;
 
         let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
+        let rawValue = 0;
+        let mulValue = 0;
 
         if (offset <= this.critWindow) {
             ++this.totalCrit;
             ++this.partialCrit;
             ++this.partialNotes;
+            rawValue = 350;
+            mulValue = 3;
             this.drawJudgementText("Nice!", "");
         } else if (this.critWindow < offset && offset <= this.perfWindow) {
             ++this.totalPerf;
             ++this.partialPerf;
             ++this.partialNotes;
+            rawValue = 300;
+            mulValue = 2;
             this.drawJudgementText("Perfect", errTxt);
         } else if (this.perfWindow < offset && offset <= this.goodWindow) {
             ++this.totalGood;
             ++this.partialGood;
             ++this.partialNotes;
+            rawValue = 200;
+            mulValue = 1.5;
             this.drawJudgementText("Fine", errTxt);
         } else if (this.goodWindow < offset && offset <= this.badWindow) {
             ++this.totalBad;
             ++this.partialBad;
             ++this.partialNotes;
+            rawValue = 50;
+            mulValue = 1.05;
             this.drawJudgementText("Meh.", errTxt);
         } else {
             this.drawJudgementText("What?", "Edge case!");
+            rawValue = 0;
+            mulValue = 0;
         }
+
+        this.score += (rawValue + mulValue * this.combo);
 
         this.setLongNoteActivity(keyPosition, isLnStart);
         this.setInputLockActivity(true);
@@ -653,24 +667,42 @@ class Game extends Phaser.Scene {
         this.notes.getChildren().forEach((note) => {
             if (note.getData("lnBody")) return;
 
-            // handle MISS judgement
+            let pos = parseInt(note.getData("position"));
+
             if (note.y > 845 + 200) {
+                // if we have no active long note, that means we are probably handling a single note.
+                // so that equals a MISS.
+                if (!this.getInputLockActivity(pos)) {
+                    this.maxCombo = Math.max(this.maxCombo, this.combo);
+                    this.combo = 0;
+                    ++this.totalMiss;
+                    ++this.partialMiss;
+                    ++this.partialNotes;
+                    this.drawJudgementText("Missed.", "");
+                    this.setLongNoteActivity(this.getLanePositionX(note.x), false);
+                } else {
+                    let rawValue;
+                    let mulValue;
+
+                    // else it's a BAD.
+                    ++this.totalBad;
+                    ++this.partialBad;
+                    ++this.partialNotes;
+                    rawValue = 50;
+                    mulValue = 1;
+                    this.drawJudgementText("Meh.", "Late.");
+                    this.score += (rawValue + mulValue * this.combo);
+                }
+
                 note.destroy();
-                this.maxCombo = Math.max(this.maxCombo, this.combo);
-                this.combo = 0;
-                ++this.totalMiss;
-                ++this.partialMiss;
-                ++this.partialNotes;
-                this.drawJudgementText("Missed.", "");
-                this.setLongNoteActivity(this.getLanePositionX(note.x), false);
             }
         });
 
-        // TODO: Un-DJMAX this.
-        // this.score = (this.accuracy / 100) * 1_000_000;
+        let n = this.totalNotes;
+        let scaledScore = parseInt(this.score / (350 * n + 1.5 * n * (n + 1)) * 1_000_000);
 
         this.comboText.setText(`${this.combo}x`);
-        this.scoreText.setText(`${this.score}`.padStart(7, "0"));
+        this.scoreText.setText(`${scaledScore}`.padStart(7, "0"));
         this.accuracyText.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
     }
 }
