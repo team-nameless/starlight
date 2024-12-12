@@ -14,10 +14,12 @@ namespace Starlight.Backend.Controller;
 public class ScoreController : ControllerBase
 {
     private GameDatabaseService _gameDatabase;
+    private TrackDatabaseService _trackDatabase;
     
-    public ScoreController(GameDatabaseService gameDatabase)
+    public ScoreController(GameDatabaseService gameDatabase, TrackDatabaseService trackDatabase)
     {
         _gameDatabase = gameDatabase;
+        _trackDatabase = trackDatabase;
     }
     
     /// <summary>
@@ -44,7 +46,7 @@ public class ScoreController : ControllerBase
     }
 
     /// <summary>
-    ///     Upload the score. Reserved for in-game play.
+    ///     Upload the score. Reserved for in-gameplay.
     /// </summary>
     /// <param name="songId">Song ID to submit.</param>
     /// <param name="submission">Submission object</param>
@@ -56,6 +58,7 @@ public class ScoreController : ControllerBase
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
 
         var player = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+        var trackName = _trackDatabase.Tracks.AsNoTracking().First(t => t.Id == songId).Title;
 
         _gameDatabase.Scores.Add(new Score
         {
@@ -63,6 +66,7 @@ public class ScoreController : ControllerBase
             SubmissionDate = DateTime.UtcNow,
             Player = player!,
             TrackId = songId,
+            TrackName = trackName,
             TotalPoints = submission.Statistics.Score,
             Accuracy = submission.Statistics.Accuracy,
             Critical = submission.Statistics.Critical,
@@ -70,12 +74,14 @@ public class ScoreController : ControllerBase
             Good = submission.Statistics.Good,
             Bad = submission.Statistics.Bad,
             Miss = submission.Statistics.Miss,
+            Grade = submission.Statistics.Grade,
+            MaxCombo = submission.Statistics.MaxCombo,
             RawJson = JsonConvert.SerializeObject(submission)
         });
         
         await _gameDatabase.SaveChangesAsync();
 
-        return Ok();
+        return Created();
     }
     
     /// <summary>
