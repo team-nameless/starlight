@@ -9,7 +9,6 @@ import GirlImage from './assets/modal-image/girlimage.png';
 import LogoImage from './assets/background-image/logoo.png';
 import { useNavigate } from 'react-router-dom';
 import {requestFullScreen} from "./utils";
-import {useCookies} from "react-cookie";
 
 const rootUrl = "https://cluster1.swyrin.id.vn";
 // const rootUrl = "https://localhost:7224";
@@ -332,15 +331,8 @@ const LandingPageApp = () => {
   const [resetPasswordError, setResetPasswordError] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
-  const [cookies, setCookies] = useCookies(['.AspNetCore.Identity.Application']);
 
-  const isCookiePresent = cookies['.AspNetCore.Identity.Application'] !== undefined;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
-
-  useEffect(() => {
-    console.log(cookies);
-    setIsLoggedIn(isCookiePresent);
-  }, []);
 
   useEffect(() => {
     if (showSuccessModal) {
