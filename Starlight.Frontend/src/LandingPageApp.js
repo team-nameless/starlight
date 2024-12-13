@@ -330,6 +330,7 @@ const LandingPageApp = () => {
   const [codeError, setCodeError] = useState('');
   const [resetPasswordError, setResetPasswordError] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showLoginReminderModal, setShowLoginReminderModal] = useState(false);
   const navigate = useNavigate();
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
@@ -442,7 +443,7 @@ const LandingPageApp = () => {
 
   const handlePlayButtonClick = () => {
     if (!isLoggedIn) {
-      setShowNotificationModal(true);
+      setShowLoginReminderModal(true);
     } else {
       requestFullScreen();
       navigate('/songpage'); 
@@ -457,6 +458,7 @@ const LandingPageApp = () => {
     setShowLoginSuccessModal(false); 
     setShowForgotPasswordModal(false);
     setShowResetPasswordModal(false);
+    setShowLoginReminderModal(false);
   };
 
   const FormWrapper = styled.div`
@@ -768,6 +770,16 @@ const LandingPageApp = () => {
             </FormContainer>
           </ModalContent>
         </Modal>
+      )}
+    
+      {showLoginReminderModal && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Notification</h2>
+            <p>Please log in to continue.</p>
+            <button className="stay-button" onClick={() => setShowLoginReminderModal(false)}>Close</button>
+          </div>
+        </div>
       )}
     
       {data && <div>{JSON.stringify(data)}</div>}

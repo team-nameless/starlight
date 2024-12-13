@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 const rootUrl = "https://cluster1.swyrin.id.vn";
 
 const ProgressBar = ({ current, total, level }) => {
-  const percentage = (current / total) * 100;
+  const percentage = Math.floor((current / total) * 10000) / 100;
  
   return (
     <div className="level-container">
@@ -65,6 +65,7 @@ function ProfilePage() {
   const [emailError, setEmailError] = useState({ email: '', password: '' });
   const [showPopupUpdate, setShowPopupUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [scoreRecords, setScoreRecords] = useState([]);
   const navigate = useNavigate();
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
@@ -93,6 +94,7 @@ function ProfilePage() {
           });
           localStorage.setItem('userProfilePic', profilePic);
           setIsLoggedIn(true); 
+          setScoreRecords(userData.topScores || []); 
         } else {
           console.error('Error fetching user data:', userResponse.statusText);
         }
@@ -147,7 +149,6 @@ function ProfilePage() {
     setPasswordError({ email: '', currentPassword: '', newPassword: '', confirmNewPassword: '' });
     setIsLoading(true);
   
-    // Check for empty fields
     if (!passwordUpdate.email || !passwordUpdate.newPassword || !passwordUpdate.confirmNewPassword) {
       setPasswordError((prev) => ({
         ...prev,
@@ -160,7 +161,6 @@ function ProfilePage() {
       return;
     }
   
-    // Validate email against API
     try {
       const userResponse = await axios.get(`${rootUrl}/api/user`, {
         headers: { 'Content-Type': 'application/json' },
@@ -184,7 +184,6 @@ function ProfilePage() {
       return;
     }
   
-    // Validate new password
     if (!passwordRegex.test(passwordUpdate.newPassword)) {
       setPasswordError((prev) => ({ ...prev, newPassword: 'Password must be 8+ characters with uppercase, number, and special characters' }));
       setIsLoading(false);
@@ -196,11 +195,10 @@ function ProfilePage() {
       return;
     }
   
-    // Patch new password
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
-        password: passwordUpdate.currentPassword, // Old password
-        newPassword: passwordUpdate.newPassword, // New password
+        password: passwordUpdate.currentPassword, 
+        newPassword: passwordUpdate.newPassword, 
       }, {
         withCredentials: true
       });
@@ -225,7 +223,6 @@ function ProfilePage() {
     setEmailError({ email: '', password: '' });
     setIsLoading(true);
   
-    // Check for empty fields
     if (!emailUpdate.email || !emailUpdate.password || !emailUpdate.newEmail) {
       setEmailError((prev) => ({
         ...prev,
@@ -237,7 +234,6 @@ function ProfilePage() {
       return;
     }
   
-    // Validate current email and password against API
     try {
       const userResponse = await axios.get(`${rootUrl}/api/user`, {
         headers: { 'Content-Type': 'application/json' },
@@ -264,7 +260,6 @@ function ProfilePage() {
       return;
     }
   
-    // Validate password
     try {
       const loginResponse = await axios.post(`${rootUrl}/api/login`, {
         email: emailUpdate.email,
@@ -289,7 +284,6 @@ function ProfilePage() {
       return;
     }
   
-    // Patch new email
     try {
       const response = await axios.patch(`${rootUrl}/api/user/profile`, {
         email: emailUpdate.newEmail,
@@ -335,9 +329,8 @@ function ProfilePage() {
             ...prevProfile,
             profilePic: updatedImage
           }));
-          // Update local storage to ensure the image is updated in other components
           localStorage.setItem('userProfilePic', updatedImage);
-          window.dispatchEvent(new Event('storage')); // Trigger storage event
+          window.dispatchEvent(new Event('storage')); 
         } else {
           console.error('Error updating profile image:', response.statusText);
         }
@@ -453,19 +446,38 @@ function ProfilePage() {
           </div>
             <div className="profile-info-container">
               {activeTab === 'scoreRecord' && (
-                <div className="profile-score-record">
-                  <div>No</div>
-                  <div>Song Name</div>
-                  <div>Record</div>
-                  <div>Accuracy</div>
-                  <div>Max Combo</div>
-                  <div>CP</div>
-                  <div>P</div>
-                  <div>G</div>
-                  <div>B</div>
-                  <div>M</div>
-                  <div>Tier</div>
-                </div>
+                <>
+                  <div className="profile-score-record">
+                    <div>No</div>
+                    <div style={{ marginLeft: '20px', marginRight: '-22px' }}>Song Name</div>
+                    <div style={{ marginLeft: '40px', marginRight: '-35px' }}>Record</div>
+                    <div style={{ marginRight: '225px', marginLeft: '28px' }}>Accuracy</div>
+                    <div style={{ marginRight: '200px', marginLeft: '-250px' }}>Max Combo</div>
+                    <div style={{ marginLeft: '-215px', marginRight:'-95px' }}>CP</div>
+                    <div style={{ marginLeft: '110px', marginRight: '-25px' }}>P</div>
+                    <div style={{ marginLeft: '50px', marginRight: '5px' }}>G</div>
+                    <div style={{ marginLeft: '15px', marginRight: '10px' }}>B</div>
+                    <div style={{ marginLeft: '15px', marginRight: '20px' }}>M</div>
+                    <div style={{ marginRight: '20px' }}>Tier</div>
+                  </div>
+                  <div className="top-scores">
+                    {scoreRecords.map((record, index) => (
+                      <div key={record.trackId} className="top-score-record">
+                        <div>{index + 1}</div>
+                        <div style={{ whiteSpace: 'normal', overflow: 'visible', textOverflow: 'clip' }}>{record.trackName}</div>
+                        <div>{record.totalPoints}</div>
+                        <div>{(record.accuracy * 100).toFixed(2)}%</div>
+                        <div>{record.maxCombo}</div>
+                        <div>{record.critical}</div>
+                        <div>{record.perfect}</div>
+                        <div>{record.good}</div>
+                        <div>{record.bad}</div>
+                        <div>{record.miss}</div>
+                        <div>{record.grade}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
               {activeTab === 'achievements' && (
                 <div className="profile-achievements">
@@ -484,7 +496,6 @@ function ProfilePage() {
                     <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
                     <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
                   </div>
-                  {/* ...add other rows here (max 3 rows)... */}
                 </div>
               )}
               {activeTab === 'accountSetting' && (
