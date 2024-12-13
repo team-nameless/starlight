@@ -123,15 +123,12 @@ public class IdentityController : ControllerBase
     ///     Perform an account logout.
     /// </summary>
     [HttpGet("logout")]
-    [Authorize]
-    public async Task<ActionResult> Logout()
+    public async Task Logout()
     {
         var services = HttpContext.RequestServices;
         var signInManager = services.GetRequiredService<SignInManager<Player>>();
         
         await signInManager.SignOutAsync();
-        
-        return Redirect("/");
     }
 
     /// <summary>

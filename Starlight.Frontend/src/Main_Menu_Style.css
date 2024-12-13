@@ -909,6 +909,16 @@ body {
   cursor: pointer;
 }
 
+.popup-content .logout-button {
+  background-color: orangered;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0px 10px 0px 3px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 /* Zoom effect */
 .mfp-zoom-in {
   /* start state */

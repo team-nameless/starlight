@@ -310,7 +310,7 @@ const LandingPageApp = () => {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("login") != null);
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
   const [handleError, setHandleError] = useState(''); 
   const [signUpPasswordError, setSignUpPasswordError] = useState('');
@@ -332,7 +332,6 @@ const LandingPageApp = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showLoginReminderModal, setShowLoginReminderModal] = useState(false);
   const navigate = useNavigate();
-
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
   useEffect(() => {
@@ -388,7 +387,7 @@ const LandingPageApp = () => {
       console.log('API response:', response);
       setData(response.data); 
       setShowSignUpModal(false); 
-      setShowSuccessModal(true); 
+      setShowSuccessModal(true);
   
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -413,8 +412,8 @@ const LandingPageApp = () => {
   
     setLoginEmailError('');
     setLoginPasswordError('');
-    setIsLoading(true); 
-  
+    setIsLoading(true);
+
     try {
       const response = await axios.post(`${rootUrl}/api/login`, { email: loginEmail, password: loginPassword }, {
         headers: {
@@ -422,22 +421,22 @@ const LandingPageApp = () => {
         },
         withCredentials: true
       });
-  
-      setData(response.data); 
+
+      setData(response.data);
       setIsLoggedIn(true);
-      setShowLoginModal(false); 
-      setShowLoginSuccessModal(true); 
-  
+      setShowLoginModal(false);
+      setShowLoginSuccessModal(true);
+      localStorage.setItem("login", "true");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setLoginEmailError('User not found. Please check your email and password.');
-        setLoginPasswordError(''); 
+        setLoginPasswordError('');
       } else {
         console.error('Error logging in:', error);
         alert('An unexpected error occurred. Please try again later.');
       }
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 

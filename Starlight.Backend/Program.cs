@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
@@ -79,6 +80,15 @@ builder.Services
         
         opt.ExpireTimeSpan = TimeSpan.FromHours(480);
         opt.SlidingExpiration = true;
+        
+        opt.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            }
+        };
     })
     .Configure<CookiePolicyOptions>(opt =>
     {
