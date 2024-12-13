@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, Fragment, lazy, Suspense } fro
 import axios from 'axios';
 import './Main_Menu_Style.css';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-// import { Unity, useUnityContext } from "react-unity-webgl";
 import profilePicPlaceholder from './assets/profile.png'; // Placeholder for profile image
 import logoIcon from './assets/Starlight-logo.png'; // Logo image
 import leaveIcon from './assets/Header_Items/Leave-icon.png'; // Leave icon
@@ -213,6 +212,14 @@ function SongPage() {
     setShowPopup(false);
   };
 
+  const handleLogoutRequest = () => {
+    axios
+        .get(`${rootUrl}/api/logout`, { withCredentials: true })
+        .finally(() => {
+            localStorage.removeItem("login");
+            window.location.href = "/";
+        });
+  }
 
   useEffect(() => {
     let audio;
@@ -467,6 +474,7 @@ function SongPage() {
               <h2>Confirm Leave</h2>
               <p>Are you sure you want to leave the game?</p>
               <button className="stay-button" onClick={handleCancelLeave}>Stay</button>
+              <button className="logout-button" onClick={handleLogoutRequest}>Logout</button>
               <button className="leave-button" onClick={handleConfirmLeave}>Leave</button>
             </div>
           </div>
