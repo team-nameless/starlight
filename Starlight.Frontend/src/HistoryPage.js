@@ -497,8 +497,8 @@ function HistoryPage() {
   
   useEffect(() => {
     const renderHeatmap1 = async () => {
-      if (currentSong && !hasRenderedHeatmap1.current) {
-        hasRenderedHeatmap1.current = true;
+      if (currentSong) {
+        hasRenderedHeatmap1.current = false;
         await renderHeatmap(`/api/score/${currentSong.id}/recent`, heatmapContainer1Ref, `/api/score/${currentSong.id}/recent`, currentSong.id);
       }
     };
@@ -507,8 +507,8 @@ function HistoryPage() {
 
   useEffect(() => {
     const renderHeatmap2 = async () => {
-      if (currentSong && !hasRenderedHeatmap2.current) {
-        hasRenderedHeatmap2.current = true;
+      if (currentSong) {
+        hasRenderedHeatmap2.current = false;
         await renderHeatmap(`/api/score/${currentSong.id}/best`, heatmapContainer2Ref, `/api/score/${currentSong.id}/best`, currentSong.id);
       }
     };
