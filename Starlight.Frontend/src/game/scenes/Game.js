@@ -33,14 +33,24 @@ class Game extends Phaser.Scene {
     accuracyText;
     judgementText;
     errorText;
+    critText;
+    perfText;
+    goodText;
+    badText;
+    missText;
+    progressionBar;
 
     // buttons
     replayKey;
     pauseKey;
     noteOuter1Key;
+    noteOuter1KeyText;
     noteInner1Key;
+    noteInner1KeyText;
     noteInner2Key;
+    noteInner2KeyText;
     noteOuter2Key;
+    noteOuter2KeyText;
 
     // random
     duration;
@@ -70,6 +80,8 @@ class Game extends Phaser.Scene {
     inGameTimeInMs;
     isScenePaused;
     bgMusic;
+    trackTitle;
+    trackAuthor;
     pauseDimBg;
     pauseText;
     pauseHint;
@@ -87,7 +99,7 @@ class Game extends Phaser.Scene {
     key3_LN_active;
     key4_LN_active;
 
-    //
+    // events
     dataCollectionEvent;
     endGameEvent;
 
@@ -114,6 +126,8 @@ class Game extends Phaser.Scene {
         this.accuracy = 100;
         this.gameData = data.gameData;
         this.duration = data.gameData["metadata"]["duration"];
+        this.trackTitle = data.gameData["metadata"]["title"];
+        this.trackAuthor = data.gameData["metadata"]["artist"];
         this.totalNotes = data.gameData["notes"].length;
         this.isScenePaused = false;
 
@@ -164,7 +178,7 @@ class Game extends Phaser.Scene {
 
         // game end
         this.endGameEvent = this.time.addEvent({
-            delay: this.duration + 10,
+            delay: this.duration + 1000,
             callbackScope: this,
             callback: () => this.endGame()
         });
@@ -206,7 +220,7 @@ class Game extends Phaser.Scene {
             );
         });
 
-        this.prepareUIText();
+        this.prepareUIElements();
         this.prepareInputEvent();
     }
 
@@ -218,6 +232,7 @@ class Game extends Phaser.Scene {
         this.dataCollectionEvent.paused = false;
         this.endGameEvent.paused = false;
         this.bgMusic.play();
+        this.inGameTimeInMs = 0;
     }
 
     calculateSpawnTime(targetTime) {
@@ -244,14 +259,14 @@ class Game extends Phaser.Scene {
         this.partialMiss = 0;
     }
 
-    prepareUIText() {
+    prepareUIElements() {
         this.scoreText = this.add.text(1410, 100, "0000000", {
             fontFamily: "Inter",
             color: "#ffffff",
-            fontSize: "80px"
+            fontSize: "70px"
         }).setOrigin(0, 0);
 
-        this.comboText = this.add.text(200, 900, "0x", {
+        this.comboText = this.add.text(200, 890, "0x", {
             fontFamily: "Inter",
             color: "#ffffff",
             fontSize: "60px"
@@ -272,7 +287,7 @@ class Game extends Phaser.Scene {
         this.errorText = this.add.text(1500, 600, "", {
             fontFamily: "Inter",
             color: "#ffffff",
-            fontSize: "60px"
+            fontSize: "40px"
         }).setOrigin(0, 0);
 
         this.pauseText = this.add.text(780, 221, "", {
@@ -286,6 +301,90 @@ class Game extends Phaser.Scene {
             color: "#ffffff",
             fontSize: "50px"
         }).setOrigin(0, 0);
+
+        this.add.text(200, 110, `${this.trackTitle}\n${this.trackAuthor}`, {
+            fontFamily: "Inter",
+            color: "#ffffff",
+            fontSize: "30px"
+        }).setOrigin(0, 0);
+
+        this.critText = this.add.text(200, 500, "C", {
+            fontFamily: "Inter",
+            color: "#F9E2AF",
+            fontSize: "50px"
+        }).setOrigin(0, 0);
+
+        this.perfText = this.add.text(200, 550, "P", {
+            fontFamily: "Inter",
+            color: "#FAB387",
+            fontSize: "50px"
+        }).setOrigin(0, 0);
+
+        this.goodText = this.add.text(200, 600, "G", {
+            fontFamily: "Inter",
+            color: "#CBA6F7",
+            fontSize: "50px"
+        }).setOrigin(0, 0);
+
+        this.badText = this.add.text(200, 650, "B", {
+            fontFamily: "Inter",
+            color: "#A6E3A1",
+            fontSize: "50px"
+        }).setOrigin(0, 0);
+
+        this.missText = this.add.text(200, 700, "M", {
+            fontFamily: "Inter",
+            color: "#F38BA8",
+            fontSize: "50px"
+        }).setOrigin(0, 0);
+
+        // progression bar.
+        this.add.rectangle(200, 955, 1521, 15, 0x9399b2, 0.5).setOrigin(0, 0);
+        this.progressionBar = this.add.rectangle(200, 955, 1521, 15, 0xFFF000, 0.7).setOrigin(0, 0);
+
+        this.noteOuter1KeyText = this.add.text(
+            this.getLanePositionX(0) - 20,
+            845 - 25,
+            this.getKeyName(this.noteOuter1Key),
+            {
+                fontFamily: "Inter",
+                color: "#FFFFFF",
+                fontSize: "50px"
+            }
+        );
+
+        this.noteInner1KeyText = this.add.text(
+            this.getLanePositionX(1) - 20,
+            845 - 25,
+            this.getKeyName(this.noteInner1Key),
+            {
+                fontFamily: "Inter",
+                color: "#FFFFFF",
+                fontSize: "50px"
+            }
+        );
+
+        this.noteInner2KeyText = this.add.text(
+            this.getLanePositionX(2) - 20,
+            845 - 25,
+            this.getKeyName(this.noteInner2Key),
+            {
+                fontFamily: "Inter",
+                color: "#FFFFFF",
+                fontSize: "50px"
+            }
+        );
+
+        this.noteOuter2KeyText = this.add.text(
+            this.getLanePositionX(3) - 20,
+            845 - 25,
+            this.getKeyName(this.noteOuter2Key),
+            {
+                fontFamily: "Inter",
+                color: "#FFFFFF",
+                fontSize: "50px"
+            }
+        );
     }
 
     prepareInputEvent() {
@@ -311,6 +410,18 @@ class Game extends Phaser.Scene {
 
         this.replayKey.on("down", () => this.restartScene());
         this.pauseKey.on("down", () => this.togglePause());
+    }
+
+    /*
+        Get the corresponding Phaser key.
+     */
+    getKeyName(key) {
+        for (const keyName in Phaser.Input.Keyboard.KeyCodes) {
+            if (Phaser.Input.Keyboard.KeyCodes[keyName] === key.keyCode) {
+                return keyName;
+            }
+        }
+        return "Unknown";
     }
 
     /*
@@ -559,6 +670,7 @@ class Game extends Phaser.Scene {
         const isLate = hitTime > expectedTime;
 
         let errTxt = isEarly ? "EARLY" : isLate ? "LATE" : "Nice!";
+        let errColor = isEarly ? "#74C7EC" : isLate ? "#F38BA8" : "#FFFFFF";
         let rawValue = 0;
         let mulValue = 0;
 
@@ -568,13 +680,16 @@ class Game extends Phaser.Scene {
             ++this.partialNotes;
             rawValue = 350;
             mulValue = 3;
-            this.drawJudgementText("Nice!", "");
+            this.judgementText.setColor("#F9E2AF");
+            this.drawJudgementText("Nice!");
         } else if (this.critWindow < offset && offset <= this.perfWindow) {
             ++this.totalPerf;
             ++this.partialPerf;
             ++this.partialNotes;
             rawValue = 300;
             mulValue = 2;
+            this.judgementText.setColor("#FAB387");
+            this.errorText.setColor(errColor);
             this.drawJudgementText("Perfect", errTxt);
         } else if (this.perfWindow < offset && offset <= this.goodWindow) {
             ++this.totalGood;
@@ -582,6 +697,8 @@ class Game extends Phaser.Scene {
             ++this.partialNotes;
             rawValue = 200;
             mulValue = 1.5;
+            this.judgementText.setColor("#CBA6F7");
+            this.errorText.setColor(errColor);
             this.drawJudgementText("Fine", errTxt);
         } else if (this.goodWindow < offset && offset <= this.badWindow) {
             ++this.totalBad;
@@ -589,6 +706,8 @@ class Game extends Phaser.Scene {
             ++this.partialNotes;
             rawValue = 50;
             mulValue = 1.05;
+            this.judgementText.setColor("#A6E3A1");
+            this.errorText.setColor(errColor);
             this.drawJudgementText("Meh.", errTxt);
         } else {
             this.drawJudgementText("What?", "Edge case!");
@@ -606,13 +725,23 @@ class Game extends Phaser.Scene {
         Highlights the key being pressed.
      */
     drawInputIndicator(keyPosition) {
+        const texts = [
+            this.noteOuter1KeyText,
+            this.noteInner1KeyText,
+            this.noteInner2KeyText,
+            this.noteOuter2KeyText,
+        ];
+
         const xPosition = this.getLanePositionX(keyPosition);
 
         let indicator = this.add.image(xPosition, 845, "indicator");
+        texts[keyPosition].setDepth(1000);
+        texts[keyPosition].setColor("#1F1E33");
 
         setTimeout((x) => {
             x.destroy();
-        }, 20, indicator);
+            texts[keyPosition].setColor("#FFFFFF");
+        }, 20, indicator, texts, keyPosition);
     }
 
     /*
@@ -654,6 +783,12 @@ class Game extends Phaser.Scene {
         // only do stuffs when the game is not paused
         if (this.isScenePaused) return;
 
+        // draw input indicator
+        if (this.noteOuter1Key.isDown) { this.drawInputIndicator(0); }
+        if (this.noteInner1Key.isDown) { this.drawInputIndicator(1); }
+        if (this.noteInner2Key.isDown) { this.drawInputIndicator(2); }
+        if (this.noteOuter2Key.isDown) { this.drawInputIndicator(3); }
+
         this.inGameTimeInMs += delta;
 
         // noinspection PointlessArithmeticExpressionJS
@@ -678,6 +813,7 @@ class Game extends Phaser.Scene {
                     ++this.totalMiss;
                     ++this.partialMiss;
                     ++this.partialNotes;
+                    this.judgementText.setColor("#F38BA8");
                     this.drawJudgementText("Missed.", "");
                     this.setLongNoteActivity(this.getLanePositionX(note.x), false);
                 } else {
@@ -704,6 +840,17 @@ class Game extends Phaser.Scene {
         this.comboText.setText(`${this.combo}x`);
         this.scoreText.setText(`${scaledScore}`.padStart(7, "0"));
         this.accuracyText.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
+
+        this.critText.setText(`C ${this.totalCrit}`);
+        this.perfText.setText(`P ${this.totalPerf}`);
+        this.goodText.setText(`G ${this.totalGood}`);
+        this.badText.setText(`B ${this.totalBad}`);
+        this.missText.setText(`M ${this.totalMiss}`);
+
+        let passedPercentage = this.inGameTimeInMs / this.duration;
+        let progressionBarLength = 1521 * passedPercentage;
+
+        this.progressionBar.setSize(progressionBarLength, 15);
     }
 }
 

@@ -12,7 +12,7 @@ import axios from "axios";
 function GameApp() {
     const gameRef = useRef(null);
     const location = useLocation();
-    const { songId, songIndex } = location.state || { songId: 586954 };
+    const { songId, songIndex } = location.state || { songId: 586954, songIndex: 0 };
     const navigate = useNavigate();
 
     useEffect(() => {
