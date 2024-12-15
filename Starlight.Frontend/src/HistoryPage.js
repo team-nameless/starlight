@@ -39,6 +39,11 @@ function HistoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const fuse = new Fuse(songs, { keys: ['title'], threshold: 0.3 });
 
+  const heatmapContainer1Ref = useRef(null);
+  const heatmapContainer2Ref = useRef(null);
+  const hasRenderedHeatmap1 = useRef(false);
+  const hasRenderedHeatmap2 = useRef(false);
+
   const filteredSongs = searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs;
 
   const handleSearchChange = (event) => {
@@ -48,6 +53,13 @@ function HistoryPage() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    if (currentSong && currentSong.id === parseInt(songId)) {
+      hasRenderedHeatmap1.current = false;
+      hasRenderedHeatmap2.current = false;
+    }
+  }, [currentSong, songId]);
 
   useEffect(() => {
     const fetchSongData = async () => {
@@ -353,11 +365,6 @@ function HistoryPage() {
     }
   };
 
-  const heatmapContainer1Ref = useRef(null);
-  const heatmapContainer2Ref = useRef(null);
-  const hasRenderedHeatmap1 = useRef(false);
-  const hasRenderedHeatmap2 = useRef(false);
-
   const renderHeatmap = useCallback(async (url, containerRef, scoreUrl, songId) => {
     const container = containerRef.current;
     if (!container) {
@@ -494,34 +501,39 @@ function HistoryPage() {
         .text("Data fetched from test_heatmap.json");
     }
   }, []);
-  
+
   useEffect(() => {
+    if (hasRenderedHeatmap1.current) return () => { console.warn("Rendered Heatmap1 complete!"); };
+
     const renderHeatmap1 = async () => {
-      if (currentSong) {
-        hasRenderedHeatmap1.current = false;
+      if (currentSong && !hasRenderedHeatmap1.current) {
+        hasRenderedHeatmap1.current = true;
         await renderHeatmap(`/api/score/${currentSong.id}/recent`, heatmapContainer1Ref, `/api/score/${currentSong.id}/recent`, currentSong.id);
       }
     };
     renderHeatmap1();
-  }, [renderHeatmap, currentSong]);
+
+    return () => {
+      console.warn("Heatmap 1 triggered re-render!");
+    }
+  }, [renderHeatmap, currentSong?.id]);
 
   useEffect(() => {
+    if (hasRenderedHeatmap2.current) return () => { console.warn("Rendered Heatmap2 complete!"); };
+
     const renderHeatmap2 = async () => {
       if (currentSong) {
-        hasRenderedHeatmap2.current = false;
+        hasRenderedHeatmap2.current = true;
         await renderHeatmap(`/api/score/${currentSong.id}/best`, heatmapContainer2Ref, `/api/score/${currentSong.id}/best`, currentSong.id);
       }
     };
     renderHeatmap2();
-  }, [renderHeatmap, currentSong]);
 
-  useEffect(() => {
-    if (currentSong && currentSong.id === parseInt(songId)) {
-      hasRenderedHeatmap1.current = false;
-      hasRenderedHeatmap2.current = false;
+    return () => {
+      console.warn("Heatmap 2 triggered re-render!");
     }
-  }, [currentSong, songId]);
-  
+  }, [renderHeatmap, currentSong?.id]);
+
   return (
     <div className="historypage">
       <Suspense fallback={<div>Loading...</div>}>
