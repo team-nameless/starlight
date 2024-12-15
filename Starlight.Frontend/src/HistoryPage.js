@@ -538,7 +538,7 @@ function HistoryPage() {
               <img src={songsIcon} alt="Songs" className="nav-icon" />
               <span>Songs</span>
             </Link>
-            <Link to="/historypage">
+            <Link to= { `/historypage/${songId}/${songIndex}` } >
               <img src={historyIcon} alt="History" className="nav-icon" />
               <span>History</span>
             </Link>
