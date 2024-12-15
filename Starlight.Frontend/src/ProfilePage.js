@@ -67,6 +67,8 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [scoreRecords, setScoreRecords] = useState([]);
   const navigate = useNavigate();
+  const [currentSong, setCurrentSong] = useState(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
@@ -104,6 +106,27 @@ function ProfilePage() {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const response = await axios.get(`${rootUrl}/api/track/all`, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const songs = response.data;
+        if (songs.length > 0) {
+          setCurrentSong(songs[0]);
+          setCurrentSongIndex(0);
+        }
+      } catch (error) {
+        console.error('Error fetching songs:', error);
+      }
+    };
+
+    fetchSongs();
   }, []);
 
   const handleLeaveClick = () => {
@@ -382,15 +405,15 @@ function ProfilePage() {
               <img src={songsIcon} alt="Songs" className="nav-iconh" />
               <span>Songs</span>
             </Link>
-            <Link to="/HistoryPage">
+            <Link to={`/HistoryPage/${currentSong?.id ?? 586954}/${currentSongIndex ?? 0}`} state={{ currentSong: currentSong, currentSongIndex: 0 }}>
               <img src={historyIcon} alt="History" className="nav-iconh" />
               <span>History</span>
             </Link>
-            <Link to="/EventPage">
+            <Link to="/EventPage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
               <img src={eventsIcon} alt="Events" className="nav-iconh" />
               <span>Events</span>
             </Link>
-            <Link to="/StorePage">
+            <Link to="/StorePage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
               <img src={storeIcon} alt="Store" className="nav-iconh" />
               <span>Store</span>
             </Link>
