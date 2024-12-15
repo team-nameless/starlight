@@ -450,7 +450,7 @@ class Game extends Phaser.Scene {
                 good: this.totalGood,
                 bad: this.totalBad,
                 miss: this.totalMiss,
-                score: this.score,
+                score: this.calculateScore(),
                 accuracy: this.accuracy / 100,
                 grade : grade,
                 maxCombo: this.maxCombo
@@ -606,6 +606,15 @@ class Game extends Phaser.Scene {
                 break;
         }
     }
+
+    /*
+        Calculate the actual score.
+    */
+   calculateScore() {
+        const n = this.totalNotes;
+        const score = this.score;
+        return parseInt(score / (350 * n + 1.5 * n * (n + 1)) * 1_000_000);
+   }
 
     /*
         Handle game input.
@@ -834,11 +843,8 @@ class Game extends Phaser.Scene {
             }
         });
 
-        let n = this.totalNotes;
-        let scaledScore = parseInt(this.score / (350 * n + 1.5 * n * (n + 1)) * 1_000_000);
-
         this.comboText.setText(`${this.combo}x`);
-        this.scoreText.setText(`${scaledScore}`.padStart(7, "0"));
+        this.scoreText.setText(`${this.calculateScore()}`.padStart(7, "0"));
         this.accuracyText.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
 
         this.critText.setText(`C ${this.totalCrit}`);
