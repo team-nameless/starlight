@@ -1,7 +1,9 @@
 # Project Starlight
 
-- Welcome to our project: Starlight. This is a web-based VSRG (vertically-scrolling-rhythm game) made with React, 
+- Welcome to our project: Starlight. This is a web-based VSRG (vertically-scrolling rhythm game) made with React, 
 Vite, ASP.NET Core (+batteries from Microsoft) and a-particular-game-engine which I was strictly forbidden to disclose by the PM.
+
+- To perceive the best and our intended UX, make sure your screen is 1536x864 or 1920x1080 at 125%.
 
 # Does it work?
 
@@ -11,8 +13,6 @@ Vite, ASP.NET Core (+batteries from Microsoft) and a-particular-game-engine whic
 # How do I self-host this?
 
 It's a bit complicated. You have been warned.
-
-> I assume you know how to use `cd` and possesses a minimal legibility.
 
 - Clone the entire project.
 - Install packages.
@@ -44,4 +44,4 @@ It's a bit complicated. You have been warned.
     - Publish the package: `dotnet publish Starlight.Backend /p:EnvironmentName=Development -o build/`
 - Running:
   - Front-end: There should be a `build` directory containing `index.html`, host that.
-  - Back-end: There should be a `build` directory containing `Starlight.Backend[.*]`, use a Project Manager like PM2 to host that.
+  - Back-end: There should be a `build` directory containing `Starlight.Backend[.*]`, use a Process Manager like PM2 to host that.
