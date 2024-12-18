@@ -1,105 +1,102 @@
-@font-face { 
-    font-family: 'Anta';
-    src: url('fonts/anta.ttf') ; 
+@font-face {
+    font-family: "Anta";
+    src: url("fonts/anta.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Protest Revolution';
-    src: url('fonts/ProtestRevolution-Regular.ttf') ; 
+    font-family: "Protest Revolution";
+    src: url("fonts/ProtestRevolution-Regular.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Adlam Display';
-    src: url('fonts/adlamdisplay.ttf') ; 
+    font-family: "Adlam Display";
+    src: url("fonts/adlamdisplay.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
-@font-face { 
-    font-family: 'Inter';
-    src: url('fonts/inter.ttf') ; 
+@font-face {
+    font-family: "Inter";
+    src: url("fonts/inter.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 body {
-    font-family: Anta, sans-serif; 
+    font-family: Anta, sans-serif;
     margin: 0;
     padding: 0;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.8);
-  z-index: 2000; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 2000;
 }
 
-.one, .two {
-  position: absolute;
-  border-radius: 50%;
-  height: 20px;
-  width: 20px;
+.one,
+.two {
+    position: absolute;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
 }
 
 .one {
-  background: #3fbbf7;
-  opacity: 0;
-  animation: loading 1.3s 0.65s infinite;
+    background: #3fbbf7;
+    opacity: 0;
+    animation: loading 1.3s 0.65s infinite;
 }
 
 .two {
-  background: #FF4081;
-  opacity: 0;
-  animation: loading 1.3s infinite;
+    background: #ff4081;
+    opacity: 0;
+    animation: loading 1.3s infinite;
 }
 
 @keyframes loading {
-  0% {
-    opacity: 0;
-    transform: scale(0.15);
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.15);
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-  }
+    0% {
+        opacity: 0;
+        transform: scale(0.15);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.15);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .password-container {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .password-container input {
-  width: calc(100% - 40px); 
+    width: calc(100% - 40px);
 }
 
 .password-container .eye-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
 }
-
-
-
-

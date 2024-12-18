@@ -160,7 +160,7 @@ class Game extends Phaser.Scene {
             trackIndex: data["mapIndex"],
             stats: {},
             partial: []
-        }
+        };
 
         // notes
         this.notes = this.physics.add.group();
@@ -211,13 +211,10 @@ class Game extends Phaser.Scene {
         this.pauseDimBg.setOrigin(0, 0);
         this.pauseDimBg.setDepth(10);
 
-        this.gameData["notes"].forEach((note) => {
-            this.time.delayedCall(
-                this.calculateSpawnTime(note.time),
-                () => {
-                    this.spawnNote(note);
-                }
-            );
+        this.gameData["notes"].forEach(note => {
+            this.time.delayedCall(this.calculateSpawnTime(note.time), () => {
+                this.spawnNote(note);
+            });
         });
 
         this.prepareUIElements();
@@ -248,7 +245,7 @@ class Game extends Phaser.Scene {
             perf: this.partialPerf,
             bad: this.partialBad,
             good: this.partialGood,
-            miss: this.partialMiss,
+            miss: this.partialMiss
         });
 
         this.partialNotes = 0;
@@ -260,87 +257,113 @@ class Game extends Phaser.Scene {
     }
 
     prepareUIElements() {
-        this.scoreText = this.add.text(1410, 100, "0000000", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "70px"
-        }).setOrigin(0, 0);
+        this.scoreText = this.add
+            .text(1410, 100, "0000000", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "70px"
+            })
+            .setOrigin(0, 0);
 
-        this.comboText = this.add.text(200, 890, "0x", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "60px"
-        }).setOrigin(0, 0);
+        this.comboText = this.add
+            .text(200, 890, "0x", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "60px"
+            })
+            .setOrigin(0, 0);
 
-        this.accuracyText = this.add.text(1480, 180, "100.00%", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "60px"
-        }).setOrigin(0, 0);
+        this.accuracyText = this.add
+            .text(1480, 180, "100.00%", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "60px"
+            })
+            .setOrigin(0, 0);
 
-        this.judgementText = this.add.text(1500, 500, "", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "60px"
-        }).setOrigin(0, 0);
+        this.judgementText = this.add
+            .text(1500, 500, "", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "60px"
+            })
+            .setOrigin(0, 0);
 
-        this.errorText = this.add.text(1500, 600, "", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "40px"
-        }).setOrigin(0, 0);
+        this.errorText = this.add
+            .text(1500, 600, "", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "40px"
+            })
+            .setOrigin(0, 0);
 
-        this.pauseText = this.add.text(780, 221, "", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "100px"
-        }).setOrigin(0, 0);
+        this.pauseText = this.add
+            .text(780, 221, "", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "100px"
+            })
+            .setOrigin(0, 0);
 
-        this.pauseHint = this.add.text(730, 318, "", {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.pauseHint = this.add
+            .text(730, 318, "", {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
-        this.add.text(200, 110, `${this.trackTitle}\n${this.trackAuthor}`, {
-            fontFamily: "Inter",
-            color: "#ffffff",
-            fontSize: "30px"
-        }).setOrigin(0, 0);
+        this.add
+            .text(200, 110, `${this.trackTitle}\n${this.trackAuthor}`, {
+                fontFamily: "Inter",
+                color: "#ffffff",
+                fontSize: "30px"
+            })
+            .setOrigin(0, 0);
 
-        this.critText = this.add.text(200, 500, "C", {
-            fontFamily: "Inter",
-            color: "#F9E2AF",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.critText = this.add
+            .text(200, 500, "C", {
+                fontFamily: "Inter",
+                color: "#F9E2AF",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
-        this.perfText = this.add.text(200, 550, "P", {
-            fontFamily: "Inter",
-            color: "#FAB387",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.perfText = this.add
+            .text(200, 550, "P", {
+                fontFamily: "Inter",
+                color: "#FAB387",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
-        this.goodText = this.add.text(200, 600, "G", {
-            fontFamily: "Inter",
-            color: "#CBA6F7",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.goodText = this.add
+            .text(200, 600, "G", {
+                fontFamily: "Inter",
+                color: "#CBA6F7",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
-        this.badText = this.add.text(200, 650, "B", {
-            fontFamily: "Inter",
-            color: "#A6E3A1",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.badText = this.add
+            .text(200, 650, "B", {
+                fontFamily: "Inter",
+                color: "#A6E3A1",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
-        this.missText = this.add.text(200, 700, "M", {
-            fontFamily: "Inter",
-            color: "#F38BA8",
-            fontSize: "50px"
-        }).setOrigin(0, 0);
+        this.missText = this.add
+            .text(200, 700, "M", {
+                fontFamily: "Inter",
+                color: "#F38BA8",
+                fontSize: "50px"
+            })
+            .setOrigin(0, 0);
 
         // progression bar.
         this.add.rectangle(200, 955, 1521, 15, 0x9399b2, 0.5).setOrigin(0, 0);
-        this.progressionBar = this.add.rectangle(200, 955, 1521, 15, 0xFFF000, 0.7).setOrigin(0, 0);
+        this.progressionBar = this.add.rectangle(200, 955, 1521, 15, 0xfff000, 0.7).setOrigin(0, 0);
 
         this.noteOuter1KeyText = this.add.text(
             this.getLanePositionX(0) - 20,
@@ -388,12 +411,7 @@ class Game extends Phaser.Scene {
     }
 
     prepareInputEvent() {
-        const gameKeys = [
-            this.noteOuter1Key,
-            this.noteInner1Key,
-            this.noteInner2Key,
-            this.noteOuter2Key
-        ];
+        const gameKeys = [this.noteOuter1Key, this.noteInner1Key, this.noteInner2Key, this.noteOuter2Key];
 
         gameKeys.forEach((key, index) => {
             key.on("down", () => {
@@ -404,7 +422,7 @@ class Game extends Phaser.Scene {
             key.on("up", () => {
                 this.handleInput(index, true);
                 this.setLongNoteActivity(index, false);
-                this.setInputLockActivity(index, false)
+                this.setInputLockActivity(index, false);
             });
         });
 
@@ -442,23 +460,24 @@ class Game extends Phaser.Scene {
         else grade = "D";
 
         this.collectedGameData.trackId = this.gameData["metadata"]["map_set_id"];
-        this.collectedGameData.stats =
-            {
-                duration: this.duration,
-                crit: this.totalCrit,
-                perf: this.totalPerf,
-                good: this.totalGood,
-                bad: this.totalBad,
-                miss: this.totalMiss,
-                score: this.calculateScore(),
-                accuracy: this.accuracy / 100,
-                grade : grade,
-                maxCombo: this.maxCombo
-            };
+        this.collectedGameData.stats = {
+            duration: this.duration,
+            crit: this.totalCrit,
+            perf: this.totalPerf,
+            good: this.totalGood,
+            bad: this.totalBad,
+            miss: this.totalMiss,
+            score: this.calculateScore(),
+            accuracy: this.accuracy / 100,
+            grade: grade,
+            maxCombo: this.maxCombo
+        };
 
         this.collectedGameData.partial = this.collectedGameData.partial.slice(0, 30);
 
-        this.scene.switch("GameFinalizer", { collectedData: this.collectedGameData });
+        this.scene.switch("GameFinalizer", {
+            collectedData: this.collectedGameData
+        });
     }
 
     /*
@@ -468,19 +487,9 @@ class Game extends Phaser.Scene {
         const pos = note["position"];
         const xPosition = this.getLanePositionX(pos);
 
-        const noteSelection = [
-            "noteOuter",
-            "noteInner",
-            "noteInner",
-            "noteOuter",
-        ];
+        const noteSelection = ["noteOuter", "noteInner", "noteInner", "noteOuter"];
 
-        const colorSelection = [
-            0xb4befe,
-            0xf2cdcd,
-            0xf2cdcd,
-            0xb4befe
-        ];
+        const colorSelection = [0xb4befe, 0xf2cdcd, 0xf2cdcd, 0xb4befe];
 
         const noteObject = this.add.image(xPosition, 0, noteSelection[pos]);
 
@@ -496,10 +505,7 @@ class Game extends Phaser.Scene {
             const startTime = note["time"];
             const endTime = note["lastUntil"];
             const duration = endTime - startTime;
-            const height = Math.max(
-                0,
-                Math.ceil((duration / 1000) * this.noteSpeed * this.noteScale)
-            );
+            const height = Math.max(0, Math.ceil((duration / 1000) * this.noteSpeed * this.noteScale));
 
             const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, colorSelection[pos]);
             longNoteBody.setOrigin(0.5, 1);
@@ -518,12 +524,9 @@ class Game extends Phaser.Scene {
         Get X coordinate of the lane.
      */
     getLanePositionX(keyPosition) {
-        return [
-            this.noteOuter1PositionX,
-            this.noteInner1PositionX,
-            this.noteInner2PositionX,
-            this.noteOuter2PositionX
-        ][keyPosition];
+        return [this.noteOuter1PositionX, this.noteInner1PositionX, this.noteInner2PositionX, this.noteOuter2PositionX][
+            keyPosition
+        ];
     }
 
     /*
@@ -533,22 +536,22 @@ class Game extends Phaser.Scene {
         this.judgementText.setText(judgement);
         this.errorText.setText(error);
 
-        this.time.delayedCall(200, () => {
-            this.judgementText.setText("");
-            this.errorText.setText("");
-        }, [], this);
+        this.time.delayedCall(
+            200,
+            () => {
+                this.judgementText.setText("");
+                this.errorText.setText("");
+            },
+            [],
+            this
+        );
     }
 
     /*
         Get long note activity
      */
     getLongNoteActivity(keyPosition) {
-        return [
-            this.key1_LN_active,
-            this.key2_LN_active,
-            this.key3_LN_active,
-            this.key4_LN_active
-        ][keyPosition];
+        return [this.key1_LN_active, this.key2_LN_active, this.key3_LN_active, this.key4_LN_active][keyPosition];
     }
 
     /*
@@ -577,12 +580,7 @@ class Game extends Phaser.Scene {
         Get key lock.
      */
     getInputLockActivity(keyPosition) {
-        return [
-            this.key1_locked,
-            this.key2_locked,
-            this.key3_locked,
-            this.key4_locked,
-        ][keyPosition];
+        return [this.key1_locked, this.key2_locked, this.key3_locked, this.key4_locked][keyPosition];
     }
 
     /*
@@ -610,11 +608,11 @@ class Game extends Phaser.Scene {
     /*
         Calculate the actual score.
     */
-   calculateScore() {
+    calculateScore() {
         const n = this.totalNotes;
         const score = this.score;
-        return parseInt(score / (350 * n + 1.5 * n * (n + 1)) * 1_000_000);
-   }
+        return parseInt((score / (350 * n + 1.5 * n * (n + 1))) * 1_000_000);
+    }
 
     /*
         Handle game input.
@@ -635,18 +633,17 @@ class Game extends Phaser.Scene {
 
         // get notes that lies the furthest,
         // but not exceeding the "judgement bound".
-        const theChosenOne = notesAtWantedLanes
-            .reduce((previousNote, currentNote) => {
-                const judgePoint = 845;
-                const judgeRange = 100;
+        const theChosenOne = notesAtWantedLanes.reduce((previousNote, currentNote) => {
+            const judgePoint = 845;
+            const judgeRange = 100;
 
-                const upperPoint = judgePoint - judgeRange
-                const chokePoint = judgePoint + judgeRange;
+            const upperPoint = judgePoint - judgeRange;
+            const chokePoint = judgePoint + judgeRange;
 
-                return (upperPoint <= currentNote.y && currentNote.y <= chokePoint) && (currentNote.y < previousNote.y)
-                    ? currentNote
-                    : previousNote;
-            });
+            return upperPoint <= currentNote.y && currentNote.y <= chokePoint && currentNote.y < previousNote.y
+                ? currentNote
+                : previousNote;
+        });
 
         // well, no note I guess?
         if (theChosenOne === null) return;
@@ -724,7 +721,7 @@ class Game extends Phaser.Scene {
             mulValue = 0;
         }
 
-        this.score += (rawValue + mulValue * this.combo);
+        this.score += rawValue + mulValue * this.combo;
 
         this.setLongNoteActivity(keyPosition, isLnStart);
         this.setInputLockActivity(true);
@@ -734,12 +731,7 @@ class Game extends Phaser.Scene {
         Highlights the key being pressed.
      */
     drawInputIndicator(keyPosition) {
-        const texts = [
-            this.noteOuter1KeyText,
-            this.noteInner1KeyText,
-            this.noteInner2KeyText,
-            this.noteOuter2KeyText,
-        ];
+        const texts = [this.noteOuter1KeyText, this.noteInner1KeyText, this.noteInner2KeyText, this.noteOuter2KeyText];
 
         const xPosition = this.getLanePositionX(keyPosition);
 
@@ -747,10 +739,16 @@ class Game extends Phaser.Scene {
         texts[keyPosition].setDepth(1000);
         texts[keyPosition].setColor("#1F1E33");
 
-        setTimeout((x) => {
-            x.destroy();
-            texts[keyPosition].setColor("#FFFFFF");
-        }, 20, indicator, texts, keyPosition);
+        setTimeout(
+            x => {
+                x.destroy();
+                texts[keyPosition].setColor("#FFFFFF");
+            },
+            20,
+            indicator,
+            texts,
+            keyPosition
+        );
     }
 
     /*
@@ -793,22 +791,31 @@ class Game extends Phaser.Scene {
         if (this.isScenePaused) return;
 
         // draw input indicator
-        if (this.noteOuter1Key.isDown) { this.drawInputIndicator(0); }
-        if (this.noteInner1Key.isDown) { this.drawInputIndicator(1); }
-        if (this.noteInner2Key.isDown) { this.drawInputIndicator(2); }
-        if (this.noteOuter2Key.isDown) { this.drawInputIndicator(3); }
+        if (this.noteOuter1Key.isDown) {
+            this.drawInputIndicator(0);
+        }
+        if (this.noteInner1Key.isDown) {
+            this.drawInputIndicator(1);
+        }
+        if (this.noteInner2Key.isDown) {
+            this.drawInputIndicator(2);
+        }
+        if (this.noteOuter2Key.isDown) {
+            this.drawInputIndicator(3);
+        }
 
         this.inGameTimeInMs += delta;
 
         // noinspection PointlessArithmeticExpressionJS
-        this.accuracy = (
-            350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
-            200 * this.totalGood +
-            50 * this.totalBad +
-            0 * this.totalMiss
-        ) / (350.00 * this.totalNotes) * 100.0;
+        this.accuracy =
+            ((350 * (this.totalNotes - this.totalGood - this.totalBad - this.totalMiss) +
+                200 * this.totalGood +
+                50 * this.totalBad +
+                0 * this.totalMiss) /
+                (350.0 * this.totalNotes)) *
+            100.0;
 
-        this.notes.getChildren().forEach((note) => {
+        this.notes.getChildren().forEach(note => {
             if (note.getData("lnBody")) return;
 
             let pos = parseInt(note.getData("position"));
@@ -836,7 +843,7 @@ class Game extends Phaser.Scene {
                     rawValue = 50;
                     mulValue = 1;
                     this.drawJudgementText("Meh.", "Late.");
-                    this.score += (rawValue + mulValue * this.combo);
+                    this.score += rawValue + mulValue * this.combo;
                 }
 
                 note.destroy();

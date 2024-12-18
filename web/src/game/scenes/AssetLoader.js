@@ -35,7 +35,10 @@ class AssetLoader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.switch("Game", {gameData: this.gameData, mapIndex: this.mapIndex});
+        this.scene.switch("Game", {
+            gameData: this.gameData,
+            mapIndex: this.mapIndex
+        });
     }
 }
 

@@ -1,18 +1,22 @@
-import Phaser from "phaser";
-import {useRef, useEffect} from "react";
-import {useLocation} from "react-router-dom";
-import Game from "./scenes/Game";
-import DataLoader from "./scenes/DataLoader";
-import AssetLoader from "./scenes/AssetLoader";
-import GameFinalizer from "./scenes/GameFinalizer";
-import { EventEmitter } from "./EventEmitter";
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import Phaser from "phaser";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { EventEmitter } from "./EventEmitter";
+import AssetLoader from "./scenes/AssetLoader";
+import DataLoader from "./scenes/DataLoader";
+import Game from "./scenes/Game";
+import GameFinalizer from "./scenes/GameFinalizer";
 
 function GameApp() {
     const gameRef = useRef(null);
     const location = useLocation();
-    const { songId, songIndex } = location.state || { songId: 586954, songIndex: 0 };
+    const { songId, songIndex } = location.state || {
+        songId: 586954,
+        songIndex: 0
+    };
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,10 +36,13 @@ function GameApp() {
                 default: "arcade"
             },
             autoFocus: true,
-            antialias: true,
+            antialias: true
         });
 
-        game.scene.add("DataLoader", DataLoader, true, { song: songId, index: songIndex });
+        game.scene.add("DataLoader", DataLoader, true, {
+            song: songId,
+            index: songIndex
+        });
         game.scene.add("AssetLoader", AssetLoader);
         game.scene.add("Game", Game);
         game.scene.add("GameFinalizer", GameFinalizer);
@@ -43,11 +50,18 @@ function GameApp() {
         EventEmitter.on("game-finished", () => {
             const url = `https://cluster1.swyrin.id.vn/api/track/${songId}`;
 
-            axios.get(url, {
-                withCredentials: true
-            }).then((response) => {
-                navigate(`/historypage/${songId}/${songIndex}`, { state: { currentSong: response.data, currentSongIndex: songIndex } });
-            });
+            axios
+                .get(url, {
+                    withCredentials: true
+                })
+                .then(response => {
+                    navigate(`/historypage/${songId}/${songIndex}`, {
+                        state: {
+                            currentSong: response.data,
+                            currentSongIndex: songIndex
+                        }
+                    });
+                });
         });
 
         return () => {
@@ -59,8 +73,13 @@ function GameApp() {
     return (
         <div
             ref={gameRef}
-             style={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
-        </div>
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh"
+            }}
+        ></div>
     );
 }
 

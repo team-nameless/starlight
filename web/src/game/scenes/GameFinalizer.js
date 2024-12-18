@@ -1,6 +1,7 @@
-import Phaser from "phaser";
-import {EventEmitter} from "../EventEmitter";
 import axios from "axios";
+import Phaser from "phaser";
+
+import { EventEmitter } from "../EventEmitter";
 
 class GameFinalizer extends Phaser.Scene {
     collectedGameData;
@@ -19,7 +20,8 @@ class GameFinalizer extends Phaser.Scene {
         const url = `https://cluster1.swyrin.id.vn/api/score/${this.trackId}`;
         console.log(this.collectedGameData);
 
-        axios.post(url, this.collectedGameData, { withCredentials: true })
+        axios
+            .post(url, this.collectedGameData, { withCredentials: true })
             .then(_ => {
                 EventEmitter.emit("game-finished");
                 this.scene.stop("GameFinalizer");

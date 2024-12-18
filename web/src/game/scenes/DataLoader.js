@@ -23,7 +23,10 @@ class DataLoader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.switch("AssetLoader", {mapId: this.mapId, mapIndex: this.mapIndex});
+        this.scene.switch("AssetLoader", {
+            mapId: this.mapId,
+            mapIndex: this.mapIndex
+        });
     }
 }
 

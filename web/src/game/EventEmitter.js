@@ -1,3 +1,3 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 export const EventEmitter = new Phaser.Events.EventEmitter();
