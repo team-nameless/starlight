@@ -25,6 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "fix": "npx eslint --fix",
     "clean": "npx prettier --write src"
   },
   "eslintConfig": {
@@ -52,7 +53,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@eslint/js": "^9.17.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
-    "prettier": "^3.4.1"
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.13.0",
+    "prettier": "^3.4.1",
+    "typescript-eslint": "^8.18.1"
   }
 }
