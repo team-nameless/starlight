@@ -1,4 +1,4 @@
-/// Index page.
-mod index;
+mod request;
 
-pub use index::*;
+pub mod index;
+pub mod auth;

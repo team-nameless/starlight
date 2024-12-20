@@ -1,3 +1,4 @@
 [global]
 address = "127.0.0.1"
 port = 5000
+secret_key = "VCYPhClChCOTYpvk0ODAkxPhyj34Yz5fC72EL2PdCLE="

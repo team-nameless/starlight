@@ -1,0 +1,73 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "cargo prisma"
+  output   = "../src/prisma.rs"
+}
+
+model Player {
+  Id                      String   @id @default(uuid())
+  NumericId               BigInt
+  Handle                  String
+  Email                   String
+  HashedPassword          String   @db.Text
+  HashedTemporaryPassword String   @db.Text
+  TotalPlayTime           BigInt
+  Level                   BigInt
+  ExpOfLevel              BigInt
+  CreationDate            DateTime @default(now())
+
+  Achievements Achievement[]
+  FriendsOf    Player[]      @relation("Friendship")
+  FriendsWith  Player[]      @relation("Friendship")
+  Scores       Score[]
+  Setting      Setting?
+}
+
+model Achievement {
+  Id        BigInt @id
+  Name      String @db.VarChar(255)
+  Detail    String @db.Text
+  FavorText String @db.Text
+
+  Players Player[]
+}
+
+model Score {
+  Id             BigInt   @id @default(autoincrement())
+  TrackId        BigInt
+  TrackName      String   @db.VarChar(16384)
+  TotalPoints    BigInt
+  Accuracy       Float
+  Critical       BigInt
+  MaxCombo       BigInt
+  Grade          String   @db.VarChar(10)
+  Perfect        BigInt
+  Good           BigInt
+  Bad            BigInt
+  Miss           BigInt
+  RawJson        String   @db.Text
+  SubmissionDate DateTime
+  PlayerId       String
+
+  Player Player @relation(fields: [PlayerId], references: [Id])
+}
+
+model Setting {
+  Id                BigInt @id @default(autoincrement())
+  KeyCode1          Int
+  KeyCode2          Int
+  KeyCode3          Int
+  KeyCode4          Int
+  MasterVolume      Int
+  MusicVolume       Int
+  SoundEffectVolume Int
+  Offset            Int
+  FrameRate         Int
+
+  PlayerId String @unique
+  Player   Player @relation(fields: [PlayerId], references: [Id])
+}
