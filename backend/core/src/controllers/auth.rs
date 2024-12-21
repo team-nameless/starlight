@@ -1,4 +1,4 @@
-use prisma_client_rust::{and, or, not};
+use prisma_client_rust::{or};
 use rocket::http::{Cookie, CookieJar};
 use rocket::http::Status;
 use rocket::serde::json::Json;
@@ -6,6 +6,7 @@ use crate::context::Ctx;
 use crate::prisma::player;
 
 use rocket_okapi::openapi;
+use crate::controllers::guard::auth_player::AuthenticatedPlayer;
 use crate::controllers::request::auth_request::*;
 use crate::utils::hash_password;
 
@@ -46,7 +47,7 @@ pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) ->
 #[openapi(tag = "Authentication")]
 #[post("/api/login", data = "<login_request>")]
 pub async fn login(cookies: &CookieJar<'_>, ctx: &Ctx, login_request: Json<LoginRequest<'_>>) -> Status {
-    let mut found_player = ctx.prisma.player()
+    let found_player = ctx.prisma.player()
         .find_first(vec![
             player::email::equals(login_request.email.to_string()),
             or![
@@ -70,7 +71,7 @@ pub async fn login(cookies: &CookieJar<'_>, ctx: &Ctx, login_request: Json<Login
 
 #[openapi(tag = "Authentication")]
 #[get("/api/logout")]
-pub async fn logout(cookies: &CookieJar<'_>) -> Status {
+pub async fn logout(cookies: &CookieJar<'_>, _ignore_me: AuthenticatedPlayer) -> Status {
     cookies.remove_private("user");
 
     Status::Ok
