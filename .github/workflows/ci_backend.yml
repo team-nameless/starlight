@@ -46,6 +46,7 @@ jobs:
 
       - name: Generate the database
         run: |
+          cargo prisma db push --accept-data-loss
           cargo prisma generate
 
       - name: Build the backend binary
