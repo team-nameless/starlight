@@ -16,3 +16,7 @@ hex = "0.4.3"
 prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.11", default-features = false, features = ["migrations", "postgresql"] }
 chrono = { version = "0.4.39", features = ["clock"] }
 validator = { version = "0.19", features = ["derive"] }
+
+[lints.rust]
+unused_imports = "allow"
+dead_code = "allow"

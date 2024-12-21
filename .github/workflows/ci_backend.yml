@@ -21,37 +21,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/cache@v4
+      - uses: dtolnay/rust-toolchain@master
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          toolchain: stable
 
-      - name: Install Rust
+      - name: Rust version check
+        shell: bash
         run: |
-          rustup update stable && rustup default stable
+          rustup override set stable
+          cargo --version
+          rustc --version
 
-      - name: Install PostgresQL
+      - name: Cache cargo registry
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: cargo-${{ hashFiles('**/Cargo.toml') }}
+          workspaces: "./backend -> target"
+
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libpq-dev postgresql
+          version: 1.0
+          execute_install_scripts: true
+
+      - name: Setup PostgresQL database
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libpq-dev postgresql
-          sudo service postgresql restart && sleep 3
+          sudo service postgresql restart
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
           sudo -u postgres psql -c "CREATE DATABASE testdb;"
-          sudo service postgresql restart && sleep 3
+          sudo service postgresql restart
 
       - name: Generate the database
         run: |
+          cargo prisma db push --accept-data-loss
           cargo prisma generate
 
-      - name: Build the backend binary
-        run: |
-          cargo build
-
-      - name: Test
+      - name: Run "cargo test"
         run: |
           cargo test
