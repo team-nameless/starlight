@@ -1,2 +1,2 @@
 [alias]
-prisma = "run --bin prisma_client --"
+prisma = "run -p prisma-cli --"

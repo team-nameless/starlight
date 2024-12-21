@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
     <option name="buildProfileId" value="test" />
-    <option name="command" value="test " />
+    <option name="command" value="test" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$/backend" />
     <envs />
     <option name="emulateTerminal" value="true" />

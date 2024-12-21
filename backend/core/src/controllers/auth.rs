@@ -6,7 +6,7 @@ use crate::context::Ctx;
 use crate::prisma::player;
 
 use rocket_okapi::openapi;
-use crate::controllers::request::auth::*;
+use crate::controllers::request::auth_request::*;
 use crate::utils::hash_password;
 
 #[openapi(tag = "Authentication")]

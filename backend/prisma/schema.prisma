@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider = "cargo prisma"
-  output   = "../src/prisma.rs"
+  output   = "../prisma_lib/src/lib.rs"
 }
 
 model Player {
