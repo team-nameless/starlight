@@ -44,7 +44,7 @@ pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) ->
         .await
         .expect("Unable to register user!");
 
-    Status::Ok
+    Status::Created
 }
 
 #[openapi(tag = "Authentication")]
