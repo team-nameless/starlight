@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=rust,rust-analyzer
 
 ### Prisma generated client file ###
-prisma_lib/src/lib.rs
+core/src/prisma.rs
 .env
 
 ### Rust ###

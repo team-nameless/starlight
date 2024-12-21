@@ -1,6 +1,6 @@
-use rocket::local::asynchronous::Client;
-use rocket::http::Status;
 use crate::rocket;
+use rocket::http::Status;
+use rocket::local::asynchronous::Client;
 
 #[rocket::async_test]
 async fn test_rootpage() {

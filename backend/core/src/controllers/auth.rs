@@ -1,31 +1,34 @@
-use prisma_client_rust::{or};
-use rocket::http::{Cookie, CookieJar};
-use rocket::http::Status;
-use rocket::serde::json::Json;
 use crate::context::Ctx;
 use crate::prisma::player;
+use prisma_client_rust::or;
+use rocket::http::Status;
+use rocket::http::{Cookie, CookieJar};
+use rocket::serde::json::Json;
 
-use rocket_okapi::openapi;
 use crate::controllers::guard::auth_player::AuthenticatedPlayer;
 use crate::controllers::request::auth_request::*;
 use crate::utils::hash_password;
+use rocket_okapi::openapi;
 
 #[openapi(tag = "Authentication")]
 #[post("/api/register", data = "<register_request>")]
 pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) -> Status {
-    let found_player = ctx.prisma.player()
-        .find_first(
-            vec![player::email::equals(register_request.email.to_string())]
-        )
+    let found_player = ctx
+        .prisma
+        .player()
+        .find_first(vec![player::email::equals(
+            register_request.email.to_string(),
+        )])
         .exec()
         .await
         .unwrap();
-    
+
     if found_player.is_some() {
         return Status::BadRequest;
     }
 
-    ctx.prisma.player()
+    ctx.prisma
+        .player()
         .create(
             chrono::offset::Utc::now().timestamp(),
             register_request.handle.to_string(),
@@ -35,7 +38,7 @@ pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) ->
             0,
             1,
             0,
-            vec![]
+            vec![],
         )
         .exec()
         .await
@@ -46,14 +49,20 @@ pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) ->
 
 #[openapi(tag = "Authentication")]
 #[post("/api/login", data = "<login_request>")]
-pub async fn login(cookies: &CookieJar<'_>, ctx: &Ctx, login_request: Json<LoginRequest<'_>>) -> Status {
-    let found_player = ctx.prisma.player()
+pub async fn login(
+    cookies: &CookieJar<'_>,
+    ctx: &Ctx,
+    login_request: Json<LoginRequest<'_>>,
+) -> Status {
+    let found_player = ctx
+        .prisma
+        .player()
         .find_first(vec![
             player::email::equals(login_request.email.to_string()),
             or![
                 player::hashed_password::equals(hash_password(login_request.password)),
                 player::hashed_temporary_password::equals(hash_password(login_request.password))
-            ]
+            ],
         ])
         .exec()
         .await

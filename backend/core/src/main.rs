@@ -1,16 +1,17 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
-use std::sync::Arc;
+use crate::middlewares::cors;
 use rocket_okapi::openapi_get_routes;
 use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
-use crate::middlewares::cors;
-use prisma;
+use std::sync::Arc;
 
-mod controllers;
-mod tests;
 mod context;
-mod utils;
+mod controllers;
 mod middlewares;
+mod prisma;
+mod tests;
+mod utils;
 
 #[launch]
 async fn rocket() -> _ {
@@ -23,15 +24,18 @@ async fn rocket() -> _ {
     rocket::build()
         .attach(cors::Cors)
         .manage(context::Context { prisma: db })
-        .mount("/",
-               openapi_get_routes![
-                   controllers::index::hello_world,
-                   controllers::auth::register,
-                   controllers::auth::login,
-                   controllers::auth::logout
-               ]
+        .mount(
+            "/",
+            openapi_get_routes![
+                controllers::index::hello_world,
+                controllers::auth::register,
+                controllers::auth::login,
+                controllers::auth::logout
+            ],
         )
-        .mount("/swagger", make_swagger_ui(&SwaggerUIConfig {
+        .mount(
+            "/swagger",
+            make_swagger_ui(&SwaggerUIConfig {
                 url: "../openapi.json".to_owned(),
                 ..Default::default()
             }),

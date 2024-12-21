@@ -1,15 +1,15 @@
-use rocket::http::Status;
-use rocket::outcome::{try_outcome};
-use rocket::Request;
-use rocket::request::{FromRequest, Outcome};
-use rocket_okapi::OpenApiFromRequest;
 use crate::context::Ctx;
 use crate::prisma::*;
+use rocket::http::Status;
+use rocket::outcome::try_outcome;
+use rocket::request::{FromRequest, Outcome};
+use rocket::Request;
+use rocket_okapi::OpenApiFromRequest;
 
 #[derive(OpenApiFromRequest)]
 pub struct AuthenticatedPlayer {
     #[allow(unused)]
-    pub player: player::Data
+    pub player: player::Data,
 }
 
 #[rocket::async_trait]
@@ -19,7 +19,8 @@ impl<'r> FromRequest<'r> for AuthenticatedPlayer {
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         let db = try_outcome!(request.guard::<&Ctx>().await);
 
-        let user_id: Option<String> = request.cookies()
+        let user_id: Option<String> = request
+            .cookies()
             .get_private("user")
             .and_then(|cookie| cookie.value().parse().ok());
 
@@ -27,16 +28,20 @@ impl<'r> FromRequest<'r> for AuthenticatedPlayer {
 
         match user_id {
             Some(crunch) => read_user_id = crunch,
-            None => return Outcome::Error((Status::Unauthorized, ()))
+            None => return Outcome::Error((Status::Unauthorized, ())),
         }
 
-        let user = db.prisma.player().find_first(
-            vec![player::id::equals(read_user_id)]
-        ).exec().await.unwrap();
+        let user = db
+            .prisma
+            .player()
+            .find_first(vec![player::id::equals(read_user_id)])
+            .exec()
+            .await
+            .unwrap();
 
         match user {
             Some(user) => Outcome::Success(AuthenticatedPlayer { player: user }),
-            None => Outcome::Error((Status::Unauthorized, ()))
+            None => Outcome::Error((Status::Unauthorized, ())),
         }
     }
 }

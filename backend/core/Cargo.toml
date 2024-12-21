@@ -8,7 +8,6 @@ authors = [
 ]
 
 [dependencies]
-prisma = { path = "../prisma_lib" }
 rocket = { version = "0.5.1", features = ["json", "secrets"] }
 rocket_okapi = { "version" = "0.9.0", features = ["swagger"] }
 serde = { version = "1.0", features = ["derive"] }

@@ -8,12 +8,12 @@ pub struct RegisterRequest<'a> {
     pub handle: &'a str,
     #[validate(email)]
     pub email: &'a str,
-    pub password: &'a str
+    pub password: &'a str,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Validate)]
 pub struct LoginRequest<'a> {
     #[validate(email)]
     pub email: &'a str,
-    pub password: &'a str
+    pub password: &'a str,
 }

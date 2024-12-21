@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "core",
-    "prisma_lib",
     "prisma-cli"
 ]
 resolver = "2"

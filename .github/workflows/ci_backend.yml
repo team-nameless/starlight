@@ -1,0 +1,57 @@
+name: Backend validation CI
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/ci_backend.yml"
+      - "backend/**"
+
+env:
+  CARGO_TERM_COLOR: always
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+
+      - name: Install Rust
+        run: |
+          rustup update stable && rustup default stable
+
+      - name: Install PostgresQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev postgresql
+          sudo service postgresql restart && sleep 3
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+          sudo -u postgres psql -c "CREATE DATABASE testdb;"
+          sudo service postgresql restart && sleep 3
+
+      - name: Generate the database
+        run: |
+          cargo prisma generate
+
+      - name: Build the backend binary
+        run: |
+          cargo build
+
+      - name: Test
+        run: |
+          cargo test
