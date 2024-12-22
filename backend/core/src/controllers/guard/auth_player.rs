@@ -21,7 +21,7 @@ impl<'r> FromRequest<'r> for AuthenticatedPlayer {
 
         let user_id: Option<String> = request
             .cookies()
-            .get_private("user")
+            .get("user")
             .and_then(|cookie| cookie.value().parse().ok());
 
         let read_user_id: String;

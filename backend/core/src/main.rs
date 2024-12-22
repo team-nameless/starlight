@@ -36,7 +36,9 @@ async fn rocket() -> _ {
                 controllers::index::hello_world,
                 controllers::auth::register,
                 controllers::auth::login,
-                controllers::auth::logout
+                controllers::auth::logout,
+                controllers::user::get_user,
+                controllers::user::delete_user
             ],
         )
         .mount(

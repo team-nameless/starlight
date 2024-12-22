@@ -1,13 +1,13 @@
 use crate::context::Ctx;
-use crate::prisma::player;
-use prisma_client_rust::or;
-use rocket::http::Status;
-use rocket::http::{Cookie, CookieJar};
-use rocket::serde::json::Json;
-
 use crate::controllers::guard::auth_player::AuthenticatedPlayer;
 use crate::controllers::request::auth_request::*;
-use crate::utils::hash_password;
+use crate::prisma::player;
+use crate::utils::password::*;
+use prisma_client_rust::or;
+use rocket::http::{Cookie, CookieJar};
+use rocket::http::{SameSite, Status};
+use rocket::serde::json::Json;
+use rocket::time::Duration;
 use rocket_okapi::openapi;
 
 #[openapi(tag = "Authentication")]
@@ -73,7 +73,15 @@ pub async fn login(
     }
 
     let found_player = found_player.expect("How did we get here?");
-    cookies.add_private(Cookie::new("user", found_player.id));
+
+    let mut user_cookie = Cookie::new("user", found_player.id);
+    user_cookie.set_http_only(true);
+    user_cookie.set_same_site(SameSite::Lax);
+    user_cookie.set_secure(true);
+    user_cookie.set_path("/");
+    user_cookie.set_max_age(Duration::weeks(52));
+
+    cookies.add(user_cookie);
 
     Status::Ok
 }
@@ -81,7 +89,7 @@ pub async fn login(
 #[openapi(tag = "Authentication")]
 #[get("/api/logout")]
 pub async fn logout(cookies: &CookieJar<'_>, _ignore_me: AuthenticatedPlayer) -> Status {
-    cookies.remove_private("user");
+    cookies.remove("user");
 
     Status::Ok
 }
