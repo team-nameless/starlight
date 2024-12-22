@@ -2,10 +2,13 @@
 extern crate rocket;
 
 use crate::middlewares::cors;
+use figment::providers::Serialized;
+use figment::Figment;
 use rocket_okapi::openapi_get_routes;
 use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
 use std::sync::Arc;
 
+mod config;
 mod context;
 mod controllers;
 mod middlewares;
@@ -21,7 +24,10 @@ async fn rocket() -> _ {
             .expect("Failed to create Prisma client"),
     );
 
-    rocket::build()
+    let figment = Figment::from(rocket::Config::default())
+        .merge(Serialized::defaults(config::AppConfig::default()));
+
+    rocket::custom(figment)
         .attach(cors::Cors)
         .manage(context::Context { prisma: db })
         .mount(
