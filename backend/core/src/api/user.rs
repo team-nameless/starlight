@@ -1,7 +1,7 @@
 use crate::context::Ctx;
-use crate::controllers::guard::auth_player::AuthenticatedPlayer;
-use crate::controllers::request::auth_request::LoginRequest;
-use crate::controllers::response::player_response::PlayerResponse;
+use crate::api::guard::auth_player::AuthenticatedPlayer;
+use crate::api::request::auth_request::LoginRequest;
+use crate::api::response::player_response::PlayerResponse;
 use crate::prisma::player;
 use crate::utils::exp::*;
 use rocket::http::{CookieJar, Status};
@@ -32,7 +32,7 @@ pub async fn delete_user(
 ) -> Status {
     let data = player.player;
 
-    cookies.remove("user");
+    cookies.remove_private("user");
 
     ctx.prisma
         .player()

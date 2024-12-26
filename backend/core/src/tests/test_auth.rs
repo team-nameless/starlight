@@ -1,4 +1,4 @@
-use crate::controllers::request::auth_request::*;
+use crate::api::request::auth_request::*;
 use crate::prisma::PrismaClient;
 use crate::rocket;
 use prisma_client_rust;

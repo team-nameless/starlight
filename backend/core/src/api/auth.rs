@@ -1,6 +1,6 @@
 use crate::context::Ctx;
-use crate::controllers::guard::auth_player::AuthenticatedPlayer;
-use crate::controllers::request::auth_request::*;
+use crate::api::guard::auth_player::AuthenticatedPlayer;
+use crate::api::request::auth_request::*;
 use crate::prisma::player;
 use crate::utils::password::*;
 use prisma_client_rust::or;
@@ -59,10 +59,6 @@ pub async fn login(
         .player()
         .find_first(vec![
             player::email::equals(login_request.email.to_string()),
-            or![
-                player::hashed_password::equals(hash_password(login_request.password)),
-                player::hashed_temporary_password::equals(hash_password(login_request.password))
-            ],
         ])
         .exec()
         .await
@@ -74,6 +70,10 @@ pub async fn login(
 
     let found_player = found_player.expect("How did we get here?");
 
+    if !verify_password(login_request.password, found_player.hashed_password.as_str()) {
+        return Status::Unauthorized;
+    }
+
     let mut user_cookie = Cookie::new("user", found_player.id);
     user_cookie.set_http_only(true);
     user_cookie.set_same_site(SameSite::Lax);
@@ -81,7 +81,7 @@ pub async fn login(
     user_cookie.set_path("/");
     user_cookie.set_max_age(Duration::weeks(52));
 
-    cookies.add(user_cookie);
+    cookies.add_private(user_cookie);
 
     Status::Ok
 }
@@ -89,7 +89,7 @@ pub async fn login(
 #[openapi(tag = "Authentication")]
 #[get("/api/logout")]
 pub async fn logout(cookies: &CookieJar<'_>, _ignore_me: AuthenticatedPlayer) -> Status {
-    cookies.remove("user");
+    cookies.remove_private("user");
 
     Status::Ok
 }

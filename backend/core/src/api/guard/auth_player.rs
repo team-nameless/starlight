@@ -21,15 +21,13 @@ impl<'r> FromRequest<'r> for AuthenticatedPlayer {
 
         let user_id: Option<String> = request
             .cookies()
-            .get("user")
+            .get_private("user")
             .and_then(|cookie| cookie.value().parse().ok());
 
-        let read_user_id: String;
-
-        match user_id {
-            Some(crunch) => read_user_id = crunch,
+        let read_user_id = match user_id {
+            Some(crunch) => crunch,
             None => return Outcome::Error((Status::Unauthorized, ())),
-        }
+        };
 
         let user = db
             .prisma
