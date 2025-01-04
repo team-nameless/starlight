@@ -1,6 +1,5 @@
 use crate::context::Ctx;
 use crate::api::guard::auth_player::AuthenticatedPlayer;
-use crate::api::request::auth_request::LoginRequest;
 use crate::api::response::player_response::PlayerResponse;
 use crate::prisma::player;
 use crate::utils::exp::*;

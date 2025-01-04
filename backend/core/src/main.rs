@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate rocket;
+#[macro_use] extern crate rocket;
 
 use crate::middlewares::cors;
 use figment::providers::Serialized;
@@ -14,7 +13,7 @@ mod context;
 mod api;
 mod middlewares;
 mod prisma;
-mod tests;
+#[cfg(test)] mod tests;
 mod utils;
 
 #[launch]

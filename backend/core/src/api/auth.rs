@@ -3,7 +3,6 @@ use crate::api::guard::auth_player::AuthenticatedPlayer;
 use crate::api::request::auth_request::*;
 use crate::prisma::player;
 use crate::utils::password::*;
-use prisma_client_rust::or;
 use rocket::http::{Cookie, CookieJar};
 use rocket::http::{SameSite, Status};
 use rocket::serde::json::Json;

@@ -1,4 +1,3 @@
-use rocket::log::private::Level;
 use rocket_okapi::okapi::schemars;
 use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
