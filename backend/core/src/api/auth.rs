@@ -7,9 +7,7 @@ use rocket::http::{Cookie, CookieJar};
 use rocket::http::{SameSite, Status};
 use rocket::serde::json::Json;
 use rocket::time::Duration;
-use rocket_okapi::openapi;
 
-#[openapi(tag = "Authentication")]
 #[post("/api/register", data = "<register_request>")]
 pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) -> Status {
     let found_player = ctx
@@ -46,7 +44,6 @@ pub async fn register(ctx: &Ctx, register_request: Json<RegisterRequest<'_>>) ->
     Status::Created
 }
 
-#[openapi(tag = "Authentication")]
 #[post("/api/login", data = "<login_request>")]
 pub async fn login(
     cookies: &CookieJar<'_>,
@@ -85,7 +82,6 @@ pub async fn login(
     Status::Ok
 }
 
-#[openapi(tag = "Authentication")]
 #[get("/api/logout")]
 pub async fn logout(cookies: &CookieJar<'_>, _ignore_me: AuthenticatedPlayer) -> Status {
     cookies.remove_private("user");

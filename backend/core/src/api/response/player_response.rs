@@ -1,8 +1,7 @@
-use rocket_okapi::okapi::schemars;
-use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, Validate)]
 pub struct PlayerResponse {
     pub id: i64,
     pub name: String,

@@ -3,8 +3,6 @@
 use crate::middlewares::cors;
 use figment::providers::Serialized;
 use figment::Figment;
-use rocket_okapi::openapi_get_routes;
-use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
 use std::sync::Arc;
 use dotenvy::dotenv;
 
@@ -12,7 +10,7 @@ mod config;
 mod context;
 mod api;
 mod middlewares;
-mod prisma;
+#[allow(dead_code, clippy::all)] mod prisma;
 #[cfg(test)] mod tests;
 mod utils;
 
@@ -34,7 +32,7 @@ async fn rocket() -> _ {
         .manage(context::Context { prisma: db })
         .mount(
             "/",
-            openapi_get_routes![
+            routes![
                 api::index::hello_world,
                 api::auth::register,
                 api::auth::login,
@@ -42,12 +40,5 @@ async fn rocket() -> _ {
                 api::user::get_user,
                 api::user::delete_user
             ],
-        )
-        .mount(
-            "/swagger",
-            make_swagger_ui(&SwaggerUIConfig {
-                url: "../openapi.json".to_owned(),
-                ..Default::default()
-            }),
         )
 }

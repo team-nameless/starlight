@@ -4,9 +4,7 @@ use rocket::http::Status;
 use rocket::outcome::try_outcome;
 use rocket::request::{FromRequest, Outcome};
 use rocket::Request;
-use rocket_okapi::OpenApiFromRequest;
 
-#[derive(OpenApiFromRequest)]
 pub struct AuthenticatedPlayer {
     #[allow(unused)]
     pub player: player::Data,

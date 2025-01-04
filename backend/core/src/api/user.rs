@@ -5,9 +5,7 @@ use crate::prisma::player;
 use crate::utils::exp::*;
 use rocket::http::{CookieJar, Status};
 use rocket::serde::json::Json;
-use rocket_okapi::openapi;
 
-#[openapi(tag = "User")]
 #[get("/api/user")]
 pub async fn get_user(player: AuthenticatedPlayer) -> Json<PlayerResponse> {
     let data = player.player;
@@ -22,7 +20,6 @@ pub async fn get_user(player: AuthenticatedPlayer) -> Json<PlayerResponse> {
     })
 }
 
-#[openapi(tag = "User")]
 #[delete("/api/user")]
 pub async fn delete_user(
     cookies: &CookieJar<'_>,

@@ -1,9 +1,7 @@
-use rocket_okapi::okapi::schemars;
-use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-#[derive(Serialize, Deserialize, JsonSchema, Validate)]
+#[derive(Serialize, Deserialize, Validate)]
 pub struct RegisterRequest<'a> {
     pub handle: &'a str,
     #[validate(email)]
@@ -11,7 +9,7 @@ pub struct RegisterRequest<'a> {
     pub password: &'a str,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Validate)]
+#[derive(Serialize, Deserialize, Validate)]
 pub struct LoginRequest<'a> {
     #[validate(email)]
     pub email: &'a str,
