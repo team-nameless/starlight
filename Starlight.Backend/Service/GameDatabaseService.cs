@@ -17,6 +17,8 @@ public class GameDatabaseService : IdentityDbContext<Player, Role, Guid>
     public GameDatabaseService(IConfiguration configuration)
     {
         _configuration = configuration;
+        
+        this.Database.Migrate();
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -10,6 +10,7 @@ public class TrackDatabaseService : DbContext
 
     public TrackDatabaseService(DbContextOptions<TrackDatabaseService> options) : base(options)
     {
+        this.Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
