@@ -4,7 +4,7 @@ import { authorizeMessage, connectMessage, sessionMessaage } from "./emotiv_mess
 
 const ws = new WebSocket("wss://localhost:6868", { rejectUnauthorized: false });
 
-const accessToken: string = "";
+// const accessToken: string = "";
 
 ws.on("open", () => {
     console.log("Connected to Emotiv data source.");
