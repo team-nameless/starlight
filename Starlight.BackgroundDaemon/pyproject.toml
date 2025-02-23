@@ -1,7 +1,0 @@
-[project]
-name = "brainbit-background-daemon"
-version = "7.2.7"
-description = "Yes."
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = ["pyneurosdk2==1.0.14", "websockets==14.2"]

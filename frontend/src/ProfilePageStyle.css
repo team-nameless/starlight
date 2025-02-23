@@ -1,0 +1,750 @@
+@import url("https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Protest+Revolution&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.profile-page {
+    background-color: #451666;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-container {
+    width: 72%;
+    height: 90%;
+    background-color: #10171b;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    margin-top: 60px;
+    margin-left: 40px;
+    border-radius: 20px;
+}
+
+.profile-avatar-container {
+    width: 90%;
+    height: 28%;
+    background-color: #1d2e38;
+    margin-bottom: 15px;
+    opacity: 0.9;
+    margin-top: 50px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 20px;
+    position: relative;
+    border-right: none;
+    padding-right: 15px;
+}
+
+.profile-avatar-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #ff9c33;
+    padding-right: 15px;
+    position: relative;
+}
+
+.profile-tabs-section {
+    flex: 8;
+    display: flex;
+    height: 80%;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid #303030;
+    padding-right: 15px;
+    position: relative;
+}
+
+.profile-playtime-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 15px;
+    color: #b9b4b4;
+    border-left: 2px solid #303030;
+}
+
+.profile-tabs {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 145px;
+}
+
+.profile-tab {
+    cursor: pointer;
+    padding: 10px;
+    font-family: "KoHo", sans-serif;
+    font-weight: 600;
+    color: #b9b4b4;
+    transition:
+        color 0.3s ease,
+        border-bottom 0.3s ease;
+}
+
+.profile-tab.active {
+    border-bottom: 2px solid #ff9100;
+}
+
+.profile-img-avatar {
+    width: 120px;
+    height: 120px;
+    margin-left: 5px;
+    border-radius: 50%;
+    z-index: 5;
+    margin-bottom: 5px;
+    position: absolute;
+    top: -35px;
+    object-fit: cover;
+    object-position: center;
+    font-family: "KoHo", sans-serif;
+}
+
+.profile-username-avatar {
+    font-family: "Koho", sans-serif;
+    font-weight: 600;
+    color: #fff5f5;
+    margin-top: 90px;
+    margin-bottom: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.profile-userid-avatar {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    color: #ff9100;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.profile-info-container {
+    width: 90%;
+    height: 65%;
+    background-color: #1d2e38;
+    margin-top: 0;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-left: none;
+    padding-left: 15px;
+}
+
+.profile-score-record {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    color: #9a9393;
+    margin-top: 3px;
+    margin-bottom: 30px;
+    border-left: 2px solid #303030;
+    padding-left: 15px;
+    font-size: 11px;
+}
+
+.top-scores {
+    width: 103%;
+    height: 85%;
+    background-color: #1d2e38;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+    color: #9a9393;
+    border-left: 2px solid #303030;
+    padding-right: 35px;
+    font-size: 11px;
+}
+
+.top-score-record {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr repeat(8, 0.9fr);
+    justify-content: space-around;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.top-score-record div {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
+    max-width: 110px;
+}
+
+.profile-achievements,
+.profile-account-setting {
+    margin-top: -5px;
+    border-left: 2px solid #303030;
+    padding-left: 15px;
+    font-size: 20px;
+}
+
+.profile-account-setting {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 10;
+    position: relative;
+}
+
+.update-password,
+.update-email {
+    flex: 1;
+    margin: 10px;
+    z-index: 10;
+    position: relative;
+}
+
+.update-password h2,
+.update-email h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #fff5f5;
+    text-align: center;
+    z-index: 10;
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 10;
+    position: relative;
+}
+
+.update-button {
+    background-color: #841efc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+.update-button:hover {
+    background-color: #a135ff;
+}
+
+.update-message {
+    color: red;
+    margin-top: 10px;
+    z-index: 10;
+    position: relative;
+}
+
+.chat-container {
+    width: 23%;
+    height: 95%;
+    background-color: #10171b;
+    position: absolute;
+    top: 65px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    border-radius: 20px 0px 0px 0px;
+    overflow: hidden;
+}
+
+.nav3h {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #240b36;
+    height: 50px;
+    padding: 0 20px;
+    color: white;
+    overflow: visible;
+    z-index: 2;
+}
+
+.logo-container {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.logo {
+    background-color: #240b36;
+    width: 200px;
+    height: 85px;
+    border-radius: 100% 100% 20% 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+
+.star-light:hover ~ .logo-icon,
+.logo-icon:hover {
+    transform: scale(1.2);
+}
+@import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&display=swap");
+
+.star-light {
+    font-family: "Karla", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    font-size: 24px;
+    color: #03dac5;
+}
+
+.star-light .light {
+    color: #ff6f00;
+}
+
+.nav3h::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 80px;
+    background-color: #240b36;
+    border-radius: 0 0 150px 150px;
+    z-index: 0;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Keania+One&display=swap");
+
+.nav3 {
+    display: flex;
+    gap: 30px;
+    z-index: 1;
+}
+
+.nav3 a {
+    color: white;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 17px;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.nav3 a span {
+    margin-left: 14px;
+    transition: color 0.3s ease;
+}
+
+.nav-iconh {
+    width: 22px;
+    height: 22px;
+    margin-top: 8px;
+    margin-left: -15px;
+}
+
+.nav3 {
+    font-family: "Keania One", sans-serif;
+}
+.nav3 {
+    display: flex;
+    margin-top: 100px;
+    align-items: center;
+    margin-left: 70px;
+    gap: 80px;
+}
+
+.nav3 a {
+    position: relative;
+}
+
+.nav3 a::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 80%;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition:
+        width 0.3s ease,
+        left 0.3s ease;
+}
+
+.nav3 a:hover::after {
+    width: 120%;
+    left: -10px;
+}
+#nav-iconh {
+    width: 50px;
+    height: 55px;
+    position: relative;
+    margin: 0;
+    transform: rotate(0deg);
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+}
+
+#nav-iconh span {
+    display: block;
+    position: absolute;
+    height: 4.5px;
+    width: 100%;
+    background: white;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: 0.25s ease-in-out;
+}
+
+#nav-iconh span:nth-child(1) {
+    top: 0px;
+}
+
+#nav-iconh span:nth-child(2) {
+    top: 9px;
+}
+
+#nav-iconh span:nth-child(3) {
+    top: 18px;
+}
+
+#nav-iconh.open span:nth-child(1) {
+    top: 9px;
+    transform: rotate(135deg);
+}
+
+#nav-iconh.open span:nth-child(2) {
+    opacity: 0;
+    left: -30px;
+}
+
+#nav-iconh.open span:nth-child(3) {
+    top: 9px;
+    transform: rotate(-135deg);
+}
+
+.userprofile {
+    position: absolute;
+    top: 10%;
+    left: 61%;
+    transform: translate(30%, -50%);
+    flex-direction: column;
+    align-items: center;
+}
+
+.username {
+    font-family: "Koho", sans-serif;
+    font-weight: 600;
+    color: #8095ff;
+    font-size: 18px;
+    margin-bottom: 3px;
+}
+.userid {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    color: #ff9100;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.profileimg {
+    width: auto;
+    height: 46px;
+    border-radius: 50%;
+    z-index: 2;
+    margin-bottom: 6px;
+    font-family: "KoHo", sans-serif;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.popup-content h2 {
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+}
+
+.popup-content .stay-button {
+    background-color: white;
+    color: #000;
+    border: 1px solid #000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.popup-content .leave-button {
+    background-color: #841efc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-body {
+    height: 600px;
+    width: 95%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 5px;
+}
+
+.chat-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: #2e333d;
+    width: 200%;
+    height: auto;
+}
+
+.chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.chat-message-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-sender {
+    font-weight: bold;
+    color: #767979;
+    font-size: 9px;
+}
+
+.message-content {
+    flex: 1;
+    margin-top: 5px;
+    font-size: 10px;
+    color: #ffffff;
+}
+
+.message-time {
+    font-size: 8px;
+    color: #aaa;
+}
+
+.chat-footer {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 55px;
+    width: calc(100% - 40px);
+    background-color: #13171b;
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: #13171b;
+    color: #ffffff;
+}
+
+.chat-footer input::placeholder {
+    color: #353f45;
+}
+
+.chat-footer button {
+    padding: 8px 16px;
+    background-color: #ff6600;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-footer button:hover {
+    background-color: #e65c00;
+}
+
+.chatimage {
+    width: 5%;
+    height: 2%;
+    margin-right: 290px;
+}
+
+h3 {
+    color: #8e8f90;
+    font-size: 9px;
+    font-family: "Inter", sans-serif;
+    margin-bottom: 50px;
+    margin-top: -14px;
+    margin-right: 190px;
+    font-weight: 100;
+}
+
+.level {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    margin: 5px 0;
+    color: #c2bfbf;
+    font-weight: 300;
+}
+
+.progress-bar {
+    position: relative;
+    width: 415px;
+    height: 25px;
+    margin-top: -50px;
+    background-color: #1e1e1e;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(45deg, #ffa500, #ff4500);
+    border-radius: 20px;
+    transition: width 0.5s ease-out;
+}
+
+.level-container {
+    position: relative;
+    top: -150px;
+}
+
+.level:first-of-type {
+    margin-top: -25px;
+}
+
+.level:nth-of-type(2) {
+    margin-top: 35px;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    z-index: 10;
+    position: relative;
+}
+
+.camera-icon {
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    z-index: 10;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: white;
+    padding: 5px;
+}
+
+.profile-img-table {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.profile-achievements {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 30px;
+    align-items: start;
+    justify-items: start;
+    width: 90%;
+    height: 100%;
+    background-color: #1d2e38;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.achievement-row {
+    display: contents;
+}
+
+.achievement-icon {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}

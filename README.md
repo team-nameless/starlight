@@ -29,9 +29,9 @@ After all, thank to Mr. Nguyen Trung Nghia for being so enthusiastic!
 - To perceive the best and our intended UX, make sure your screen is 1536x864 or 1920x1080 at 125%.
 
 - Make sure your audio stack is low-latency enough:
-  - Try to use ASIO stack, either ASIO4ALL or your driver's one is OK!
-  - Make sure you don't stream via VGA or HDMI since it will cause buffer overhead on the browser, which affected the sound quality and latency.
-    - This one issue is out of my control, which blew up the presentation. Apologize to Mr. Nguyen Trung Nghia and the team.
+    - Try to use ASIO stack, either ASIO4ALL or your driver's one is OK!
+    - Make sure you don't stream via VGA or HDMI since it will cause buffer overhead on the browser, which affected the sound quality and latency.
+        - This one issue is out of my control, which blew up the presentation. Apologize to Mr. Nguyen Trung Nghia and the team.
 
 # Does it work?
 
@@ -49,32 +49,32 @@ It's a bit complicated. You have been warned.
 
 - Clone the entire project.
 - Install packages.
-  - Front-end: `npm install`
-  - Back-end: `dotnet restore`
+    - Front-end: `npm install`
+    - Back-end: `dotnet restore`
 - Setting up:
-  - Front-end: `npm run build`
-  - Backend:
-    - Create a `config.json` file with the following structure.
-    ```json
-    {
-      "Email": {
-        "Sender": "",
-        "Auth": "",
-        "Host": "",
-        "Port": 587
-      },
-      "Database": {
-        "Host": "",
-        "Port": 6969,
-        "User": "",
-        "Password": "",
-        "Database": ""
-      }
-    }
-    ```
-    where `Email` is your SMTP relay (i.e. SendGrid), `Database` is your MySQL configuration (_psst_ We support MariaDB, too _psst_).
-    - Make sure CORS is correctly set up for your domain. (Hint: see `Program.cs` file)
-    - Publish the package: `dotnet publish Starlight.Backend /p:EnvironmentName=Development -o build/`
+    - Front-end: `npm run build`
+    - Backend:
+        - Create a `config.json` file with the following structure.
+        ```json
+        {
+            "Email": {
+                "Sender": "",
+                "Auth": "",
+                "Host": "",
+                "Port": 587
+            },
+            "Database": {
+                "Host": "",
+                "Port": 6969,
+                "User": "",
+                "Password": "",
+                "Database": ""
+            }
+        }
+        ```
+        where `Email` is your SMTP relay (i.e. SendGrid), `Database` is your MySQL configuration (_psst_ We support MariaDB, too _psst_).
+        - Make sure CORS is correctly set up for your domain. (Hint: see `Program.cs` file)
+        - Publish the package: `dotnet publish Starlight.Backend /p:EnvironmentName=Development -o build/`
 - Running:
-  - Front-end: There should be a `build` directory containing `index.html`, host that.
-  - Back-end: There should be a `build` directory containing `Starlight.Backend[.*]`, use a Process Manager like PM2 to host that.
+    - Front-end: There should be a `build` directory containing `index.html`, host that.
+    - Back-end: There should be a `build` directory containing `Starlight.Backend[.*]`, use a Process Manager like PM2 to host that.
