@@ -1,0 +1,50 @@
+{
+    "name": "starlight",
+    "version": "7.2.7",
+    "private": true,
+    "description": "4-button VSRG on the web?",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "lint": "npx eslint --fix .",
+        "prettier": "npx prettier --write ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/team-nameless/starlight.git"
+    },
+    "author": "Pham Tien Dat <dat20036@gmail.com>",
+    "contributors": [
+        {
+            "name": "Ta Trung Hieu",
+            "url": "https://github.com/itsmetrunqhieu"
+        },
+        {
+            "name": "Nguyen Thi Thanh Thao",
+            "url": "https://github.com/NTThanhThao"
+        }
+    ],
+    "license": "AGPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/team-nameless/starlight/issues"
+    },
+    "homepage": "https://github.com/team-nameless/starlight#readme",
+    "workspaces": [
+        "frontend",
+        "server",
+        "emotiv"
+    ],
+    "devDependencies": {
+        "@eslint/js": "^9.21.0",
+        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "@types/node": "^22.13.5",
+        "eslint": "^9.21.0",
+        "eslint-plugin-react": "^7.37.4",
+        "globals": "^16.0.0",
+        "prettier": "^3.5.2",
+        "tsx": "^4.19.3",
+        "typescript-eslint": "^8.24.1"
+    },
+    "dependencies": {
+        "starlight": "file:"
+    }
+}
