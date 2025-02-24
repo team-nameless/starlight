@@ -45,6 +45,7 @@
         "typescript-eslint": "^8.24.1"
     },
     "dependencies": {
+        "react-use-websocket": "^4.13.0",
         "starlight": "file:"
     }
 }
