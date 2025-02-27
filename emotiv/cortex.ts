@@ -157,7 +157,9 @@ class Cortex {
         });
     }
 
-    /** Subscribe to data stream. */
+    /**
+     * Subscribe to data stream.
+     */
     subscribe(token: string, sessionId: string): void {
         const subRequest = {
             id: 1,
@@ -176,6 +178,21 @@ class Cortex {
             const parsedData = JSON.parse(data.toString());
             if (parsedData["pow"]) console.log(parsedData["pow"]);
         });
+    }
+
+    unsubscribe(token: string, sessionId: string): void {
+        const unsubRequest = {
+            id: 1,
+            jsonrpc: "2.0",
+            method: "unsubscribe",
+            params: {
+                cortexToken: token,
+                session: sessionId,
+                streams: ["pow"]
+            }
+        };
+
+        this.socket.send(JSON.stringify(unsubRequest));
     }
 }
 
