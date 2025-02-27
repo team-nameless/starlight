@@ -4,6 +4,7 @@
     "private": true,
     "description": "The Emotiv portion of Starlight",
     "scripts": {
+        "start": "npx tsx ./cortex_client.ts"
     },
     "dependencies": {
         "ws": "^8.18.1"
