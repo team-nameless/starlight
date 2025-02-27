@@ -2,9 +2,9 @@ import Cortex from "./cortex";
 
 async function main(): Promise<void> {
     const user: CortexUser = {
-        client_id: "vjMBqB8DFsCLgmhBInToyO4ucsHTOU83NSuphSDT",
+        client_id: "Bzo4T0SaIg16mOmJKu2HDClXr6z3arFp4hNt9J8A",
         client_secret:
-            "1zqdwEGengT8sYLO74IFh9kAxPoLFrcTN3WPAzN5WX2thDq9oDuIuKXwnObYMiNTveRW3tsBsuQMkouMC7qMuxMBA1Ci33O2QMjrxSObovRh0EcHDToe1a3xvE9OhQBV"
+            "ILFpRd97oQwdttb8OibWZCLhGorrWnDn3j9ht5LmXKIejueQFrmro10H0h8DYKbJ9JBIa0KUr1DiJSANmbVYgNoR28ckIYsSin1P2ZGyqEAPFfAOoStNrTa6ecqhEegG"
     };
 
     const c = new Cortex(user);
