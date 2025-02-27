@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import EventPage from "./EventPage";
+import SuggestionPage from "./SuggestionPage";
 import HistoryPage from "./HistoryPage";
 import LandingPage from "./LandingPageApp";
 import "./ProfilePageStyle.css";
@@ -23,7 +23,7 @@ import chatimage from "./assets/modal-image/chat.png";
 import girlImage from "./assets/modal-image/girlimage.png";
 import profilePicPlaceholder from "./assets/profile.png";
 
-const rootUrl = "https://cluster1.swyrin.id.vn";
+const rootUrl = "http://localhost:5000";
 
 const ProgressBar = ({ current, total, level }) => {
     const percentage = Math.floor((current / total) * 10000) / 100;
@@ -48,7 +48,6 @@ const ProgressBar = ({ current, total, level }) => {
 function ProfilePage() {
     const [userProfile, setUserProfile] = useState({});
     const [showPopup, setShowPopup] = useState(false);
-    const [isSongListOpen, setIsSongListOpen] = useState(false);
     const [chatMessages, setChatMessages] = useState([
         { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02:34 PM", avatar: girlImage },
         { id: 2, sender: "Xích", message: "Meo meo", color: "red", time: "3:35:13 AM", avatar: girlImage },
@@ -124,7 +123,8 @@ function ProfilePage() {
                 const response = await axios.get(`${rootUrl}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    withCredentials: true
                 });
                 const songs = response.data;
                 if (songs.length > 0) {
@@ -423,7 +423,7 @@ function ProfilePage() {
             <Routes>
                 <Route path="/SongPage" element={<SongPage />} />
                 <Route path="/HistoryPage" element={<HistoryPage />} />
-                <Route path="/EventPage" element={<EventPage />} />
+                <Route path="/SuggestionPage" element={<SuggestionPage />} />
                 <Route path="/StorePage" element={<StorePage />} />
                 <Route path="/Logout" element={<LandingPage />} />
             </Routes>
@@ -441,7 +441,7 @@ function ProfilePage() {
                             <img src={historyIcon} alt="History" className="nav-iconh" />
                             <span>History</span>
                         </Link>
-                        <Link to="/EventPage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
+                        <Link to="/SuggestionPage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
                             <img src={eventsIcon} alt="Events" className="nav-iconh" />
                             <span>Events</span>
                         </Link>

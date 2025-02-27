@@ -454,7 +454,6 @@ class Game extends Phaser.Scene {
         if (97 <= this.accuracy) grade = "S+";
         else if (95 <= this.accuracy && this.accuracy < 97) grade = "S";
         else if (90 <= this.accuracy && this.accuracy < 95) grade = "A";
-        else if (90 <= this.accuracy && this.accuracy < 95) grade = "A";
         else if (80 <= this.accuracy && this.accuracy < 90) grade = "B";
         else if (65 <= this.accuracy && this.accuracy < 80) grade = "C";
         else grade = "D";

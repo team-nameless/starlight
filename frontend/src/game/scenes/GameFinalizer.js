@@ -17,7 +17,7 @@ class GameFinalizer extends Phaser.Scene {
     }
 
     create() {
-        const url = `https://cluster1.swyrin.id.vn/api/score/${this.trackId}`;
+        const url = `http://localhost:5000/api/score/${this.trackId}`;
         console.log(this.collectedGameData);
 
         axios

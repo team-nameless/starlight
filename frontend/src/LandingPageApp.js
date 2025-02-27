@@ -11,8 +11,7 @@ import GirlImage from "./assets/modal-image/girlimage.png";
 import "./styleoflandingpage.css";
 import { requestFullScreen } from "./utils";
 
-const rootUrl = "https://cluster1.swyrin.id.vn";
-// const rootUrl = "https://localhost:7224";
+const rootUrl = "http://localhost:5000";
 
 const AppContainer = styled.div`
     text-align: center;
