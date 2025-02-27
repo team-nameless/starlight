@@ -11,7 +11,7 @@ const LandingPageApp = lazy(() => import("./LandingPageApp"));
 const SongPage = lazy(() => import("./SongPage"));
 const HistoryPage = lazy(() => import("./HistoryPage"));
 const StorePage = lazy(() => import("./StorePage"));
-const EventPage = lazy(() => import("./EventPage"));
+const SuggestionPage = lazy(() => import("./SuggestionPage"));
 const ProfilePage = lazy(() => import("./ProfilePage"));
 const GameApp = lazy(() => import("./game/GameApp"));
 
@@ -25,7 +25,7 @@ root.render(
                 <Route path="/songpage" element={<SongPage />} />
                 <Route path="/historypage/:songId/:songIndex" element={<HistoryPage />} />
                 <Route path="/storepage" element={<StorePage />} />
-                <Route path="/eventpage" element={<EventPage />} />
+                <Route path="/SuggestionPage" element={<SuggestionPage />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route path="/TestGame" element={<GameApp />} />
             </Routes>

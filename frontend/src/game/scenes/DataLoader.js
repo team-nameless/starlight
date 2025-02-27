@@ -17,12 +17,13 @@ class DataLoader extends Phaser.Scene {
     }
 
     preload() {
-        const jsonUrl = `https://cluster1.swyrin.id.vn/static/${this.mapId}/${this.mapId}.json`;
+        const jsonUrl = `http://localhost:5000/static/${this.mapId}/${this.mapId}.json`;
 
         this.load.json("gameData", jsonUrl);
     }
 
     create() {
+        this.cache.json.add("gameData", this.cache.json.get("gameData"));
         this.scene.switch("AssetLoader", { mapId: this.mapId, mapIndex: this.mapIndex });
     }
 }

@@ -42,7 +42,7 @@ function GameApp() {
         game.scene.add("GameFinalizer", GameFinalizer);
 
         EventEmitter.on("game-finished", () => {
-            const url = `https://cluster1.swyrin.id.vn/api/track/${songId}`;
+            const url = `http://localhost:5000/api/track/${songId}`;
 
             axios
                 .get(url, {
@@ -59,7 +59,7 @@ function GameApp() {
             game.destroy(true);
             EventEmitter.removeListener("game-finished");
         };
-    }, [songId]);
+    }, [songId, songIndex, navigate]);
 
     return (
         <div

@@ -1,4 +1,8 @@
 import Phaser from "phaser";
+import noteOuter from "../assets/star_note_outer.png";
+import noteInner from "../assets/star_note_inner.png";
+import noteRing from "../assets/ring.png";
+import indicator from "../assets/indicator.png";
 
 /**
  *  Class used for loading all the asset stuffs into the game.
@@ -23,13 +27,13 @@ class AssetLoader extends Phaser.Scene {
         const audioName = this.gameData["metadata"]["audio_file"];
         const imageName = this.gameData["metadata"]["background_file"];
 
-        const imageUrl = `https://cluster1.swyrin.id.vn/static/${this.mapId}/${imageName}`;
-        const audioFile = `https://cluster1.swyrin.id.vn/static/${this.mapId}/${audioName}`;
+        const imageUrl = `http://localhost:5000/static/${this.mapId}/${imageName}`;
+        const audioFile = `http://localhost:5000/static/${this.mapId}/${audioName}`;
 
-        this.load.image("noteOuter", require("../assets/star_note_outer.png"));
-        this.load.image("noteInner", require("../assets/star_note_inner.png"));
-        this.load.image("noteRing", require("../assets/ring.png"));
-        this.load.image("indicator", require("../assets/indicator.png"));
+        this.load.image("noteOuter", noteOuter);
+        this.load.image("noteInner", noteInner);
+        this.load.image("noteRing", noteRing);
+        this.load.image("indicator", indicator);
         this.load.image("background", imageUrl);
         this.load.audio("music", audioFile);
     }

@@ -10,8 +10,8 @@ Why?
 What does this mean?
 
 - The Starlight service hosted at `starlight.swyrin.id.vn`, is **_no longer available_** after the said time.
-- The Starlight API service hosted at `cluster1.swyrin.id.vn`, is **_no longer available_** after the said time.
-- You will have to self-host the entire game, along with replacing occurences, _including but not limited to_: [API URLs](https://github.com/search?q=repo%3Ateam-nameless%2Fstarlight%20cluster1.swyrin.id.vn&type=code) and [Service URLs](https://github.com/search?q=repo%3Ateam-nameless%2Fstarlight+starlight.swyrin.id.vn&type=code).
+- The Starlight API service hosted at `http://localhost:5000`, is **_no longer available_** after the said time.
+- You will have to self-host the entire game, along with replacing occurences, _including but not limited to_: [API URLs](https://github.com/search?q=repo%3Ateam-nameless%2Fstarlight%20http://localhost:5000&type=code) and [Service URLs](https://github.com/search?q=repo%3Ateam-nameless%2Fstarlight+starlight.swyrin.id.vn&type=code).
 
 Is there any future plan?
 
