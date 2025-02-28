@@ -1,16 +1,24 @@
 import { WebSocket, WebSocketServer } from "ws";
 
 import Cortex from "./cortex";
+import dotenv from "dotenv";
+import assert from "node:assert";
+
+dotenv.config();
+
+const { CORTEX_CLIENT_ID, CORTEX_CLIENT_SECRET } = process.env;
 
 const wss = new WebSocketServer({ port: 8686 });
 
 wss.on("connection", async (ws: WebSocket) => {
     if (ws.listeners.length > 1) throw new Error("Only one listener can only be used.");
 
+    assert(CORTEX_CLIENT_ID !== undefined);
+    assert(CORTEX_CLIENT_SECRET !== undefined);
+
     const user: CortexUser = {
-        client_id: "vjMBqB8DFsCLgmhBInToyO4ucsHTOU83NSuphSDT",
-        client_secret:
-            "1zqdwEGengT8sYLO74IFh9kAxPoLFrcTN3WPAzN5WX2thDq9oDuIuKXwnObYMiNTveRW3tsBsuQMkouMC7qMuxMBA1Ci33O2QMjrxSObovRh0EcHDToe1a3xvE9OhQBV"
+        client_id: CORTEX_CLIENT_ID,
+        client_secret: CORTEX_CLIENT_SECRET
     };
 
     const c = new Cortex(user);

@@ -4,9 +4,11 @@
     "private": true,
     "description": "The Emotiv portion of Starlight",
     "scripts": {
-        "start:cortex": "npx tsx ./cortex_server.ts"
+        "start:cortex": "npx tsx ./cortex_server.ts",
+        "start:simple": "npx tsx ./simple_reader.ts"
     },
     "dependencies": {
+        "dotenv": "^16.4.7",
         "ws": "^8.18.1"
     },
     "devDependencies": {

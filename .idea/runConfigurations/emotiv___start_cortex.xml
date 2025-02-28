@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="emotiv" type="js.build_tools.npm">
+  <configuration default="false" name="emotiv &gt; start:cortex" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/emotiv/package.json" />
     <command value="run" />
     <scripts>

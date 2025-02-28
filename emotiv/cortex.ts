@@ -168,7 +168,7 @@ class Cortex {
             params: {
                 cortexToken: token,
                 session: sessionId,
-                streams: ["pow"]
+                streams: ["met"]
             }
         };
 
@@ -176,7 +176,7 @@ class Cortex {
 
         this.socket.on("message", data => {
             const parsedData = JSON.parse(data.toString());
-            if (parsedData["pow"]) console.log(parsedData["pow"]);
+            if (parsedData["met"]) console.log(parsedData["met"]);
         });
     }
 
@@ -188,7 +188,7 @@ class Cortex {
             params: {
                 cortexToken: token,
                 session: sessionId,
-                streams: ["pow"]
+                streams: ["met"]
             }
         };
 
