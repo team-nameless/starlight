@@ -13,8 +13,7 @@ import { SERVER_PORT } from "./secrets";
 const app = express();
 const port = SERVER_PORT;
 
-app
-    .use(bodyParser.json())
+app.use(bodyParser.json())
     .use(morgan("tiny", { immediate: true }))
     .use(
         rateLimit({
@@ -27,15 +26,17 @@ app
     )
     .use(
         cors({
-        credentials: true,
-        origin: true
-    })
-);
+            credentials: true,
+            origin: true
+        })
+    );
 
 app.use("/api/", auth);
 app.use("/api/song", song);
 app.use("/api/game", game);
 app.use("/api/user", user);
+app.use("/api/static", express.static("__data__"));
+app.use("/api/static/avatar", express.static("__data__/__avatar__"));
 
 app.listen(port, () => {
     console.log(`We are online at http://localhost:${port}`);

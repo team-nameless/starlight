@@ -5,8 +5,7 @@
     "description": "4-button VSRG on the web?",
     "scripts": {
         "test:server": "npm run test --workspace server",
-        "lint": "npx eslint --fix .",
-        "prettier": "npx prettier --write ."
+        "prettify": "npx prettier --write ."
     },
     "repository": {
         "type": "git",

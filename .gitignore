@@ -2,3 +2,6 @@
 **/build/
 **/**.env
 **/*.db
+server/__data__/__avatar__/**
+!server/__data__/.placeholder
+!server/__data__/__avatar__/.placeholder

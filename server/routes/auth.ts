@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 import express, { Request } from "express";
 import HttpStatus from "http-status-codes";
 
-import { prisma } from "../prisma/client";
 import { generateAccessJWT } from "../common/jwt";
+import { prisma } from "../prisma/client";
 import { BasicUserIdentity, RegisterRequest } from "./requests/auth";
 
 const router = express.Router();

@@ -1,37 +1,46 @@
 name: Sanity check
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
-    SERVER_SECRET_KEY: 9e3466f46e5516ee45250d0dfe3d514b
-    SERVER_PORT: 6969
+  SERVER_SECRET_KEY: 9e3466f46e5516ee45250d0dfe3d514b
+  SERVER_PORT: 6969
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
-    build-and-test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v4
-              with:
-                  cache: "npm"
-                  node-version: "23"
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version: "23"
 
-            - name: Install npm packages
-              run: |
-                  npm install
+      - name: Install npm packages
+        run: |
+          npm install
 
-            - name: Setup stuffs
-              run: |
-                  npm run prisma --workspace server
+      - name: Setup stuffs
+        run: |
+          npm run prisma --workspace server
 
-            - name: Run test suite for backend.
-              run: |
-                  npm run test:server
+      - name: Run test suite for backend.
+        run: |
+          npm run test:server
+
+      - name: Un-shit the code.
+        run: |
+          npm run prettify
+
+      - name: Commit formatted code.
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[ci skip] Automated code format commit."
