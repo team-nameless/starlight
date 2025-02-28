@@ -1,9 +1,17 @@
 import axios from "axios";
 import Fuse from "fuse.js";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link, Route, Routes } from "react-router-dom";
+import songSidebarIcon from "starlight-web/src/assets/Collapsed_Sidebar/Song-sidebar-icon.png";
+import bgSidebarImage from "starlight-web/src/assets/Collapsed_Sidebar/sidebar-bg.png";
+import leaveIcon from "starlight-web/src/assets/Header_Items/Leave-icon.png";
+import eventsIcon from "starlight-web/src/assets/Header_Items/events-icon.png";
+import historyIcon from "starlight-web/src/assets/Header_Items/history-icon.png";
+import songsIcon from "starlight-web/src/assets/Header_Items/songs-icon.png";
+import storeIcon from "starlight-web/src/assets/Header_Items/store-icon.png";
+import logoIcon from "starlight-web/src/assets/Starlight-logo.png";
 
 import HistoryPage from "../HistoryPage";
 import LandingPage from "../LandingPageApp";
@@ -11,15 +19,7 @@ import ProfilePage from "../ProfilePage";
 import SongPage from "../SongPage";
 import StorePage from "../StorePage";
 import SuggestionPage from "../SuggestionPage";
-import songSidebarIcon from "../assets/Collapsed_Sidebar/Song-sidebar-icon.png";
-import bgSidebarImage from "../assets/Collapsed_Sidebar/sidebar-bg.png";
-import leaveIcon from "../assets/Header_Items/Leave-icon.png";
-import eventsIcon from "../assets/Header_Items/events-icon.png";
-import historyIcon from "../assets/Header_Items/history-icon.png";
-import songsIcon from "../assets/Header_Items/songs-icon.png";
-import storeIcon from "../assets/Header_Items/store-icon.png";
-import logoIcon from "../assets/Starlight-logo.png";
-import GameApp from "../game/GameApp";
+import GameApp from "../game/GameApp.jsx";
 
 const rootUrl = "http://localhost:5000";
 

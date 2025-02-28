@@ -1,7 +1,7 @@
 import axios from "axios";
-import * as d3 from "d3";
+import d3 from "d3";
 import "d3-scale-chromatic";
-import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import "./Heatmap_Style.css";

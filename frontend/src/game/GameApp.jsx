@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import { EventEmitter } from "./EventEmitter";
-import AssetLoader from "./scenes/AssetLoader";
-import DataLoader from "./scenes/DataLoader";
-import Game from "./scenes/Game";
-import GameFinalizer from "./scenes/GameFinalizer";
+import { EventEmitter } from "./EventEmitter.js";
+import AssetLoader from "./scenes/AssetLoader.js";
+import DataLoader from "./scenes/DataLoader.js";
+import Game from "./scenes/Game.js";
+import GameFinalizer from "./scenes/GameFinalizer.js";
 
 function GameApp() {
     const gameRef = useRef(null);

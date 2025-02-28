@@ -296,13 +296,14 @@ const EyeIcon = styled.span`
     cursor: pointer;
 `;
 
-const LandingPageApp = () => {
+function LandingPage() {
     const [handle, setHandle] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [data, setData] = useState(null);
+    S;
     const [showNotificationModal, setShowNotificationModal] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -886,6 +887,6 @@ const LandingPageApp = () => {
             {data && <div>{JSON.stringify(data)}</div>}
         </AppContainer>
     );
-};
+}
 
-export default LandingPageApp;
+export default LandingPage;

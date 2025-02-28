@@ -1,7 +1,7 @@
 import axios from "axios";
 import Phaser from "phaser";
 
-import { EventEmitter } from "../EventEmitter";
+import { EventEmitter } from "../EventEmitter.js";
 
 class GameFinalizer extends Phaser.Scene {
     collectedGameData;

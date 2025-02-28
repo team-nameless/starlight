@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
-
-import nextArrow from "../assets/nextArrow.png";
-import previousArrow from "../assets/previousArrow.png";
+import nextArrow from "starlight-web/src/assets/nextArrow.png";
+import previousArrow from "starlight-web/src/assets/previousArrow.png";
 
 const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, setCurrentSong }) => {
     const handleNextSong = () => {
