@@ -32,10 +32,10 @@ app
     })
 );
 
-app.use("/routes/", auth);
-app.use("/routes/song", song);
-app.use("/routes/game", game);
-app.use("/routes/user", user);
+app.use("/api/", auth);
+app.use("/api/song", song);
+app.use("/api/game", game);
+app.use("/api/user", user);
 
 app.listen(port, () => {
     console.log(`We are online at http://localhost:${port}`);
