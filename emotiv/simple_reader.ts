@@ -1,6 +1,7 @@
-import Cortex from "./cortex";
 import dotenv from "dotenv";
 import assert from "node:assert";
+
+import Cortex from "./cortex";
 
 dotenv.config();
 

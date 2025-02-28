@@ -1,8 +1,8 @@
+import dotenv from "dotenv";
+import assert from "node:assert";
 import { WebSocket, WebSocketServer } from "ws";
 
 import Cortex from "./cortex";
-import dotenv from "dotenv";
-import assert from "node:assert";
 
 dotenv.config();
 
