@@ -4,7 +4,7 @@
     "private": true,
     "description": "4-button VSRG on the web?",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 0",
+        "test:server": "npm run test --workspace server",
         "lint": "npx eslint --fix .",
         "prettier": "npx prettier --write ."
     },

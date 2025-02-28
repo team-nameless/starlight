@@ -1,11 +1,11 @@
 import { WebSocket, WebSocketServer } from "ws";
+
 import Cortex from "./cortex";
 
 const wss = new WebSocketServer({ port: 8686 });
 
 wss.on("connection", async (ws: WebSocket) => {
-    if (ws.listeners.length > 1)
-        throw new Error("Only one listener can only be used.");
+    if (ws.listeners.length > 1) throw new Error("Only one listener can only be used.");
 
     const user: CortexUser = {
         client_id: "vjMBqB8DFsCLgmhBInToyO4ucsHTOU83NSuphSDT",

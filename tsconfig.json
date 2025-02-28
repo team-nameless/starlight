@@ -21,6 +21,7 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": false
     },
-    "include": ["frontend/**/*.ts", "server/**/*.ts", "tests/**/*.ts", "emotiv/**/*.ts"],
+    "include": ["frontend/**/*.ts", "server/**/*.ts",
+        "server/__tests__/**/*.ts", "emotiv/**/*.ts"],
     "exclude": ["frontend/webpack.config.js"]
 }
