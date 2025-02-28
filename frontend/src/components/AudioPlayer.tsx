@@ -1,14 +1,15 @@
-import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
 
-const AudioPlayer = ({ audioUrl }) => {
-    const audioRef = useRef(null);
+import { AudioPlayerProps } from "./props";
+
+function AudioPlayer({ audioUrl }: AudioPlayerProps) {
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         if (audioUrl) {
             audioRef.current = new Audio(audioUrl);
             audioRef.current.loop = true;
-            audioRef.current.play().catch(error => console.error("Error playing audio:", error));
+            audioRef.current.play().catch((error: unknown) => console.error("Error playing audio:", error));
         }
 
         return () => {
@@ -20,10 +21,6 @@ const AudioPlayer = ({ audioUrl }) => {
     }, [audioUrl]);
 
     return null;
-};
-
-AudioPlayer.propTypes = {
-    audioUrl: PropTypes.string.isRequired
-};
+}
 
 export default AudioPlayer;

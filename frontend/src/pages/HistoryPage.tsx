@@ -1,22 +1,26 @@
 import axios from "axios";
 import d3 from "d3";
 import "d3-scale-chromatic";
+import * as assert from "node:assert";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
+import { apiHost } from "../common/site_setting.ts";
+import HeaderBar from "../components/HeaderBar.tsx";
+import NextPreviousButton from "../components/NextPreviousButton.tsx";
+import testHeatmapData from "../test_heatmap.json";
 import "./Heatmap_Style.css";
 import "./Main_Menu_Style.css";
 import sparkle from "./assets/sparkle.png";
-import Header from "./components/Header";
-import NextPreviousButtons from "./components/NextPreviousButtons";
-import testHeatmapData from "./test_heatmap.json";
-
-const rootUrl = "http://localhost:5000";
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();
-    const [currentSong, setCurrentSong] = useState(null);
-    const [currentSongIndex, setCurrentSongIndex] = useState(songIndex);
+
+    assert(songId !== undefined);
+    assert(songIndex !== undefined);
+
+    const [currentSong, setCurrentSong] = useState<StarlightSong>();
+    const [currentSongIndex, setCurrentSongIndex] = useState(parseInt(songIndex));
     const [bestScore, setBestScore] = useState(null);
     const [songs, setSongs] = useState([]);
     const heatmapContainer1Ref = useRef(null);
@@ -34,27 +38,27 @@ function HistoryPage() {
     useEffect(() => {
         const fetchSongData = async () => {
             try {
-                const response = await axios.get(`${rootUrl}/api/track/${songId}`, {
+                const response = await axios.get(`${apiHost}/api/track/${songId}`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
                     withCredentials: true
                 });
                 setCurrentSong(response.data);
-                setCurrentSongIndex(songIndex);
+                setCurrentSongIndex(parseInt(songIndex));
             } catch (error) {
                 console.error("Error fetching song data:", error);
             }
         };
 
-        fetchSongData();
+        fetchSongData().catch();
     }, [songId, songIndex]);
 
     useEffect(() => {
         const fetchBestScore = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
+                    const response = await axios.get(`${apiHost}/api/score/${currentSong.id}/best`, {
                         headers: {
                             "Content-Type": "application/json"
                         },
@@ -74,13 +78,15 @@ function HistoryPage() {
             }
         };
 
-        fetchBestScore();
+        fetchBestScore().catch(err => {
+            throw err;
+        });
     }, [currentSong]);
 
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+                const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -98,7 +104,7 @@ function HistoryPage() {
 
     const fetchHeatmapData = async url => {
         try {
-            const response = await axios.get(`${rootUrl}${url}`, {
+            const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
             });
 
@@ -205,7 +211,7 @@ function HistoryPage() {
 
     const fetchOverallScore = async url => {
         try {
-            const response = await axios.get(`${rootUrl}${url}`, {
+            const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
             });
             const data = JSON.parse(response.data["rawJson"]);
@@ -218,7 +224,7 @@ function HistoryPage() {
 
     const fetchGrade = async url => {
         try {
-            const response = await axios.get(`${rootUrl}${url}`, {
+            const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
             });
             const data = JSON.parse(response.data["rawJson"]);
@@ -394,7 +400,7 @@ function HistoryPage() {
 
     return (
         <div className="historypage">
-            <Header
+            <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}
@@ -415,7 +421,7 @@ function HistoryPage() {
                         <div className="artist-name-history">- {currentSong?.artist} -</div>
                     </div>
 
-                    <NextPreviousButtons
+                    <NextPreviousButton
                         currentSongIndex={currentSongIndex}
                         setCurrentSongIndex={setCurrentSongIndex}
                         songs={songs}

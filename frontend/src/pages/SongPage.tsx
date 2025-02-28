@@ -1,23 +1,22 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { apiHost } from "../common/site_setting.ts";
+import AudioPlayer from "../components/AudioPlayer";
+import HeaderBar from "../components/HeaderBar.tsx";
+import NextPreviousButton from "../components/NextPreviousButton";
+import PlayButton from "../components/PlayButton";
 import "./Main_Menu_Style.css";
 import profilePicPlaceholder from "./assets/profile.png";
-import AudioPlayer from "./components/AudioPlayer";
-import Header from "./components/Header";
-import NextPreviousButtons from "./components/NextPreviousButtons";
-import PlayButton from "./components/PlayButton";
-
-const rootUrl = "http://localhost:5000";
 
 function SongPage() {
-    const [userProfile, setUserProfile] = useState({});
-    const [currentSong, setCurrentSong] = useState(null);
+    const [userProfile, setUserProfile] = useState<StarlightUser>();
+    const [currentSong, setCurrentSong] = useState<StarlightSong>();
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [bestScore, setBestScore] = useState(null);
+    const [bestScore, setBestScore] = useState<string | number>("");
     const [isLoading, setIsLoading] = useState(false);
-    const [songs, setSongs] = useState([]);
+    const [songs, setSongs] = useState<StarlightSong[]>([]);
     const [isSongListOpen, setIsSongListOpen] = useState(false);
 
     //const navigate = useNavigate();
@@ -32,7 +31,7 @@ function SongPage() {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const userResponse = await axios.get(`${rootUrl}/api/user`, {
+                const userResponse = await axios.get(`${apiHost}/api/user`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -77,7 +76,7 @@ function SongPage() {
         const fetchBestScore = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
+                    const response = await axios.get(`${apiHost}/api/score/${currentSong.id}/best`, {
                         headers: {
                             "Content-Type": "application/json"
                         },
@@ -103,7 +102,7 @@ function SongPage() {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+                const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -123,7 +122,7 @@ function SongPage() {
         fetchSongs();
     }, []);
 
-    const handleSongClick = song => {
+    const handleSongClick = (song: StarlightSong) => {
         const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".background-image img");
@@ -148,7 +147,7 @@ function SongPage() {
 
     return (
         <Fragment>
-            <Header
+            <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}
@@ -178,13 +177,13 @@ function SongPage() {
                             <table>
                                 <tr>
                                     <td>
-                                        <div className="user-name">{userProfile.name}</div>
-                                        <div className="user-id">ID: {userProfile.id}</div>
+                                        <div className="user-name">{userProfile?.name}</div>
+                                        <div className="user-id">ID: {userProfile?.id}</div>
                                     </td>
                                     <td>
                                         <Link to="/ProfilePage">
                                             <img
-                                                src={userProfile.profilePic || profilePicPlaceholder}
+                                                src={userProfile?.profilePic || profilePicPlaceholder}
                                                 alt="Profile"
                                                 className="profile-img-table"
                                             />
@@ -194,7 +193,7 @@ function SongPage() {
                             </table>
                         </div>
 
-                        <NextPreviousButtons
+                        <NextPreviousButton
                             currentSongIndex={currentSongIndex}
                             setCurrentSongIndex={setCurrentSongIndex}
                             songs={songs}
@@ -213,7 +212,6 @@ function SongPage() {
                             </div>
                             {currentSong && (
                                 <PlayButton
-                                    currentSong={currentSong}
                                     currentSongIndex={currentSongIndex}
                                     isLoading={isLoading}
                                     setIsLoading={setIsLoading}

@@ -1,14 +1,14 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, MouseEventHandler, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import { apiHost } from "../common/site_setting.ts";
+import AudioPlayer from "../components/AudioPlayer";
+import HeaderBar from "../components/HeaderBar";
+import PlayButton from "../components/PlayButton";
+import { StarlightSong } from "../index";
 import "./Main_Menu_Style.css";
 import "./SuggestionPage.css";
-import AudioPlayer from "./components/AudioPlayer";
-import Header from "./components/Header";
-import PlayButton from "./components/PlayButton";
-
-const rootUrl = "http://localhost:5000";
 
 function SuggestionPage() {
     const location = useLocation();
@@ -17,7 +17,7 @@ function SuggestionPage() {
     const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
     const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
     const [setShowPopup] = useState(false);
-    const [songs, setSongs] = useState([]);
+    const [songs, setSongs] = useState<StarlightSong[]>([]);
     const [bestScore, setBestScore] = useState(null);
     const [record, setRecord] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ function SuggestionPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+                const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -61,7 +61,7 @@ function SuggestionPage() {
         const fetchCurrentSongData = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${rootUrl}/api/track/${currentSong.id}`, {
+                    const response = await axios.get(`${apiHost}/api/track/${currentSong.id}`, {
                         headers: {
                             "Content-Type": "application/json"
                         },
@@ -82,7 +82,7 @@ function SuggestionPage() {
         const fetchBestScore = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${rootUrl}/api/score/${currentSong.id}/best`, {
+                    const response = await axios.get(`${apiHost}/api/score/${currentSong.id}/best`, {
                         headers: {
                             "Content-Type": "application/json"
                         },
@@ -109,8 +109,8 @@ function SuggestionPage() {
         fetchBestScore();
     }, [currentSong]);
 
-    const handleSongClick = song => {
-        const index = songs.findIndex(s => s.id === song.id);
+    const handleSongClick = (song: StarlightSong): MouseEventHandler => {
+        const index = songs.findIndex((s: StarlightSong) => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".page-background-image img");
             if (imgElement) {
@@ -134,7 +134,7 @@ function SuggestionPage() {
 
     return (
         <Fragment>
-            <Header
+            <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}

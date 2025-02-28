@@ -1,13 +1,12 @@
 import axios from "axios";
-import PropTypes from "prop-types";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { requestFullScreen } from "../utils";
+import { apiHost } from "../common/site_setting.ts";
+import { requestFullScreen } from "../common/utils";
+import { PlayButtonProps } from "./props";
 
-const rootUrl = "http://localhost:5000";
-
-const PlayButton = ({ currentSongIndex, isLoading, setIsLoading, songs }) => {
+function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayButtonProps) {
     const navigate = useNavigate();
 
     const handlePlayButtonClick = useCallback(async () => {
@@ -15,7 +14,7 @@ const PlayButton = ({ currentSongIndex, isLoading, setIsLoading, songs }) => {
         const currentSong = songs[currentSongIndex];
         if (currentSong) {
             try {
-                await axios.post(`${rootUrl}/api/game/start`, { songId: currentSong.id }, { withCredentials: true });
+                await axios.post(`${apiHost}/api/game/start`, { songId: currentSong.id }, { withCredentials: true });
                 requestFullScreen();
                 navigate(`/TestGame`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
             } catch (error) {
@@ -41,14 +40,6 @@ const PlayButton = ({ currentSongIndex, isLoading, setIsLoading, songs }) => {
             )}
         </div>
     );
-};
-
-PlayButton.propTypes = {
-    currentSong: PropTypes.object.isRequired,
-    currentSongIndex: PropTypes.number.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    setIsLoading: PropTypes.func.isRequired,
-    songs: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+}
 
 export default PlayButton;

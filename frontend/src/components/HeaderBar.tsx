@@ -1,7 +1,6 @@
 import axios from "axios";
 import Fuse from "fuse.js";
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link, Route, Routes } from "react-router-dom";
 import songSidebarIcon from "starlight-web/src/assets/Collapsed_Sidebar/Song-sidebar-icon.png";
@@ -13,17 +12,25 @@ import songsIcon from "starlight-web/src/assets/Header_Items/songs-icon.png";
 import storeIcon from "starlight-web/src/assets/Header_Items/store-icon.png";
 import logoIcon from "starlight-web/src/assets/Starlight-logo.png";
 
-import HistoryPage from "../HistoryPage";
-import LandingPage from "../LandingPageApp";
-import ProfilePage from "../ProfilePage";
-import SongPage from "../SongPage";
-import StorePage from "../StorePage";
-import SuggestionPage from "../SuggestionPage";
-import GameApp from "../game/GameApp.jsx";
+import { apiHost } from "../common/site_setting.ts";
+import GameApp from "../game/GameApp.tsx";
+import { StarlightSong } from "../index";
+import HistoryPage from "../pages/HistoryPage.tsx";
+import LandingPage from "../pages/LandingPage.tsx";
+import ProfilePage from "../pages/ProfilePage.tsx";
+import SongPage from "../pages/SongPage.tsx";
+import StorePage from "../pages/StorePage.tsx";
+import SuggestionPage from "../pages/SuggestionPage.tsx";
+import { HeaderBarProps } from "./props";
 
-const rootUrl = "http://localhost:5000";
-
-const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleSongList, isSongListOpen }) => {
+function HeaderBar({
+    currentSong,
+    currentSongIndex,
+    songs,
+    handleSongClick,
+    toggleSongList,
+    isSongListOpen
+}: HeaderBarProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredSongs, setFilteredSongs] = useState(songs);
     const [showPopup, setShowPopup] = useState(false);
@@ -33,11 +40,11 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
         setFilteredSongs(searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs);
     }, [searchQuery, songs]);
 
-    const handleSearchChange = event => {
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleSearchSubmit = event => {
+    const handleSearchSubmit = (event: FormEvent) => {
         event.preventDefault();
     };
 
@@ -54,14 +61,14 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
     };
 
     const handleLogoutRequest = () => {
-        axios.get(`${rootUrl}/api/logout`, { withCredentials: true }).finally(() => {
+        axios.get(`${apiHost}/api/logout`, { withCredentials: true }).finally(() => {
             localStorage.removeItem("login");
             window.location.href = "/";
         });
     };
 
     useEffect(() => {
-        const handleKeyDown = event => {
+        const handleKeyDown = (event: KeyboardEvent) => {
             if (event.keyCode === 27) {
                 event.preventDefault();
                 setShowPopup(true);
@@ -69,6 +76,7 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
         };
 
         window.addEventListener("keydown", handleKeyDown);
+
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
@@ -156,8 +164,8 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
                     </form>
                 </div>
                 <ul>
-                    {filteredSongs.map((song, index) => (
-                        <li key={index} className="song-item" onClick={() => handleSongClick(song)}>
+                    {filteredSongs.map((song: StarlightSong, index: number) => (
+                        <li key={index} className="song-item" onClick={handleSongClick(song)}>
                             <div className="song-info-sidebar">
                                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                                 <span className="sidebar-song">{song.title}</span>
@@ -198,23 +206,6 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
             </Routes>
         </>
     );
-};
+}
 
-Header.propTypes = {
-    currentSong: PropTypes.object,
-    currentSongIndex: PropTypes.number,
-    setCurrentSong: PropTypes.func.isRequired,
-    setCurrentSongIndex: PropTypes.func.isRequired,
-    songs: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            title: PropTypes.string.isRequired,
-            backgroundUrl: PropTypes.string
-        })
-    ).isRequired,
-    handleSongClick: PropTypes.func.isRequired,
-    toggleSongList: PropTypes.func.isRequired,
-    isSongListOpen: PropTypes.bool.isRequired
-};
-
-export default Header;
+export default HeaderBar;

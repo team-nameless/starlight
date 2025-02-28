@@ -1,9 +1,10 @@
-import PropTypes from "prop-types";
-import React, { useEffect } from "react";
-import nextArrow from "starlight-web/src/assets/nextArrow.png";
-import previousArrow from "starlight-web/src/assets/previousArrow.png";
+import { useEffect } from "react";
 
-const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, setCurrentSong }) => {
+import nextArrow from "../assets/nextArrow.png";
+import previousArrow from "../assets/previousArrow.png";
+import { NextPrevButtonProps } from "./props";
+
+function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setCurrentSong }: NextPrevButtonProps) {
     const handleNextSong = () => {
         triggerFadeEffect(() => {
             const newIndex = (currentSongIndex + 1) % songs.length;
@@ -20,7 +21,7 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
         });
     };
 
-    const triggerFadeEffect = callback => {
+    const triggerFadeEffect = (callback: () => void) => {
         const imgElement = document.querySelector(".background-image img");
         if (imgElement) {
             imgElement.classList.add("fade-out");
@@ -45,7 +46,7 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
         }
     };
 
-    const triggerButtonHoverEffect = selector => {
+    const triggerButtonHoverEffect = (selector: string) => {
         const button = document.querySelector(selector);
         if (button) {
             button.classList.add("hover");
@@ -56,7 +57,7 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
     };
 
     useEffect(() => {
-        const handleKeyDown = event => {
+        const handleKeyDown = (event: KeyboardEvent) => {
             if (event.keyCode === 39) {
                 // Right arrow key
                 handleNextSong();
@@ -92,13 +93,6 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
             </button>
         </div>
     );
-};
+}
 
-NextPreviousButtons.propTypes = {
-    currentSongIndex: PropTypes.number.isRequired,
-    setCurrentSongIndex: PropTypes.func.isRequired,
-    songs: PropTypes.arrayOf(PropTypes.object).isRequired,
-    setCurrentSong: PropTypes.func.isRequired
-};
-
-export default NextPreviousButtons;
+export default NextPreviousButton;
