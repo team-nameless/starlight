@@ -1,13 +1,13 @@
 import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Header from "./components/Header";
-import NextPreviousButtons from "./components/NextPreviousButtons";
-import PlayButton from "./components/PlayButton";
-import AudioPlayer from "./components/AudioPlayer";
 
 import "./Main_Menu_Style.css";
 import profilePicPlaceholder from "./assets/profile.png";
+import AudioPlayer from "./components/AudioPlayer";
+import Header from "./components/Header";
+import NextPreviousButtons from "./components/NextPreviousButtons";
+import PlayButton from "./components/PlayButton";
 
 const rootUrl = "http://localhost:5000";
 

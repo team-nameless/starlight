@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Header from './components/Header';
-import PlayButton from "./components/PlayButton";
-import AudioPlayer from "./components/AudioPlayer";
 
 import "./Main_Menu_Style.css";
 import "./SuggestionPage.css";
+import AudioPlayer from "./components/AudioPlayer";
+import Header from "./components/Header";
+import PlayButton from "./components/PlayButton";
 
 const rootUrl = "http://localhost:5000";
 
@@ -156,10 +156,7 @@ function SuggestionPage() {
 
                 <div className="track-card">
                     <div className="track-card-background">
-                        <img
-                            src={currentSong?.backgroundUrl || ""}
-                            alt="Song Background"
-                        />
+                        <img src={currentSong?.backgroundUrl || ""} alt="Song Background" />
                         <div className="overlay-top"></div>
                         <div className="overlay-bottom"></div>
                     </div>
@@ -198,7 +195,6 @@ function SuggestionPage() {
                                 songs={songs}
                             />
                         )}
-
                     </div>
                 </div>
             </div>

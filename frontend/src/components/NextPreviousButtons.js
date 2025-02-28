@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+
 import nextArrow from "../assets/nextArrow.png";
 import previousArrow from "../assets/previousArrow.png";
 
@@ -20,7 +21,7 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
         });
     };
 
-    const triggerFadeEffect = (callback) => {
+    const triggerFadeEffect = callback => {
         const imgElement = document.querySelector(".background-image img");
         if (imgElement) {
             imgElement.classList.add("fade-out");
@@ -45,7 +46,7 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
         }
     };
 
-    const triggerButtonHoverEffect = (selector) => {
+    const triggerButtonHoverEffect = selector => {
         const button = document.querySelector(selector);
         if (button) {
             button.classList.add("hover");
@@ -77,10 +78,18 @@ const NextPreviousButtons = ({ currentSongIndex, setCurrentSongIndex, songs, set
     return (
         <div className="song-navigation">
             <button className="nav-btn prev-btn" onClick={handlePreviousSong}>
-                <img src={previousArrow} alt="Previous" style={{ width: "21px", height: "21px", transition: "transform 0.3s" }} />
+                <img
+                    src={previousArrow}
+                    alt="Previous"
+                    style={{ width: "21px", height: "21px", transition: "transform 0.3s" }}
+                />
             </button>
             <button className="nav-btn next-btn" onClick={handleNextSong}>
-                <img src={nextArrow} alt="Next" style={{ width: "21px", height: "21px", transition: "transform 0.3s" }} />
+                <img
+                    src={nextArrow}
+                    alt="Next"
+                    style={{ width: "21px", height: "21px", transition: "transform 0.3s" }}
+                />
             </button>
         </div>
     );

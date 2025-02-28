@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Header from './components/Header'; // Import Header component
+
+// Import Header component
 
 import "./Main_Menu_Style.css";
+import Header from "./components/Header";
 
 const rootUrl = "http://localhost:5000";
 
@@ -10,7 +12,6 @@ function StorePage() {
     const [currentSong, setCurrentSong] = useState(null);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [songs, setSongs] = useState([]);
- 
 
     useEffect(() => {
         const fetchData = async () => {

@@ -84,7 +84,7 @@
 
 .track-info {
     text-align: left; /* Left-align text */
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: "Didact Gothic", sans-serif;
 }
 
 .track-info h2 {
@@ -93,7 +93,7 @@
 }
 
 .track-info p {
-    font-family: 'Sansation Light', sans-serif;
+    font-family: "Sansation Light", sans-serif;
     font-size: 16px;
     margin: 5px 0;
 }
@@ -102,7 +102,7 @@
     display: flex;
     justify-content: space-between;
     text-align: left;
-    font-family: 'Space Mono', monospace;
+    font-family: "Space Mono", monospace;
     font-size: 14px;
 }
 
@@ -112,16 +112,16 @@
 }
 
 .tier-label {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     color: #ffffff;
     opacity: 0.75;
 }
 
 .grade {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 40px;
-    color: #FFAC33;
+    color: #ffac33;
     opacity: 0.75;
 }
 

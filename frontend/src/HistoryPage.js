@@ -2,13 +2,13 @@ import axios from "axios";
 import * as d3 from "d3";
 import "d3-scale-chromatic";
 import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import Header from "./components/Header";
-import NextPreviousButtons from "./components/NextPreviousButtons";
+import { useLocation, useParams } from "react-router-dom";
 
 import "./Heatmap_Style.css";
 import "./Main_Menu_Style.css";
 import sparkle from "./assets/sparkle.png";
+import Header from "./components/Header";
+import NextPreviousButtons from "./components/NextPreviousButtons";
 import testHeatmapData from "./test_heatmap.json";
 
 const rootUrl = "http://localhost:5000";

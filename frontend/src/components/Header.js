@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Link, Route, Routes } from "react-router-dom";
 import axios from "axios";
+import Fuse from "fuse.js";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { Link, Route, Routes } from "react-router-dom";
+
+import HistoryPage from "../HistoryPage";
+import LandingPage from "../LandingPageApp";
+import ProfilePage from "../ProfilePage";
+import SongPage from "../SongPage";
+import StorePage from "../StorePage";
+import SuggestionPage from "../SuggestionPage";
 import songSidebarIcon from "../assets/Collapsed_Sidebar/Song-sidebar-icon.png";
 import bgSidebarImage from "../assets/Collapsed_Sidebar/sidebar-bg.png";
 import leaveIcon from "../assets/Header_Items/Leave-icon.png";
@@ -11,14 +19,6 @@ import historyIcon from "../assets/Header_Items/history-icon.png";
 import songsIcon from "../assets/Header_Items/songs-icon.png";
 import storeIcon from "../assets/Header_Items/store-icon.png";
 import logoIcon from "../assets/Starlight-logo.png";
-import Fuse from "fuse.js";
-
-import LandingPage from "../LandingPageApp";
-import HistoryPage from "../HistoryPage";
-import SuggestionPage from "../SuggestionPage";
-import StorePage from "../StorePage";
-import ProfilePage from "../ProfilePage";
-import SongPage from "../SongPage";
 import GameApp from "../game/GameApp";
 
 const rootUrl = "http://localhost:5000";
@@ -30,9 +30,7 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
 
     useEffect(() => {
         const fuse = new Fuse(songs, { keys: ["title"], threshold: 0.3 });
-        setFilteredSongs(
-            searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs
-        );
+        setFilteredSongs(searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs);
     }, [searchQuery, songs]);
 
     const handleSearchChange = event => {
@@ -100,7 +98,11 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
                 </nav>
 
                 <div className="logo-container">
-                    <Link to="/SongPage" className="logo" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
+                    <Link
+                        to="/SongPage"
+                        className="logo"
+                        state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}
+                    >
                         <span className="star-light">
                             <span>STAR</span>
                             <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: "middle" }} />
@@ -160,10 +162,7 @@ const Header = ({ currentSong, currentSongIndex, songs, handleSongClick, toggleS
                                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                                 <span className="sidebar-song">{song.title}</span>
                             </div>
-                            <div
-                                className="song-bg"
-                                style={{ backgroundImage: `url(${song.backgroundUrl})` }}
-                            ></div>
+                            <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
                             <span className="sidebar-song-title">{song.title}</span>
                         </li>
                     ))}
@@ -206,11 +205,13 @@ Header.propTypes = {
     currentSongIndex: PropTypes.number,
     setCurrentSong: PropTypes.func.isRequired,
     setCurrentSongIndex: PropTypes.func.isRequired,
-    songs: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
-        backgroundUrl: PropTypes.string
-    })).isRequired,
+    songs: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            title: PropTypes.string.isRequired,
+            backgroundUrl: PropTypes.string
+        })
+    ).isRequired,
     handleSongClick: PropTypes.func.isRequired,
     toggleSongList: PropTypes.func.isRequired,
     isSongListOpen: PropTypes.bool.isRequired

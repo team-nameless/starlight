@@ -1,7 +1,8 @@
-import React, { useCallback } from "react";
-import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import PropTypes from "prop-types";
+import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { requestFullScreen } from "../utils";
 
 const rootUrl = "http://localhost:5000";

@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import SuggestionPage from "./SuggestionPage";
 import HistoryPage from "./HistoryPage";
 import LandingPage from "./LandingPageApp";
 import "./ProfilePageStyle.css";
 import SongPage from "./SongPage";
 import StorePage from "./StorePage";
+import SuggestionPage from "./SuggestionPage";
 import BeatAchieve from "./assets/Achievement-icons/Beat_achieve.png";
 import CrownAchieve from "./assets/Achievement-icons/Crown_achieve.png";
 import NonStopAchieve from "./assets/Achievement-icons/Non-stop_achieve.png";
