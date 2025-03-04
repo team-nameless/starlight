@@ -165,7 +165,11 @@ function HeaderBar({
                 </div>
                 <ul>
                     {filteredSongs.map((song: StarlightSong, index: number) => (
-                        <li key={index} className="song-item" onClick={handleSongClick ? handleSongClick(song) : undefined}>
+                        <li
+                            key={index}
+                            className="song-item"
+                            onClick={handleSongClick ? handleSongClick(song) : undefined}
+                        >
                             <div className="song-info-sidebar">
                                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                                 <span className="sidebar-song">{song.title}</span>

@@ -20,16 +20,16 @@ function SuggestionPage() {
     const [bestScore, setBestScore] = useState<number | string | null>(null);
     const [record, setRecord] = useState<ScoreRecord>({
         trackId: 0,
-        trackName: '',
+        trackName: "",
         totalPoints: 0,
         accuracy: 0,
         maxCombo: 0,
         critical: 0,
         perfect: 0,
         good: 0,
-        bad: 0, 
+        bad: 0,
         miss: 0,
-        grade: ''
+        grade: ""
     });
     const [isLoading, setIsLoading] = useState(false);
     const [isSongListOpen, setIsSongListOpen] = useState(false);
@@ -106,16 +106,16 @@ function SuggestionPage() {
                         setBestScore("No record");
                         setRecord({
                             trackId: 0,
-                            trackName: '',
+                            trackName: "",
                             totalPoints: 0,
                             accuracy: 0,
                             maxCombo: 0,
                             critical: 0,
                             perfect: 0,
                             good: 0,
-                            bad: 0, 
+                            bad: 0,
                             miss: 0,
-                            grade: ''
+                            grade: ""
                         });
                     } else {
                         console.error("Error fetching best score:", response.statusText);
@@ -125,16 +125,16 @@ function SuggestionPage() {
                     setBestScore("No record");
                     setRecord({
                         trackId: 0,
-                        trackName: '',
+                        trackName: "",
                         totalPoints: 0,
                         accuracy: 0,
                         maxCombo: 0,
                         critical: 0,
                         perfect: 0,
                         good: 0,
-                        bad: 0, 
+                        bad: 0,
                         miss: 0,
-                        grade: ''
+                        grade: ""
                     });
                 }
             }

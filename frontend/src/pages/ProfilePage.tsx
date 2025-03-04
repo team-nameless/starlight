@@ -1,8 +1,8 @@
 import axios from "axios";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import { ScoreRecord, StarlightSong } from "../index";
 
+import { ScoreRecord, StarlightSong } from "../index";
 import HistoryPage from "./HistoryPage";
 import LandingPage from "./LandingPage";
 import "./ProfilePageStyle.css";
@@ -25,7 +25,7 @@ import profilePicPlaceholder from "./assets/profile.png";
 
 const rootUrl = "http://localhost:5000";
 
-const ProgressBar = ({ current, total, level }: { current: number, total: number, level: number }) => {
+const ProgressBar = ({ current, total, level }: { current: number; total: number; level: number }) => {
     const percentage = Math.floor((current / total) * 10000) / 100;
 
     return (
@@ -51,7 +51,7 @@ function ProfilePage() {
         name?: string;
         profilePic?: string;
     }
-    
+
     const [userProfile, setUserProfile] = useState<UserProfile>({});
     const [showPopup, setShowPopup] = useState(false);
     const [chatMessages, setChatMessages] = useState([
@@ -174,11 +174,11 @@ function ProfilePage() {
         setActiveTab(tab);
     };
 
-    const handlePasswordChange = (e: { target: { name: any; value: any; }; }) => {
+    const handlePasswordChange = (e: { target: { name: any; value: any } }) => {
         setPasswordUpdate({ ...passwordUpdate, [e.target.name]: e.target.value });
     };
 
-    const handleEmailChange = (e: { target: { name: any; value: any; }; }) => {
+    const handleEmailChange = (e: { target: { name: any; value: any } }) => {
         setEmailUpdate({ ...emailUpdate, [e.target.name]: e.target.value });
     };
 

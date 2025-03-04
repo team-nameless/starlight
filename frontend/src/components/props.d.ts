@@ -1,4 +1,4 @@
-import { MouseEventHandler, Dispatch, SetStateAction } from "react";
+import { Dispatch, MouseEventHandler, SetStateAction } from "react";
 
 import { StarlightSong } from "../index";
 

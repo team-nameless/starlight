@@ -1,6 +1,6 @@
 export default class Game {
-  constructor(game: any);
-  preload(): void;
-  create(): void;
-  update(): void;
+    constructor(game: any);
+    preload(): void;
+    create(): void;
+    update(): void;
 }

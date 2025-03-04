@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import TextField from "@atlaskit/textfield";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,8 +8,8 @@ import Background from "./assets/background-image/backgroundd.png";
 import LogoImage from "./assets/background-image/logoo.png";
 import ModalBackground from "./assets/background-image/pur.png";
 import GirlImage from "./assets/modal-image/girlimage.png";
-import ".stylesheets/styleoflandingpage.css";
 import { requestFullScreen } from "./utils.ts";
+import ".stylesheets/styleoflandingpage.css";
 
 const rootUrl = "http://localhost:5000";
 
@@ -334,7 +334,7 @@ function LandingPage() {
         }
     }, [showSuccessModal]);
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setHandleError("");
         setSignUpEmailError("");
@@ -401,7 +401,7 @@ function LandingPage() {
         }
     };
 
-    const handleLogin = async (e: { preventDefault: () => void; }) => {
+    const handleLogin = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
 
         setLoginEmailError("");
@@ -481,7 +481,7 @@ function LandingPage() {
         setShowLoginPassword(!showLoginPassword);
     };
 
-    const handleForgotPassword = async (e: { preventDefault: () => void; }) => {
+    const handleForgotPassword = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setForgotPasswordError("");
         setIsLoading(true);

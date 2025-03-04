@@ -16,7 +16,7 @@ What does this mean?
 Is there any future plan?
 
 - Yes, we are rewriting the entire game, which you can track at the main branch! (You are here already.)
-- For recruiter, or just wanderers, you can visit [the project before we started to rewrite it](https://github.com/team-nameless/starlight/tree/c317231d213dad168ffb18388db17ef227490cd3).  
+- For recruiter, or just wanderers, you can visit [the project before we started to rewrite it](https://github.com/team-nameless/starlight/tree/c317231d213dad168ffb18388db17ef227490cd3).
 
 After all, thank to Mr. Nguyen Trung Nghia for being so enthusiastic! And a warning happy new year from the Starlight team!
 

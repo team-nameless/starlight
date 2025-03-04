@@ -3,14 +3,13 @@ import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { apiHost } from "../common/site_setting.ts";
-
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
-import "./stylesheets/Main_Menu_Style.css";
-import profilePicPlaceholder from "./assets/profile.png";
 import { StarlightSong, StarlightUser } from "../index";
+import profilePicPlaceholder from "./assets/profile.png";
+import "./stylesheets/Main_Menu_Style.css";
 
 function SongPage() {
     const [userProfile, setUserProfile] = useState<StarlightUser>();
@@ -151,16 +150,18 @@ function SongPage() {
 
     return (
         <Fragment>
-            {currentSong && <HeaderBar
-                currentSong={currentSong}
-                currentSongIndex={currentSongIndex}
-                setCurrentSong={setCurrentSong}
-                setCurrentSongIndex={setCurrentSongIndex}
-                songs={songs}
-                handleSongClick={handleSongClick}
-                toggleSongList={toggleSongList}
-                isSongListOpen={isSongListOpen}
-            />}
+            {currentSong && (
+                <HeaderBar
+                    currentSong={currentSong}
+                    currentSongIndex={currentSongIndex}
+                    setCurrentSong={setCurrentSong}
+                    setCurrentSongIndex={setCurrentSongIndex}
+                    songs={songs}
+                    handleSongClick={handleSongClick}
+                    toggleSongList={toggleSongList}
+                    isSongListOpen={isSongListOpen}
+                />
+            )}
             {isLoading && (
                 <div className="loader">
                     <div className="one"></div>
