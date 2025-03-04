@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import TextField from "@atlaskit/textfield";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,8 +8,8 @@ import Background from "./assets/background-image/backgroundd.png";
 import LogoImage from "./assets/background-image/logoo.png";
 import ModalBackground from "./assets/background-image/pur.png";
 import GirlImage from "./assets/modal-image/girlimage.png";
-import "./styleoflandingpage.css";
-import { requestFullScreen } from "./utils";
+import ".stylesheets/styleoflandingpage.css";
+import { requestFullScreen } from "./utils.ts";
 
 const rootUrl = "http://localhost:5000";
 
@@ -303,10 +303,10 @@ function LandingPage() {
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [data, setData] = useState(null);
-    S;
     const [showNotificationModal, setShowNotificationModal] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showLoginReminderModal, setShowLoginReminderModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("login") != null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [handleError, setHandleError] = useState("");
@@ -319,15 +319,8 @@ function LandingPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showLoginPassword, setShowLoginPassword] = useState(false);
     const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
-    const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
     const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
-    const [forgotPasswordCode, setForgotPasswordCode] = useState("");
-    const [newPassword, setNewPassword] = useState("");
     const [forgotPasswordError, setForgotPasswordError] = useState("");
-    const [codeError, setCodeError] = useState("");
-    const [resetPasswordError, setResetPasswordError] = useState("");
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showLoginReminderModal, setShowLoginReminderModal] = useState(false);
     const navigate = useNavigate();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
@@ -341,7 +334,7 @@ function LandingPage() {
         }
     }, [showSuccessModal]);
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         setHandleError("");
         setSignUpEmailError("");
@@ -391,7 +384,7 @@ function LandingPage() {
             setData(response.data);
             setShowSignUpModal(false);
             setShowSuccessModal(true);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error fetching data:", error);
 
             if (error.response && error.response.status === 400 && error.response.data) {
@@ -408,7 +401,7 @@ function LandingPage() {
         }
     };
 
-    const handleLogin = async e => {
+    const handleLogin = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         setLoginEmailError("");
@@ -432,7 +425,7 @@ function LandingPage() {
             setShowLoginModal(false);
             setShowLoginSuccessModal(true);
             localStorage.setItem("login", "true");
-        } catch (error) {
+        } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 setLoginEmailError("User not found. Please check your email and password.");
                 setLoginPasswordError("");
@@ -461,7 +454,6 @@ function LandingPage() {
         setShowSuccessModal(false);
         setShowLoginSuccessModal(false);
         setShowForgotPasswordModal(false);
-        setShowResetPasswordModal(false);
         setShowLoginReminderModal(false);
     };
 
@@ -489,7 +481,7 @@ function LandingPage() {
         setShowLoginPassword(!showLoginPassword);
     };
 
-    const handleForgotPassword = async e => {
+    const handleForgotPassword = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         setForgotPasswordError("");
         setIsLoading(true);
@@ -517,7 +509,7 @@ function LandingPage() {
                 closeModal();
                 setShowNotificationModal(true);
             }
-        } catch (error) {
+        } catch (error: any) {
             setForgotPasswordError("Failed to send reset code. Please try again.");
         } finally {
             setIsLoading(false);
@@ -527,43 +519,6 @@ function LandingPage() {
     const openForgotPasswordModal = () => {
         closeModal();
         setShowForgotPasswordModal(true);
-    };
-
-    const handleResetPassword = async e => {
-        e.preventDefault();
-        setResetPasswordError("");
-        setIsLoading(true);
-
-        if (!passwordRegex.test(newPassword)) {
-            setResetPasswordError(
-                "Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character."
-            );
-            setIsLoading(false);
-            return;
-        }
-
-        try {
-            const response = await axios.post(
-                `${rootUrl}/api/resetPassword`,
-                { email: forgotPasswordEmail, code: forgotPasswordCode, newPassword },
-                {
-                    headers: { "Content-Type": "application/json" }
-                }
-            );
-
-            if (response.status === 200) {
-                setShowResetPasswordModal(false);
-                setShowSuccessModal(true);
-            }
-        } catch (error) {
-            setResetPasswordError("Failed to reset password. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const toggleNewPasswordVisibility = () => {
-        setShowNewPassword(!showNewPassword);
     };
 
     return (
@@ -614,7 +569,7 @@ function LandingPage() {
                                     <TextField
                                         id="playerName"
                                         value={handle}
-                                        onChange={e => setHandle(e.target.value)}
+                                        onChange={e => setHandle((e.target as HTMLInputElement).value)}
                                         maxLength={14}
                                         required
                                     />
@@ -627,7 +582,7 @@ function LandingPage() {
                                     <TextField
                                         id="email"
                                         value={email}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={e => setEmail((e.target as HTMLInputElement).value)}
                                         required
                                     />
                                     {signUpEmailError && (
@@ -641,7 +596,7 @@ function LandingPage() {
                                             id="password"
                                             type={showPassword ? "text" : "password"}
                                             value={password}
-                                            onChange={e => setPassword(e.target.value)}
+                                            onChange={e => setPassword((e.target as HTMLInputElement).value)}
                                             required
                                         />
                                         <EyeIcon onClick={togglePasswordVisibility}>
@@ -704,7 +659,7 @@ function LandingPage() {
                                     <TextField
                                         id="loginEmail"
                                         value={loginEmail}
-                                        onChange={e => setLoginEmail(e.target.value)}
+                                        onChange={e => setLoginEmail((e.target as HTMLInputElement).value)}
                                         required
                                     />
                                     {loginEmailError && (
@@ -728,7 +683,7 @@ function LandingPage() {
                                             id="loginPassword"
                                             type={showLoginPassword ? "text" : "password"}
                                             value={loginPassword}
-                                            onChange={e => setLoginPassword(e.target.value)}
+                                            onChange={e => setLoginPassword((e.target as HTMLInputElement).value)}
                                             required
                                         />
                                         <EyeIcon onClick={toggleLoginPasswordVisibility}>
@@ -856,7 +811,7 @@ function LandingPage() {
                                     <TextField
                                         id="forgotPasswordEmail"
                                         value={forgotPasswordEmail}
-                                        onChange={e => setForgotPasswordEmail(e.target.value)}
+                                        onChange={e => setForgotPasswordEmail((e.target as HTMLInputElement).value)}
                                         required
                                     />
                                     {forgotPasswordError && (

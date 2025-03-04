@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { ScoreRecord, StarlightSong } from "../index";
 
 import HistoryPage from "./HistoryPage";
-import LandingPage from "./LandingPageApp";
+import LandingPage from "./LandingPage";
 import "./ProfilePageStyle.css";
 import SongPage from "./SongPage";
 import StorePage from "./StorePage";
@@ -25,7 +25,7 @@ import profilePicPlaceholder from "./assets/profile.png";
 
 const rootUrl = "http://localhost:5000";
 
-const ProgressBar = ({ current, total, level }) => {
+const ProgressBar = ({ current, total, level }: { current: number, total: number, level: number }) => {
     const percentage = Math.floor((current / total) * 10000) / 100;
 
     return (
@@ -46,7 +46,13 @@ const ProgressBar = ({ current, total, level }) => {
 };
 
 function ProfilePage() {
-    const [userProfile, setUserProfile] = useState({});
+    interface UserProfile {
+        id?: number | string;
+        name?: string;
+        profilePic?: string;
+    }
+    
+    const [userProfile, setUserProfile] = useState<UserProfile>({});
     const [showPopup, setShowPopup] = useState(false);
     const [chatMessages, setChatMessages] = useState([
         { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02:34 PM", avatar: girlImage },
@@ -55,7 +61,6 @@ function ProfilePage() {
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [activeTab, setActiveTab] = useState("scoreRecord");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [levelData, setLevelData] = useState({ level: 1, exp: 0, expNeededForNextLevel: 100 });
     const [passwordUpdate, setPasswordUpdate] = useState({
         email: "",
@@ -71,13 +76,13 @@ function ProfilePage() {
         newPassword: "",
         confirmNewPassword: ""
     });
-    const [emailError, setEmailError] = useState({ email: "", password: "" });
+
+    const [emailError, setEmailError] = useState({ email: "", password: "", newEmail: "" });
     const [showPopupUpdate, setShowPopupUpdate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [scoreRecords, setScoreRecords] = useState([]);
-    const navigate = useNavigate();
-    const [currentSong, setCurrentSong] = useState(null);
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
+    const [scoreRecords, setScoreRecords] = useState<ScoreRecord[]>([]);
+    const [currentSong, setCurrentSong] = useState<StarlightSong | null>(null);
+    const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
@@ -104,7 +109,6 @@ function ProfilePage() {
                         expNeededForNextLevel: userData.expNeededForNextLevel || 100
                     });
                     localStorage.setItem("userProfilePic", profilePic);
-                    setIsLoggedIn(true);
                     setScoreRecords(userData.topScores || []);
                 } else {
                     console.error("Error fetching user data:", userResponse.statusText);
@@ -166,15 +170,15 @@ function ProfilePage() {
         }
     };
 
-    const handleTabClick = tab => {
+    const handleTabClick = (tab: SetStateAction<string>) => {
         setActiveTab(tab);
     };
 
-    const handlePasswordChange = e => {
+    const handlePasswordChange = (e: { target: { name: any; value: any; }; }) => {
         setPasswordUpdate({ ...passwordUpdate, [e.target.name]: e.target.value });
     };
 
-    const handleEmailChange = e => {
+    const handleEmailChange = (e: { target: { name: any; value: any; }; }) => {
         setEmailUpdate({ ...emailUpdate, [e.target.name]: e.target.value });
     };
 
@@ -264,7 +268,7 @@ function ProfilePage() {
     };
 
     const handleEmailUpdate = async () => {
-        setEmailError({ email: "", password: "" });
+        setEmailError({ email: "", password: "", newEmail: "" });
         setIsLoading(true);
 
         if (!emailUpdate.email || !emailUpdate.password || !emailUpdate.newEmail) {
@@ -361,8 +365,9 @@ function ProfilePage() {
         }
     };
 
-    const handleProfilePicChange = async event => {
-        const file = event.target.files[0];
+    const handleProfilePicChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files ? event.target.files[0] : null;
+        if (!file) return;
         if (file) {
             const formData = new FormData();
             formData.append("file", file);

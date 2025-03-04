@@ -10,7 +10,11 @@ function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayBu
     const navigate = useNavigate();
 
     const handlePlayButtonClick = useCallback(async () => {
-        setIsLoading(true);
+        setIsLoading?.(true);
+        if (!songs || typeof currentSongIndex !== "number") {
+            setIsLoading?.(false);
+            return;
+        }
         const currentSong = songs[currentSongIndex];
         if (currentSong) {
             try {
@@ -20,7 +24,7 @@ function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayBu
             } catch (error) {
                 console.error("Error starting game:", error);
             } finally {
-                setIsLoading(false);
+                setIsLoading?.(false);
             }
         }
     }, [currentSongIndex, navigate, setIsLoading, songs]);

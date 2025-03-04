@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Fragment, MouseEventHandler, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
-import { StarlightSong } from "../index";
+import { ScoreRecord, StarlightSong } from "../index";
 import "./Main_Menu_Style.css";
 import "./SuggestionPage.css";
 
@@ -16,10 +16,21 @@ function SuggestionPage() {
     const currentSongIndexFromLocation = location.state?.currentSongIndex || 0;
     const [currentSong, setCurrentSong] = useState(currentSongFromLocation);
     const [currentSongIndex, setCurrentSongIndex] = useState(currentSongIndexFromLocation);
-    const [setShowPopup] = useState(false);
     const [songs, setSongs] = useState<StarlightSong[]>([]);
-    const [bestScore, setBestScore] = useState(null);
-    const [record, setRecord] = useState({});
+    const [bestScore, setBestScore] = useState<number | string | null>(null);
+    const [record, setRecord] = useState<ScoreRecord>({
+        trackId: 0,
+        trackName: '',
+        totalPoints: 0,
+        accuracy: 0,
+        maxCombo: 0,
+        critical: 0,
+        perfect: 0,
+        good: 0,
+        bad: 0, 
+        miss: 0,
+        grade: ''
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [isSongListOpen, setIsSongListOpen] = useState(false);
 
@@ -93,14 +104,38 @@ function SuggestionPage() {
                         setRecord(response.data);
                     } else if (response.status === 204) {
                         setBestScore("No record");
-                        setRecord({});
+                        setRecord({
+                            trackId: 0,
+                            trackName: '',
+                            totalPoints: 0,
+                            accuracy: 0,
+                            maxCombo: 0,
+                            critical: 0,
+                            perfect: 0,
+                            good: 0,
+                            bad: 0, 
+                            miss: 0,
+                            grade: ''
+                        });
                     } else {
                         console.error("Error fetching best score:", response.statusText);
                     }
                 } catch (error) {
                     console.error("Error fetching best score:", error);
                     setBestScore("No record");
-                    setRecord({});
+                    setRecord({
+                        trackId: 0,
+                        trackName: '',
+                        totalPoints: 0,
+                        accuracy: 0,
+                        maxCombo: 0,
+                        critical: 0,
+                        perfect: 0,
+                        good: 0,
+                        bad: 0, 
+                        miss: 0,
+                        grade: ''
+                    });
                 }
             }
         };
@@ -109,10 +144,10 @@ function SuggestionPage() {
         fetchBestScore();
     }, [currentSong]);
 
-    const handleSongClick = (song: StarlightSong): MouseEventHandler => {
-        const index = songs.findIndex((s: StarlightSong) => s.id === song.id);
+    const handleSongClick = (song: StarlightSong) => () => {
+        const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
-            const imgElement = document.querySelector(".page-background-image img");
+            const imgElement = document.querySelector(".background-image img");
             if (imgElement) {
                 imgElement.classList.add("fade-out");
                 imgElement.addEventListener(
@@ -143,7 +178,6 @@ function SuggestionPage() {
                 handleSongClick={handleSongClick}
                 toggleSongList={toggleSongList}
                 isSongListOpen={isSongListOpen}
-                handleLeaveClick={() => setShowPopup(true)}
             />
 
             <div className="content-layer">

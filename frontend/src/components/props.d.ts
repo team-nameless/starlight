@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, Dispatch, SetStateAction } from "react";
 
 import { StarlightSong } from "../index";
 
@@ -16,9 +16,11 @@ type HeaderBarProps = {
     currentSong: StarlightSong;
     currentSongIndex: number;
     songs: StarlightSong[];
-    handleSongClick: (song: StarlightSong) => MouseEventHandler;
-    toggleSongList: () => void;
-    isSongListOpen: boolean;
+    setCurrentSong: Dispatch<SetStateAction<StarlightSong | undefined>>;
+    setCurrentSongIndex: Dispatch<SetStateAction<number>>;
+    handleSongClick?: (song: StarlightSong) => MouseEventHandler;
+    toggleSongList?: () => void;
+    isSongListOpen?: boolean;
 };
 
 /**
@@ -34,9 +36,10 @@ type NextPrevButtonProps = {
 /**
  * components/PlayButton.tsx props.
  */
-type PlayButtonProps = {
-    currentSongIndex: number;
-    isLoading: boolean;
-    setIsLoading: (isLoading: boolean) => void;
-    songs: StarlightSong[];
-};
+export interface PlayButtonProps {
+    currentSong?: StarlightSong | null;
+    currentSongIndex?: number;
+    isLoading?: boolean;
+    setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    songs?: StarlightSong[];
+}

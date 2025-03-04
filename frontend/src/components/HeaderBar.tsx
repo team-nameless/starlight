@@ -165,7 +165,7 @@ function HeaderBar({
                 </div>
                 <ul>
                     {filteredSongs.map((song: StarlightSong, index: number) => (
-                        <li key={index} className="song-item" onClick={handleSongClick(song)}>
+                        <li key={index} className="song-item" onClick={handleSongClick ? handleSongClick(song) : undefined}>
                             <div className="song-info-sidebar">
                                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                                 <span className="sidebar-song">{song.title}</span>
@@ -196,6 +196,7 @@ function HeaderBar({
             )}
 
             <Routes>
+                <Route path="/" element={<LandingPage />} />
                 <Route path="/SongPage" element={<SongPage />} />
                 <Route path="/HistoryPage" element={<HistoryPage />} />
                 <Route path="/SuggestionPage" element={<SuggestionPage />} />

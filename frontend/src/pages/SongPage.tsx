@@ -3,12 +3,14 @@ import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { apiHost } from "../common/site_setting.ts";
+
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
-import "./Main_Menu_Style.css";
+import "./stylesheets/Main_Menu_Style.css";
 import profilePicPlaceholder from "./assets/profile.png";
+import { StarlightSong, StarlightUser } from "../index";
 
 function SongPage() {
     const [userProfile, setUserProfile] = useState<StarlightUser>();
@@ -62,6 +64,8 @@ function SongPage() {
             const storedProfilePic = localStorage.getItem("userProfilePic");
             setUserProfile(prevProfile => ({
                 ...prevProfile,
+                id: prevProfile?.id || 123456,
+                name: prevProfile?.name || "Anonymous",
                 profilePic: storedProfilePic || profilePicPlaceholder
             }));
         };
@@ -122,7 +126,7 @@ function SongPage() {
         fetchSongs();
     }, []);
 
-    const handleSongClick = (song: StarlightSong) => {
+    const handleSongClick = (song: StarlightSong) => () => {
         const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".background-image img");
@@ -147,7 +151,7 @@ function SongPage() {
 
     return (
         <Fragment>
-            <HeaderBar
+            {currentSong && <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}
@@ -156,7 +160,7 @@ function SongPage() {
                 handleSongClick={handleSongClick}
                 toggleSongList={toggleSongList}
                 isSongListOpen={isSongListOpen}
-            />
+            />}
             {isLoading && (
                 <div className="loader">
                     <div className="one"></div>

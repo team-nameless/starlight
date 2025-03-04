@@ -9,9 +9,10 @@ import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import testHeatmapData from "../test_heatmap.json";
-import "./Heatmap_Style.css";
-import "./Main_Menu_Style.css";
+import "./stylesheets/Heatmap_Style.css";
+import "./stylesheets/Main_Menu_Style.css";
 import sparkle from "./assets/sparkle.png";
+import { StarlightSong } from "../index";
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();
@@ -21,7 +22,7 @@ function HistoryPage() {
 
     const [currentSong, setCurrentSong] = useState<StarlightSong>();
     const [currentSongIndex, setCurrentSongIndex] = useState(parseInt(songIndex));
-    const [bestScore, setBestScore] = useState(null);
+    const [_bestScore, setBestScore] = useState<string | null>(null);
     const [songs, setSongs] = useState([]);
     const heatmapContainer1Ref = useRef(null);
     const heatmapContainer2Ref = useRef(null);
@@ -102,7 +103,7 @@ function HistoryPage() {
         fetchSongs();
     }, []);
 
-    const fetchHeatmapData = async url => {
+    const fetchHeatmapData = async (url: any) => {
         try {
             const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
@@ -113,9 +114,9 @@ function HistoryPage() {
             if (data && data.partial && Array.isArray(data.partial)) {
                 const durationInSeconds = Math.floor(data.stats.duration / 1000);
                 const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
-                const heatmapData = [];
+                const heatmapData: { group: number; variable: string; value: number; segment: any; totalNotes: any; }[] = [];
 
-                data.partial.forEach((segment, index) => {
+                data.partial.forEach((segment: { totalNotes: any; miss: number; bad: number; good: number; crit: number; }, index: number) => {
                     const totalNotes = segment.totalNotes;
                     heatmapData.push({
                         group: groups[index],
@@ -164,7 +165,7 @@ function HistoryPage() {
             const data = testHeatmapData;
             const durationInSeconds = Math.floor(data.stats.duration / 1000);
             const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.round(durationInSeconds / 30));
-            const heatmapData = [];
+            const heatmapData: { group: number; variable: string; value: number; segment: number; totalNotes: number; }[] = [];
 
             data.partial.forEach((segment, index) => {
                 const totalNotes = segment.totalNotes;
@@ -209,7 +210,7 @@ function HistoryPage() {
         }
     };
 
-    const fetchOverallScore = async url => {
+    const fetchOverallScore = async (url: any) => {
         try {
             const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
@@ -222,7 +223,7 @@ function HistoryPage() {
         }
     };
 
-    const fetchGrade = async url => {
+    const fetchGrade = async (url: any) => {
         try {
             const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
@@ -235,7 +236,7 @@ function HistoryPage() {
         }
     };
 
-    const renderHeatmap = useCallback(async (url, containerRef, scoreUrl, songId) => {
+    const renderHeatmap = useCallback(async (url: any, containerRef: { current: any; }, scoreUrl: any, _songId: any) => {
         const container = containerRef.current;
         if (!container) {
             console.error(`Container not found.`);
@@ -288,10 +289,13 @@ function HistoryPage() {
 
         const cellSize = 25;
         const gap = 2;
-        const x = d3.scaleBand().range([0, width]).domain(myGroups).padding(0.05);
+        const x = d3.scaleBand().range([0, width]).domain(myGroups.map(String)).padding(0.05);
         const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
 
-        const myColor = d3.scaleLinear().domain([0, 33, 66, 100]).range(["#14432a", "#166b34", "#37a446", "#4dd05a"]);
+        // Fix for the type error with d3.scaleLinear().range()
+        const myColor = d3.scaleLinear<string>()
+            .domain([0, 33, 66, 100])
+            .range(["#14432a", "#166b34", "#37a446", "#4dd05a"]);
 
         svg.append("g")
             .style("font-size", 15)
@@ -304,29 +308,29 @@ function HistoryPage() {
 
         const tooltip = d3.select(container).append("div").style("opacity", 0).attr("class", "tooltip");
 
-        const mouseover = function (d) {
+        const mouseover = function (this: any, _d: any) {
             tooltip.style("opacity", 1);
             d3.select(this).style("stroke", "black").style("opacity", 1);
         };
 
-        const mousemove = function (event, d) {
+        const mousemove = function (event: { pageX: number; pageY: number; }, d: { segment: any; totalNotes: any; value: number; }) {
             tooltip
                 .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
                 .style("left", `${event.pageX + 20}px`)
                 .style("top", `${event.pageY - 20}px`);
         };
 
-        const mouseleave = function () {
+        const mouseleave = function (this: any) {
             tooltip.style("opacity", 0);
             d3.select(this).style("stroke", "none").style("opacity", 0.8);
         };
 
         svg.selectAll()
-            .data(data, d => `${d.group}:${d.variable}`)
+            .data(data, (d: any) => `${d.group}:${d.variable}`)
             .enter()
             .append("rect")
-            .attr("x", d => x(d.group) + gap / 2)
-            .attr("y", d => y(d.variable) + gap / 2)
+            .attr("x", d => (x(String(d.group)) ?? 0) + gap / 2)
+            .attr("y", d => (y(d.variable) ?? 0) + gap / 2)
             .attr("width", cellSize - gap)
             .attr("height", cellSize - gap)
             .attr("rx", 4)
@@ -401,7 +405,7 @@ function HistoryPage() {
     return (
         <div className="historypage">
             <HeaderBar
-                currentSong={currentSong}
+                currentSong={currentSong as StarlightSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}
                 setCurrentSongIndex={setCurrentSongIndex}

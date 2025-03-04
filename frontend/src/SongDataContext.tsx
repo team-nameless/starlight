@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 
-const SongDataContext = createContext();
+const SongDataContext = createContext<any>(null);
 
 const rootUrl = "http://localhost:5000";
 
-export const SongDataProvider = ({ children }) => {
+export const SongDataProvider = ({ children }: { children: ReactNode }) => {
     const [songs, setSongs] = useState([]);
     const [currentSong, setCurrentSong] = useState(null);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);

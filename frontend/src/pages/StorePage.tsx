@@ -1,17 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { StarlightSong } from "../index";
 
 // Import Header component
 
 import "./Main_Menu_Style.css";
-import Header from "./components/Header";
+import Header from "../components/HeaderBar";
 
 const rootUrl = "http://localhost:5000";
 
 function StorePage() {
-    const [currentSong, setCurrentSong] = useState(null);
+    const [currentSong, setCurrentSong] = useState<any>(null);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [songs, setSongs] = useState([]);
+    const [songs, setSongs] = useState<StarlightSong[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,10 +34,10 @@ function StorePage() {
             }
         };
 
-        await fetchData();
+        fetchData();
     }, []);
 
-    const handleSongClick = song => {
+    const handleSongClick = (song: StarlightSong) => () => {
         const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".background-image img");
@@ -60,6 +61,8 @@ function StorePage() {
             <Header
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
+                setCurrentSong={setCurrentSong}
+                setCurrentSongIndex={setCurrentSongIndex}
                 songs={songs}
                 handleSongClick={handleSongClick}
             />
