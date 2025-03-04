@@ -520,6 +520,43 @@ function LandingPage() {
         closeModal();
         setShowForgotPasswordModal(true);
     };
+ /*
+    const handleResetPassword = async e => {
+        e.preventDefault();
+        setForgotPasswordError("");
+        setIsLoading(true);
+        if (!passwordRegex.test(newPassword)) {
+            setResetPasswordError(
+                "Password must be at least 8 characters, include a number, a lowercase letter, an uppercase letter, and a special character."
+            );
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${rootUrl}/api/resetPassword`,
+                { email: forgotPasswordEmail, code: forgotPasswordCode, newPassword },
+                {
+                    headers: { "Content-Type": "application/json" }
+                }
+            );
+
+            if (response.status === 200) {
+                setShowResetPasswordModal(false);
+                setShowSuccessModal(true);
+            }
+        } catch (error) {
+            setResetPasswordError("Failed to reset password. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const toggleNewPasswordVisibility = () => {
+        setShowNewPassword(!showNewPassword);
+    };
+*/
 
     return (
         <AppContainer>
