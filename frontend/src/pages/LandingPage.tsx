@@ -520,7 +520,7 @@ function LandingPage() {
         closeModal();
         setShowForgotPasswordModal(true);
     };
- /*
+    /*
     const handleResetPassword = async e => {
         e.preventDefault();
         setForgotPasswordError("");
