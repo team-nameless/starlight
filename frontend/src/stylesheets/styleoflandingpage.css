@@ -1,27 +1,27 @@
 @font-face {
     font-family: "Anta";
-    src: url("../../frontend-ts/src/fonts/anta.ttf");
+    src: url("../fonts/Anta.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Protest Revolution";
-    src: url("../../frontend-ts/src/fonts/ProtestRevolution-Regular.ttf");
+    src: url("../fonts/ProtestRevolution-Regular.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Adlam Display";
-    src: url("../../frontend-ts/src/fonts/adlamdisplay.ttf");
+    src: url("../fonts/AdlamDisplay.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Inter";
-    src: url("../../frontend-ts/src/fonts/inter.ttf");
+    src: url("../fonts/Inter.ttf");
     font-weight: normal;
     font-style: normal;
 }

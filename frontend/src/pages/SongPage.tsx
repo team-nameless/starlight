@@ -8,8 +8,8 @@ import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
 import { StarlightSong, StarlightUser } from "../index";
-import profilePicPlaceholder from "./assets/profile.png";
-import "./stylesheets/Main_Menu_Style.css";
+import profilePicPlaceholder from "../assets/profile.png";
+import "../stylesheets/Main_Menu_Style.css";
 
 function SongPage() {
     const [userProfile, setUserProfile] = useState<StarlightUser>();

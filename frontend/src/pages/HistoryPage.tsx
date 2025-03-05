@@ -1,5 +1,5 @@
 import axios from "axios";
-import d3 from "d3";
+import * as d3 from "d3";
 import "d3-scale-chromatic";
 import * as assert from "node:assert";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
@@ -10,9 +10,9 @@ import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
 import testHeatmapData from "../test_heatmap.json";
-import sparkle from "./assets/sparkle.png";
-import "./stylesheets/Heatmap_Style.css";
-import "./stylesheets/Main_Menu_Style.css";
+import sparkle from "../assets/sparkle.png";
+import "../stylesheets/Heatmap_Style.css";
+import "../stylesheets/Main_Menu_Style.css";
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();

@@ -1,4 +1,74 @@
-/* General styles */
+/* Replace Google Fonts imports with local font declarations */
+@font-face {
+    font-family: "Karla";
+    src: url("../fonts/Karla-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Karla";
+    src: url("../fonts/Karla-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Karla";
+    src: url("../fonts/Karla-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Keania One";
+    src: url("../fonts/KeaniaOne-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lemon";
+    src: url("../fonts/Lemon-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Protest Revolution";
+    src: url("../fonts/ProtestRevolution-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Young Serif";
+    src: url("../fonts/YoungSerif-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Artifika";
+    src: url("../fonts/Artifika-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Abyssinica SIL";
+    src: url("../fonts/AbyssinicaSIL-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Kotta One";
+    src: url("../fonts/KottaOne-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -65,7 +135,6 @@ body {
 .logo-icon:hover {
     transform: scale(1.2);
 }
-@import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&display=swap");
 
 .star-light {
     font-family: "Karla", sans-serif;
@@ -94,7 +163,7 @@ body {
 }
 
 /* Navigation Links */
-@import url("https://fonts.googleapis.com/css2?family=Keania+One&display=swap");
+
 
 .nav-links {
     display: flex;
@@ -334,14 +403,13 @@ body {
     transition: background-color 0.3s ease;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap");
+
 .song-name {
     font-family: "Lemon", sans-serif;
     font-weight: 400;
     color: #000000;
     font-size: 24px;
 }
-@import url("https://fonts.googleapis.com/css2?family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap");
 .artist-name {
     font-family: "Artifika", serif;
     font-weight: 400;
@@ -358,8 +426,7 @@ body {
 }
 
 /* Best Score Button */
-@import url("https://fonts.googleapis.com/css2?family=Abyssinica+SIL&family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap");
-/* Best Score Field */
+
 .best-score {
     font-family: "Abyssinica SIL", sans-serif;
     font-weight: 400;
@@ -403,7 +470,6 @@ body {
     border-radius: 10px; /* Rounded corners */
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Young+Serif&display=swap");
 
 .sidebar .sidebar-header {
     display: flex;
@@ -827,7 +893,7 @@ body {
     background: linear-gradient(360deg, rgba(0, 10, 39, 0.45) 0%, rgba(27, 0, 64, 1) 100%);
     z-index: 2;
 }
-@import url("https://fonts.googleapis.com/css2?family=Abyssinica+SIL&family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Kotta+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap");
+
 .coming-soon-text {
     position: absolute;
     top: 350px;
@@ -850,7 +916,7 @@ body {
     background: linear-gradient(360deg, rgba(27, 0, 64, 1) 0%, rgba(0, 10, 39, 0.45) 100%);
     z-index: 2;
 }
-@import url("https://fonts.googleapis.com/css2?family=Abyssinica+SIL&family=Artifika&family=Karla:ital,wght@0,200..800;1,200..800&family=Keania+One&family=Kotta+One&family=Lemon&family=Protest+Revolution&family=Young+Serif&display=swap");
+
 .coming-soon-text {
     position: absolute;
     top: 350px; /* Centrally align the text on the screen */

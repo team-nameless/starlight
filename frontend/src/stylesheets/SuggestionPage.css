@@ -1,3 +1,53 @@
+/* Replace Google Fonts imports with local font declarations */
+@font-face {
+    font-family: "Karla";
+    src: url("../fonts/Karla-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Karla";
+    src: url("../fonts/Karla-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Keania One";
+    src: url("../fonts/KeaniaOne-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lemon";
+    src: url("../fonts/Lemon-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Protest Revolution";
+    src: url("../fonts/ProtestRevolution-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Young Serif";
+    src: url("../fonts/YoungSerif-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Artifika";
+    src: url("../fonts/Artifika-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* Background Image */
 .page-background-image {
     position: absolute;
@@ -332,4 +382,260 @@
 /* Hide Song Info on Hover */
 .song-item:hover .song-info-sidebar {
     display: none;
+}
+
+.suggestion-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: 'Karla', sans-serif;
+    background-color: #f0f0f0;
+}
+
+.suggestion-content {
+    display: flex;
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.suggestion-form {
+    background-color: white;
+    border-radius: 15px;
+    padding: 25px;
+    width: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+}
+
+.suggestion-form h2 {
+    font-family: 'Keania One', sans-serif;
+    color: #240b36;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Karla', sans-serif;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.submit-button {
+    background-color: #240b36;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Karla', sans-serif;
+    font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: #3b1255;
+}
+
+.suggestions-list {
+    width: 50%;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.suggestions-list h2 {
+    font-family: 'Keania One', sans-serif;
+    color: #240b36;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.suggestion-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.suggestion-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.suggestion-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #240b36;
+    font-family: 'Lemon', sans-serif;
+}
+
+.suggestion-date {
+    color: #777;
+    font-size: 14px;
+}
+
+.suggestion-type {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #e0f7fa;
+    color: #00838f;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.suggestion-type.bug {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.suggestion-type.feature {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.suggestion-type.feedback {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.suggestion-description {
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.suggestion-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.suggestion-user {
+    font-weight: bold;
+}
+
+.suggestion-status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    background-color: #e0e0e0;
+}
+
+.suggestion-status.pending {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.suggestion-status.approved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.suggestion-status.rejected {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.suggestion-status.implemented {
+    background-color: #e0f7fa;
+    color: #00838f;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.reset-button {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Karla', sans-serif;
+}
+
+.reset-button:hover {
+    background-color: #f0f0f0;
+}
+
+.no-suggestions {
+    text-align: center;
+    color: #666;
+    padding: 40px 0;
+    font-style: italic;
+}
+
+.error-message {
+    color: #d32f2f;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.success-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.success-message svg {
+    margin-right: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .suggestion-content {
+        flex-direction: column;
+    }
+    
+    .suggestion-form,
+    .suggestions-list {
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .suggestion-form {
+        margin-bottom: 20px;
+    }
 }

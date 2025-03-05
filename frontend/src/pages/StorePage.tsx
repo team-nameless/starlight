@@ -5,7 +5,7 @@ import Header from "../components/HeaderBar";
 import { StarlightSong } from "../index";
 // Import Header component
 
-import "./Main_Menu_Style.css";
+import "../stylesheets/Main_Menu_Style.css";
 
 const rootUrl = "http://localhost:5000";
 
