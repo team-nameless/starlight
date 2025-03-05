@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import Background from "./assets/background-image/backgroundd.png";
-import LogoImage from "./assets/background-image/logoo.png";
-import ModalBackground from "./assets/background-image/pur.png";
-import GirlImage from "./assets/modal-image/girlimage.png";
+import Background from "../assets/background-image/backgroundd.png";
+import LogoImage from "../assets/background-image/logoo.png";
+import ModalBackground from "../assets/background-image/pur.png";
+import GirlImage from "../assets/modal-image/girlimage.png";
 import { requestFullScreen } from "./utils.ts";
 import ".stylesheets/styleoflandingpage.css";
 
@@ -877,6 +877,7 @@ function LandingPage() {
             )}
 
             {data && <div>{JSON.stringify(data)}</div>}
+            <p>Hello world.</p>
         </AppContainer>
     );
 }

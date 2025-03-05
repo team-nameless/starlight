@@ -5,7 +5,9 @@
     "description": "4-button VSRG on the web?",
     "scripts": {
         "test:server": "npm run test --workspace server",
-        "prettify": "npx prettier --write ."
+        "prettify": "npx prettier --write .",
+        "start:server": "npm run start --workspace server",
+        "start:web": "npm run dev --workspace frontend"
     },
     "repository": {
         "type": "git",
@@ -35,12 +37,15 @@
     "devDependencies": {
         "@eslint/js": "^9.21.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.13.5",
+        "@types/node": "^22.13.9",
         "eslint": "^9.21.0",
-        "typescript": "^5.7.2",
         "globals": "^16.0.0",
-        "prettier": "^3.5.2",
+        "prettier": "^3.5.3",
         "tsx": "^4.19.3",
-        "typescript-eslint": "^8.24.1"
+        "typescript": "^5.8.2",
+        "typescript-eslint": "^8.26.0"
+    },
+    "dependencies": {
+        "npm-check-updates": "^17.1.15"
     }
 }

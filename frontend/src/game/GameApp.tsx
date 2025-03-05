@@ -4,11 +4,12 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import { EventEmitter } from "./EventEmitter.js";
-import AssetLoader from "./scenes/AssetLoader.js";
-import DataLoader from "./scenes/DataLoader.js";
-import Game from "./scenes/Game.js";
-import GameFinalizer from "./scenes/GameFinalizer.js";
+import { apiHost } from "../common/site_setting.ts";
+import { EventEmitter } from "./EventEmitter";
+import AssetLoader from "./scenes/AssetLoader.ts";
+import DataLoader from "./scenes/DataLoader.ts";
+import Game from "./scenes/Game.ts";
+import GameFinalizer from "./scenes/GameFinalizer.ts";
 
 function GameApp() {
     const gameRef = useRef(null);
@@ -36,20 +37,20 @@ function GameApp() {
             antialias: true
         });
 
-        game.scene.add("DataLoader", DataLoader, true, { song: songId, index: songIndex });
+        game.scene.add("DataLoader", DataLoader, true, { songId: songId, songIndex: songIndex });
         game.scene.add("AssetLoader", AssetLoader);
         game.scene.add("Game", Game);
         game.scene.add("GameFinalizer", GameFinalizer);
 
         EventEmitter.on("game-finished", () => {
-            const url = `http://localhost:5000/api/track/${songId}`;
+            const url = `${apiHost}/api/track/${songId}`;
 
             axios
                 .get(url, {
                     withCredentials: true
                 })
                 .then(response => {
-                    navigate(`/historypage/${songId}/${songIndex}`, {
+                    navigate(`/history/${songId}/${songIndex}`, {
                         state: { currentSong: response.data, currentSongIndex: songIndex }
                     });
                 });

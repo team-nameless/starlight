@@ -3,8 +3,7 @@ name: Sanity check
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+  pull_request:
 
 env:
   SERVER_SECRET_KEY: 9e3466f46e5516ee45250d0dfe3d514b

@@ -15,15 +15,11 @@ function App() {
             <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
-                    <Route path="/storepage" element={<StorePage />} />
-                    <Route path="/SuggestionPage" element={<SuggestionPage />} />
-                    <Route path="/songpage" element={<SongPage />} />
-                    <Route path="/historypage/:songId/:songIndex" element={<HistoryPage />} />
-                    <Route path="/ProfilePage" element={<ProfilePage />} />
-                    {/*
-                    Rest in peace.
-                    <Route path="/TestGame" element={<GameApp />} />
-                  */}
+                    <Route path="/store" element={<StorePage />} />
+                    <Route path="/suggestion" element={<SuggestionPage />} />
+                    <Route path="/song" element={<SongPage />} />
+                    <Route path="/history/:songId/:songIndex" element={<HistoryPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                 </Routes>
             </Suspense>
         </BrowserRouter>
