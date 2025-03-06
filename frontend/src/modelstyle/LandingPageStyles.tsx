@@ -1,8 +1,8 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 // Import the images directly in this file
-import Background from "../assets/background-image/backgroundd.png";
-import ModalBackground from "../assets/background-image/pur.png";
+import Background from "../assets/images/background-image/backgroundd.png";
+import ModalBackground from "../assets/images/background-image/pur.png";
 
 // Global styles to ensure proper sizing
 export const GlobalStyle = createGlobalStyle`

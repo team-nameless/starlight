@@ -1,38 +1,3 @@
-@font-face {
-    font-family: "Karla";
-    src: url("../fonts/Karla-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Karla";
-    src: url("../fonts/Karla-Bold.ttf") format("truetype");
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Keania One";
-    src: url("../fonts/KeaniaOne-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Lemon";
-    src: url("../fonts/Lemon-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Protest Revolution";
-    src: url("../fonts/ProtestRevolution-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
 .historypage {
     font-family: "Arial", sans-serif;
     overflow-y: auto;

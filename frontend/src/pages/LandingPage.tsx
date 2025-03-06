@@ -3,11 +3,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LogoImage from "../assets/background-image/logoo.png";
-import GirlImage from "../assets/modal-image/girlimage.png";
+import LogoImage from "../assets/images/background-image/logoo.png";
+import GirlImage from "../assets/images/modal-image/girlimage.png";
 import { requestFullScreen } from "./utils.ts";
-import "../stylesheets/styleoflandingpage.css";
-// Import styled components from the correct location
+import "../assets/stylesheets/styleoflandingpage.css";
+
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -31,7 +31,7 @@ import {
     SignUpButton,
     SubmitButton,
     TextFieldContainer
-} from "../modelstyle/LandingPageStyles";  // Correct path to the file
+} from "../modelstyle/LandingPageStyles.tsx";  // Correct path to the file
 
 const rootUrl = "http://localhost:5000";
 
@@ -428,7 +428,7 @@ function LandingPage() {
                             <ModalTitle style={{ marginLeft: "50px" }}>Log In</ModalTitle>
                             <form onSubmit={handleLogin}>
                                 <FormContainer
-                                    style={{ flexDirection: "column", height: "403px", justifyContent: "space-between" }}
+                                    style={{ flexDirection: "column", justifyContent: "content-between" }}
                                 >
                                     <TextFieldContainer>
                                         <label htmlFor="loginEmail">Email:</label>
