@@ -446,6 +446,3 @@ export const SongItem = styled.li`
         background-color: rgba(132, 30, 252, 0.3);
     }
 `;
-
-
-

@@ -5,7 +5,6 @@ import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
 import "./assets/stylesheets/MainPages.css";
 
-
 const rootUrl = "http://localhost:5000";
 
 function StorePage() {
@@ -62,7 +61,16 @@ function StorePage() {
                 isSongListOpen={isSongListOpen}
             />
 
-                <div className="content-layer">
+            <div className="content-layer">
+                <div className="background-image">
+                    <img
+                        src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                        alt="Background"
+                    />
+                </div>
+
+                <div className="store-content">
+                    {/* Background Image */}
                     <div className="background-image">
                         <img
                             src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
@@ -70,22 +78,13 @@ function StorePage() {
                         />
                     </div>
 
-                    <div className="store-content">
-                        {/* Background Image */}
-                        <div className="background-image">
-                            <img
-                                src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
-                                alt="Background"
-                            />
-                        </div>
+                    {/* Overlay Layer */}
+                    <div className="overlay-layer" style={{ height: "1000px" }}></div>
 
-                        {/* Overlay Layer */}
-                        <div className="overlay-layer" style={{ height: "1000px" }}></div>
-
-                        {/* Coming Soon Text */}
-                        <div className="coming-soon-text">Coming soon...</div>
-                    </div>
+                    {/* Coming Soon Text */}
+                    <div className="coming-soon-text">Coming soon...</div>
                 </div>
+            </div>
         </Fragment>
     );
 }
