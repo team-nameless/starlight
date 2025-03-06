@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import Header from "../components/HeaderBar";
+import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
-// Import Header component
-
-import "../stylesheets/Main_Menu_Style.css";
+import {
+    PageContainer,
+    ComingSoonContainer,
+    ComingSoonText,
+    OverlayLayer
+} from "../modalstyle/HeaderBarStyles";
 
 const rootUrl = "http://localhost:5000";
 
@@ -13,6 +16,7 @@ function StorePage() {
     const [currentSong, setCurrentSong] = useState<any>(null);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [songs, setSongs] = useState<StarlightSong[]>([]);
+    const [isSongListOpen, setIsSongListOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,58 +44,33 @@ function StorePage() {
     const handleSongClick = (song: StarlightSong) => () => {
         const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
-            const imgElement = document.querySelector(".background-image img");
-            if (imgElement) {
-                imgElement.classList.add("fade-out");
-                imgElement.addEventListener(
-                    "transitionend",
-                    () => {
-                        setCurrentSongIndex(index);
-                        setCurrentSong(song);
-                        imgElement.classList.remove("fade-out");
-                    },
-                    { once: true }
-                );
-            }
+            setCurrentSongIndex(index);
+            setCurrentSong(song);
         }
+    };
+    
+    const toggleSongList = () => {
+        setIsSongListOpen(!isSongListOpen);
     };
 
     return (
-        <div className="storepage">
-            <Header
+        <PageContainer>
+            <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
                 setCurrentSong={setCurrentSong}
                 setCurrentSongIndex={setCurrentSongIndex}
                 songs={songs}
                 handleSongClick={handleSongClick}
+                toggleSongList={toggleSongList}
+                isSongListOpen={isSongListOpen}
             />
 
-            <div className="content-layer">
-                <div className="background-image">
-                    <img
-                        src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
-                        alt="Background"
-                    />
-                </div>
-
-                <div className="store-content">
-                    {/* Background Image */}
-                    <div className="background-image">
-                        <img
-                            src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
-                            alt="Background"
-                        />
-                    </div>
-
-                    {/* Overlay Layer */}
-                    <div className="overlay-layer" style={{ height: "1000px" }}></div>
-
-                    {/* Coming Soon Text */}
-                    <div className="coming-soon-text">Coming soon...</div>
-                </div>
-            </div>
-        </div>
+            <ComingSoonContainer>
+                <OverlayLayer />
+                <ComingSoonText>Coming soon...</ComingSoonText>
+            </ComingSoonContainer>
+        </PageContainer>
     );
 }
 

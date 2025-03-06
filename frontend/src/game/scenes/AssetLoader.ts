@@ -1,10 +1,10 @@
 import Phaser from "phaser";
 
 import { apiHost } from "../../common/site_setting.ts";
-import indicator from "../assets/indicator.png";
-import noteRing from "../assets/ring.png";
-import noteInner from "../assets/star_note_inner.png";
-import noteOuter from "../assets/star_note_outer.png";
+import indicator from "../assets/images/indicator.png";
+import noteRing from "../assets/images/ring.png";
+import noteInner from "../assets/images/star_note_inner.png";
+import noteOuter from "../assets/images/star_note_outer.png";
 import { StarlightMap } from "../game";
 
 /**

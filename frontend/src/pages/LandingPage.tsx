@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
-import "../assets/stylesheets/styleoflandingpage.css";
+import "../assets/stylesheets/LandingPage.css";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -16,7 +16,6 @@ import {
     FormWrapper,
     GirlImage2,
     GlobalStyle,
-    // Make sure this is correctly imported
     Hero,
     LoginButton,
     LogoImage2,
@@ -29,11 +28,13 @@ import {
     PlayIconContainer,
     SignUpButton,
     SubmitButton,
-    TextFieldContainer
-} from "../modelstyle/LandingPageStyles.tsx";
+    TextFieldContainer,
+    PopupOverlay,
+    PopupContent,
+    StayButton,
+} from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
 
-// Correct path to the file
 
 const rootUrl = "http://localhost:5000";
 
@@ -65,7 +66,6 @@ function LandingPage() {
     const navigate = useNavigate();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
-    // ...existing code...
 
     useEffect(() => {
         if (showSuccessModal) {
@@ -119,7 +119,8 @@ function LandingPage() {
                 {
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    withCredentials: true
                 }
             );
 
@@ -186,7 +187,7 @@ function LandingPage() {
             setShowLoginReminderModal(true);
         } else {
             requestFullScreen();
-            navigate("/song"); // Updated path based on App.tsx routes
+            navigate("/SongPage"); 
         }
     };
 
@@ -296,7 +297,6 @@ function LandingPage() {
 */
     return (
         <>
-            {/* Apply GlobalStyle at the root level */}
             <GlobalStyle />
             <AppContainer>
                 {isLoading && (
@@ -328,7 +328,6 @@ function LandingPage() {
                     </PlayButton>
                 </BackgroundLandingPage>
 
-                {/* Sign Up Modal */}
                 {showSignUpModal && (
                     <Modal>
                         <ModalContent>
@@ -419,7 +418,6 @@ function LandingPage() {
                     </Modal>
                 )}
 
-                {/* Login Modal */}
                 {showLoginModal && (
                     <Modal>
                         <ModalContent>
@@ -534,56 +532,52 @@ function LandingPage() {
                     </Modal>
                 )}
 
-                {/* Success Modal */}
+
                 {showSuccessModal && (
-                    <div className="popup-overlay">
-                        <div className="popup-content">
+                    <PopupOverlay>
+                        <PopupContent>
                             <h2>Register successful</h2>
                             <p>Please log in to play the game.</p>
-                            <button className="stay-button" onClick={closeModal}>
+                            <StayButton onClick={closeModal}>
                                 Close
-                            </button>
-                        </div>
-                    </div>
+                            </StayButton>
+                        </PopupContent>
+                    </PopupOverlay>
                 )}
 
-                {/* Notification Modal */}
                 {showNotificationModal && (
-                    <div className="popup-overlay">
-                        <div className="popup-content">
+                    <PopupOverlay>
+                        <PopupContent>
                             <h2>Notification</h2>
                             <p>A temporary password has been sent to your email. Please use it to log in.</p>
                             <p>*Hint*: Change your new password in Profile is advised for increased security.</p>
-                            <button
-                                className="stay-button"
+                            <StayButton
                                 onClick={() => {
                                     closeModal();
                                     setShowLoginModal(true);
                                 }}
                             >
                                 Close
-                            </button>
-                        </div>
-                    </div>
+                            </StayButton>
+                        </PopupContent>
+                    </PopupOverlay>
                 )}
 
-                {/* Login Success Modal */}
                 {showLoginSuccessModal && (
-                    <div className="popup-overlay">
-                        <div className="popup-content">
+                    <PopupOverlay>
+                        <PopupContent>
                             <h2>Login Successful</h2>
                             <p>
                                 You have successfully logged in. Please click the "Start Game" button to enter the song
                                 page.
                             </p>
-                            <button className="stay-button" onClick={closeModal}>
+                            <StayButton onClick={closeModal}>
                                 Close
-                            </button>
-                        </div>
-                    </div>
+                            </StayButton>
+                        </PopupContent>
+                    </PopupOverlay>
                 )}
 
-                {/* Forgot Password Modal */}
                 {showForgotPasswordModal && (
                     <Modal>
                         <ModalContent style={{ maxWidth: "750px", height: "350px", top: "100px" }}>
@@ -617,17 +611,16 @@ function LandingPage() {
                     </Modal>
                 )}
 
-                {/* Login Reminder Modal */}
                 {showLoginReminderModal && (
-                    <div className="popup-overlay">
-                        <div className="popup-content">
+                    <PopupOverlay>
+                        <PopupContent>
                             <h2>Notification</h2>
                             <p>Please log in to continue.</p>
-                            <button className="stay-button" onClick={() => setShowLoginReminderModal(false)}>
+                            <StayButton onClick={() => setShowLoginReminderModal(false)}>
                                 Close
-                            </button>
-                        </div>
-                    </div>
+                            </StayButton>
+                        </PopupContent>
+                    </PopupOverlay>
                 )}
 
                 {data && <div>{JSON.stringify(data)}</div>}

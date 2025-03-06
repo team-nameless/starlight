@@ -1,0 +1,412 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background: #292826;
+}
+
+.songpage {
+    font-family: "Arial", sans-serif;
+}
+
+/* Background */
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 50px); /* Adjust height to be consistent across browsers */
+    overflow: hidden;
+    z-index: -1;
+}
+
+.background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 100% 50%;
+    transition: opacity 0.5s ease-in-out; /* Reduced transition duration */
+}
+
+.background-image img.morph {
+    transform: scale(1.1); /* Smooth transition for morphing */
+}
+
+.background-image img.fade-out {
+    opacity: 0; /* Smooth transition for fading out */
+}
+
+/* Content Layer */
+.content-layer {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+/* User Profile */
+.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-name {
+    font-family: "Koho", sans-serif;
+    font-weight: 600;
+    color: #8095ff;
+    font-size: 20px;
+    text-align: right;
+    margin-bottom: 2px; /* Add some space between user-name and user-id */
+}
+.user-id {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    color: #ff9100;
+    font-size: 14px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.profile-img-table {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Navigation Buttons */
+.song-navigation {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #8d87fa;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    margin-top: -30px; /* Move up by 10px */
+    z-index: 3;
+}
+
+.nav-btn + .nav-btn {
+    margin-left: 280px; /* Distance between buttons */
+}
+.nav-btn:hover {
+    background-color: #ff8a05;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn.hover {
+    background-color: #ff8a05;
+    transition: background-color 0.3s ease;
+}
+
+.song-name {
+    font-family: "Lemon", sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 24px;
+}
+.artist-name {
+    font-family: "Artifika", serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 18px;
+}
+
+.difficulty {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+/* Best Score Button */
+
+.best-score {
+    font-family: "Abyssinica SIL", sans-serif;
+    font-weight: 400;
+    color: #ffffff;
+    background-color: #20bce4;
+    border: none;
+    margin-top: 10px;
+    padding: 8px 40px;
+    border-radius: 50px;
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Song Container */
+.song-container {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    width: 520px;
+    height: 230px;
+    background-color: rgba(255, 253, 253, 0.8); /* White with 80% opacity */
+    border-radius: 50px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* Curved Border Cutout for Play Button */
+.song-container::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 253, 253, 0.8);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Date, Song Info Layout */
+.song-identity {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.difficulty-text {
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+    color: #6c7380;
+    font-size: 14px;
+    text-align: left;
+    margin-right: 10px;
+}
+
+.difficulty-value {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    color: #000000;
+    font-size: 30px;
+    text-align: center;
+    padding-left: 20px;
+    margin-right: 10px;
+}
+.song-info {
+    flex-grow: 1;
+    text-align: center;
+    padding-left: 70px;
+}
+
+.song-name {
+    font-family: "Lemon", sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 30px;
+    margin-bottom: 5px; /* Add some space below the song name */
+}
+
+.artist-name {
+    font-family: "Artifika", serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 25px;
+}
+
+/* Play Button */
+.play-btn {
+    position: absolute;
+    bottom: 20px;
+    left: calc(100% - 70px); /* Positioning outside of song-container with 50px width */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #67d920; /* Green background */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #000000; /* Black play icon */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+}
+
+/* Play Button */
+.play-button-container {
+    position: absolute;
+    width: 75px; /* Inner circle slightly smaller */
+    height: 75px;
+    bottom: 10px;
+    left: -35px; /* Positioning at the left corner of the song-container */
+    z-index: 2;
+    margin-left: 0; /* Remove the negative margin */
+}
+
+.play-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    background-color: #67d920; /* Green background */
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Inner Circle */
+.play-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 58px; /* Inner circle slightly smaller */
+    height: 58px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.play-icon {
+    font-size: 38px;
+    color: #67d920; /* Green icon color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 8px;
+    border-radius: 50%;
+}
+
+/* Hover Effect */
+.play-button:hover {
+    background-color: black;
+    color: #67d920;
+}
+
+.play-button:hover .play-icon-container {
+    background-color: #67d920;
+}
+
+.play-button:hover .play-icon {
+    color: black;
+}
+
+/* Store + Event overlay */
+.overlay-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(360deg, rgba(0, 10, 39, 0.45) 0%, rgba(27, 0, 64, 1) 100%);
+    z-index: 2;
+}
+
+.coming-soon-text {
+    position: absolute;
+    top: 350px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Kotta One", sans-serif;
+    font-size: 50px;
+    color: #bde4f4;
+    z-index: 3;
+    text-align: center;
+}
+
+/* Store + Event overlay */
+.overlay-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(360deg, rgba(27, 0, 64, 1) 0%, rgba(0, 10, 39, 0.45) 100%);
+    z-index: 2;
+}
+
+.coming-soon-text {
+    position: absolute;
+    top: 350px; /* Centrally align the text on the screen */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Kotta One", sans-serif;
+    font-size: 50px;
+    color: #bde4f4;
+    z-index: 3; /* Ensure text is in front of the overlay-layer */
+    text-align: center; /* Ensure text is centered */
+}
+
+/* Zoom effect */
+.mfp-zoom-in {
+    /* start state */
+    .mfp-with-anim {
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+        transform: scale(0.8);
+    }
+
+    &.mfp-bg {
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+
+    /* animate in */
+    &.mfp-ready {
+        .mfp-with-anim {
+            opacity: 1;
+            transform: scale(1);
+        }
+        &.mfp-bg {
+            opacity: 0.8;
+        }
+    }
+
+    /* animate out */
+    &.mfp-removing {
+        .mfp-with-anim {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        &.mfp-bg {
+            opacity: 0;
+        }
+    }
+}

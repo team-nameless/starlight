@@ -2,18 +2,17 @@ import axios from "axios";
 import Fuse from "fuse.js";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import songSidebarIcon from "../assets/Collapsed_Sidebar/Song-sidebar-icon.png";
-import bgSidebarImage from "../assets/Collapsed_Sidebar/sidebar-bg.png";
-import leaveIcon from "../assets/Header_Items/Leave-icon.png";
-import eventsIcon from "../assets/Header_Items/events-icon.png";
-import historyIcon from "../assets/Header_Items/history-icon.png";
-import songsIcon from "../assets/Header_Items/songs-icon.png";
-import storeIcon from "../assets/Header_Items/store-icon.png";
-import logoIcon from "../assets/Starlight-logo.png";
+import songSidebarIcon from "../assets/images/Collapsed_Sidebar/Song-sidebar-icon.png";
+import bgSidebarImage from "../assets/images/Collapsed_Sidebar/sidebar-bg.png";
+import leaveIcon from "../assets/images/Header_Items/Leave-icon.png";
+import eventsIcon from "../assets/images/Header_Items/events-icon.png";
+import historyIcon from "../assets/images/Header_Items/history-icon.png";
+import songsIcon from "../assets/images/Header_Items/songs-icon.png";
+import storeIcon from "../assets/images/Header_Items/store-icon.png";
+import logoIcon from "../assets/images/Starlight-logo.png";
 import { apiHost } from "../common/site_setting.ts";
-import GameApp from "../game/GameApp.tsx";
 import { StarlightSong } from "../index";
 import HistoryPage from "../pages/HistoryPage.tsx";
 import LandingPage from "../pages/LandingPage.tsx";
@@ -22,6 +21,29 @@ import SongPage from "../pages/SongPage.tsx";
 import StorePage from "../pages/StorePage.tsx";
 import SuggestionPage from "../pages/SuggestionPage.tsx";
 import { HeaderBarProps } from "./props";
+import {
+    PopupOverlay,
+    PopupContent,
+    StayButton,
+    LeaveButton,
+    LogoutButton
+} from "../modalstyle/PopUpModals";
+import {
+    NavbarContainer,
+    NavIconToggle,
+    NavLinksContainer,
+    NavIcon,
+    LogoContainer,
+    LogoText,
+    LogoIconImage,
+    LeaveButton as LeaveButtonStyled,
+    LeaveIcon,
+    SidebarContainer,
+    SearchBarContainer,
+    ScreenReaderText,
+    SongItem,
+    StyledLink
+} from "../modalstyle/HeaderBarStyles";
 
 function HeaderBar({
     currentSong,
@@ -34,6 +56,8 @@ function HeaderBar({
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredSongs, setFilteredSongs] = useState(songs);
     const [showPopup, setShowPopup] = useState(false);
+
+    const location = useLocation();
 
     useEffect(() => {
         const fuse = new Fuse(songs, { keys: ["title"], threshold: 0.3 });
@@ -82,74 +106,82 @@ function HeaderBar({
         };
     }, []);
 
+    const isActive = (path: string) => {
+        return location.pathname.startsWith(path);
+    };
+
     return (
         <>
-            <header className="navbar">
-                <div id="nav-icon1" className={isSongListOpen ? "open" : ""} onClick={toggleSongList}>
+            <NavbarContainer>
+                <NavIconToggle className={isSongListOpen ? "open" : ""} onClick={toggleSongList}>
                     <span></span>
                     <span></span>
                     <span></span>
-                </div>
+                </NavIconToggle>
 
-                <nav className="nav-links left">
-                    <Link to="/SongPage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
-                        <img src={songsIcon} alt="Songs" className="nav-icon" />
+                <NavLinksContainer className="left">
+                    <StyledLink 
+                        to="/SongPage" 
+                        state={{ currentSong, currentSongIndex }}
+                        active={isActive('/SongPage')}
+                    >
+                        <NavIcon src={songsIcon} alt="Songs" />
                         <span>Songs</span>
-                    </Link>
-                    <Link
+                    </StyledLink>
+                    
+                    <StyledLink 
                         to={`/HistoryPage/${currentSong?.id ?? 586954}/${currentSongIndex ?? 0}`}
-                        state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}
+                        state={{ currentSong, currentSongIndex }}
+                        active={isActive('/HistoryPage')}
                     >
-                        <img src={historyIcon} alt="History" className="nav-icon" />
+                        <NavIcon src={historyIcon} alt="History" />
                         <span>History</span>
-                    </Link>
-                </nav>
+                    </StyledLink>
+                </NavLinksContainer>
 
-                <div className="logo-container">
-                    <Link
-                        to="/SongPage"
-                        className="logo"
-                        state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}
-                    >
-                        <span className="star-light">
+                <LogoContainer>
+                    <StyledLink to="/SongPage" state={{ currentSong, currentSongIndex }}>
+                        <LogoText>
                             <span>STAR</span>
-                            <img src={logoIcon} alt="Logo" className="logo-icon" style={{ verticalAlign: "middle" }} />
+                            <LogoIconImage src={logoIcon} alt="Logo" />
                             <span className="light">LIGHT</span>
-                        </span>
-                    </Link>
-                </div>
+                        </LogoText>
+                    </StyledLink>
+                </LogoContainer>
 
-                <nav className="nav-links right">
-                    <Link to="/SuggestionPage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
-                        <img src={eventsIcon} alt="Events" className="nav-icon" />
+                <NavLinksContainer className="right">
+                    <StyledLink 
+                        to="/SuggestionPage" 
+                        state={{ currentSong, currentSongIndex }}
+                        active={isActive('/SuggestionPage')}
+                    >
+                        <NavIcon src={eventsIcon} alt="Events" />
                         <span>Events</span>
-                    </Link>
-                    <Link to="/StorePage" state={{ currentSong: currentSong, currentSongIndex: currentSongIndex }}>
-                        <img src={storeIcon} alt="Store" className="nav-icon" />
+                    </StyledLink>
+                    
+                    <StyledLink 
+                        to="/StorePage" 
+                        state={{ currentSong, currentSongIndex }}
+                        active={isActive('/StorePage')}
+                    >
+                        <NavIcon src={storeIcon} alt="Store" />
                         <span>Store</span>
-                    </Link>
-                </nav>
+                    </StyledLink>
+                </NavLinksContainer>
 
-                <div className="leave-button">
-                    <img
+                <LeaveButtonStyled>
+                    <LeaveIcon 
                         src={leaveIcon}
                         alt="Leave"
-                        className="leave-icon"
-                        style={{ width: "26px", height: "26px" }}
                         onClick={handleLeaveClick}
                     />
-                </div>
-            </header>
+                </LeaveButtonStyled>
+            </NavbarContainer>
 
-            <div
-                className={`sidebar ${isSongListOpen ? "open" : ""}`}
-                style={{ backgroundImage: `url(${bgSidebarImage})` }}
-            >
-                <div className="search-bar-container">
+            <SidebarContainer className={isSongListOpen ? "open" : ""} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
+                <SearchBarContainer>
                     <form className="search-form" onSubmit={handleSearchSubmit}>
-                        <label htmlFor="search" className="screen-reader-text">
-                            Search
-                        </label>
+                        <ScreenReaderText>Search</ScreenReaderText>
                         <input
                             type="search"
                             id="search"
@@ -159,15 +191,15 @@ function HeaderBar({
                             className="search-field"
                         />
                         <button type="submit" className="search-submit">
-                            <FaSearch className="search-bar-icon" />
+                            <FaSearch />
                         </button>
                     </form>
-                </div>
+                </SearchBarContainer>
+                
                 <ul>
                     {filteredSongs.map((song: StarlightSong, index: number) => (
-                        <li
+                        <SongItem
                             key={index}
-                            className="song-item"
                             onClick={handleSongClick ? handleSongClick(song) : undefined}
                         >
                             <div className="song-info-sidebar">
@@ -176,38 +208,37 @@ function HeaderBar({
                             </div>
                             <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
                             <span className="sidebar-song-title">{song.title}</span>
-                        </li>
+                        </SongItem>
                     ))}
                 </ul>
-            </div>
+            </SidebarContainer>
 
             {showPopup && (
-                <div className="popup-overlay">
-                    <div className="popup-content">
+                <PopupOverlay>
+                    <PopupContent>
                         <h2>Confirm Leave</h2>
                         <p>Are you sure you want to leave the game?</p>
-                        <button className="stay-button" onClick={handleCancelLeave}>
+                        <StayButton onClick={handleCancelLeave}>
                             Stay
-                        </button>
-                        <button className="logout-button" onClick={handleLogoutRequest}>
+                        </StayButton>
+                        <LogoutButton onClick={handleLogoutRequest}>
                             Logout
-                        </button>
-                        <button className="leave-button" onClick={handleConfirmLeave}>
+                        </LogoutButton>
+                        <LeaveButton onClick={handleConfirmLeave}>
                             Leave
-                        </button>
-                    </div>
-                </div>
+                        </LeaveButton>
+                    </PopupContent>
+                </PopupOverlay>
             )}
 
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/SongPage" element={<SongPage />} />
-                <Route path="/HistoryPage" element={<HistoryPage />} />
+                <Route path="/HistoryPage/:songId/:songIndex" element={<HistoryPage />} />
                 <Route path="/SuggestionPage" element={<SuggestionPage />} />
                 <Route path="/StorePage" element={<StorePage />} />
                 <Route path="/Logout" element={<LandingPage />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
-                <Route path="/TestGame" element={<GameApp />} />
             </Routes>
         </>
     );

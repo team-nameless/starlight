@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import nextArrow from "../assets/nextArrow.png";
-import previousArrow from "../assets/previousArrow.png";
+import nextArrow from "../assets/images/nextArrow.png";
+import previousArrow from "../assets/images/previousArrow.png";
 import { NextPrevButtonProps } from "./props";
 
 function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setCurrentSong }: NextPrevButtonProps) {

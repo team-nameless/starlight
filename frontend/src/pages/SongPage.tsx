@@ -2,14 +2,14 @@ import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import profilePicPlaceholder from "../assets/profile.png";
+import profilePicPlaceholder from "../assets/images/profile.png";
 import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
 import { StarlightSong, StarlightUser } from "../index";
-import "../stylesheets/Main_Menu_Style.css";
+import "../assets/stylesheets/MainPages.css";
 
 function SongPage() {
     const [userProfile, setUserProfile] = useState<StarlightUser>();
@@ -213,7 +213,7 @@ function SongPage() {
                             <div className="song-info">
                                 <div className="song-name">{currentSong?.title}</div>
                                 <div className="artist-name">- {currentSong?.artist} -</div>
-                                <div className="best-score">{bestScore !== null ? bestScore : "No record"}</div>
+                                <div className="best-score">{bestScore !== null ? bestScore : "No record"} </div>
                             </div>
                             {currentSong && (
                                 <PlayButton

@@ -5,13 +5,13 @@ import * as assert from "node:assert";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import sparkle from "../assets/sparkle.png";
+import sparkle from "../assets/images/sparkle.png";
 import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
-import "../stylesheets/Heatmap_Style.css";
-import "../stylesheets/Main_Menu_Style.css";
+import "../assets/stylesheets/HeatmapStyle.css";
+import "../assets/stylesheets/MainPages.css";
 import testHeatmapData from "../test_heatmap.json";
 
 function HistoryPage() {
