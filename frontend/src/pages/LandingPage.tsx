@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
 import "../assets/stylesheets/LandingPage.css";
+import { apiHost } from "../common/site_setting.ts";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -34,7 +35,6 @@ import {
     TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-import { apiHost } from "../common/site_setting.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -130,20 +130,20 @@ function LandingPage() {
 
             // Type narrowing for proper error handling
             if (
-                typeof error === "object" && 
-                error !== null && 
+                typeof error === "object" &&
+                error !== null &&
                 "response" in error &&
-                error.response && 
+                error.response &&
                 typeof error.response === "object" &&
                 "status" in error.response &&
                 "data" in error.response
             ) {
                 // Now TypeScript knows it's an object with response property
                 const axiosError = error as AxiosError<string>;
-                
+
                 if (axiosError.response?.status === 400 && axiosError.response.data) {
                     const errorMessage = String(axiosError.response.data);
-                    
+
                     if (errorMessage.includes("DuplicateEmail")) {
                         setSignUpEmailError("Email already exists");
                     } else {
@@ -198,7 +198,7 @@ function LandingPage() {
             setShowLoginModal(false);
             setShowLoginSuccessModal(true);
             localStorage.setItem("login", "true");
-            
+
             // Store user info if available
             if (response.data && response.data.user) {
                 localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -206,15 +206,15 @@ function LandingPage() {
         } catch (error: unknown) {
             // Type narrowing for proper error handling
             if (
-                typeof error === "object" && 
-                error !== null && 
+                typeof error === "object" &&
+                error !== null &&
                 "response" in error &&
-                error.response && 
+                error.response &&
                 typeof error.response === "object"
             ) {
                 // Now TypeScript knows it's an object with response property
                 const axiosError = error as AxiosError;
-                
+
                 if (axiosError.response?.status === 401) {
                     setLoginEmailError("User not found. Please check your email and password.");
                 } else if (axiosError.response?.status === 400) {

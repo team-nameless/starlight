@@ -1,7 +1,6 @@
 import axios from "axios";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import { apiHost } from "../common/site_setting";
 
 import BeatAchieve from "../assets/images/Achievement-icons/Beat_achieve.png";
 import CrownAchieve from "../assets/images/Achievement-icons/Crown_achieve.png";
@@ -17,6 +16,7 @@ import chatimage from "../assets/images/modal-image/chat.png";
 import girlImage from "../assets/images/modal-image/girlimage.png";
 import profilePicPlaceholder from "../assets/images/profile.png";
 import "../assets/stylesheets/ProfilePage.css";
+import { apiHost } from "../common/site_setting";
 import { ScoreRecord, StarlightSong } from "../index";
 import HistoryPage from "./HistoryPage";
 import LandingPage from "./LandingPage";

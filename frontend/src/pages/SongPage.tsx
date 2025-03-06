@@ -4,8 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 
 import profilePicPlaceholder from "../assets/images/profile.png";
 import "../assets/stylesheets/MainPages.css";
-import { apiHost } from "../common/site_setting.ts";
 import { handleApiError } from "../common/errorHandlers.ts";
+import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
@@ -53,7 +53,7 @@ function SongPage() {
                 }
             } catch (error) {
                 handleApiError(error, {
-                    onDefault: (message) => {
+                    onDefault: message => {
                         console.error("Error fetching user data:", message);
                     }
                 });
