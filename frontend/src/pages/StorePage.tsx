@@ -4,9 +4,7 @@ import { Fragment, useEffect, useState } from "react";
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
 import "./assets/stylesheets/MainPages.css";
-
-
-const rootUrl = "http://localhost:5000";
+import { apiHost } from "../common/site_setting";
 
 function StorePage() {
     const [currentSong, setCurrentSong] = useState<any>(null);
@@ -17,7 +15,7 @@ function StorePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+                const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
-
+import { apiHost } from "./common/site_setting";
 const SongDataContext = createContext<any>(null);
 
-const rootUrl = "http://localhost:5000";
+
 
 export const SongDataProvider = ({ children }: { children: ReactNode }) => {
     const [songs, setSongs] = useState([]);
@@ -13,7 +13,7 @@ export const SongDataProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const songsResponse = await axios.get(`${rootUrl}/api/track/all`, {
+                const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
