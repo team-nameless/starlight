@@ -24,9 +24,9 @@ export default defineConfig({
                 },
                 build: {
                     minify: true,
-                    outDir: "dist-electron",
-                },
-            },
+                    outDir: "dist-electron"
+                }
+            }
         })
     ]
 });

@@ -21,7 +21,7 @@ function createWindow() {
     if (VITE_DEV_SERVER_URL) {
         win.loadURL(VITE_DEV_SERVER_URL).catch();
     } else {
-        win.loadFile(path.join(RENDERER_DIST, 'index.html')).catch()
+        win.loadFile(path.join(RENDERER_DIST, "index.html")).catch();
     }
 }
 

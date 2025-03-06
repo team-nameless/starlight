@@ -2,14 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import "../assets/stylesheets/SuggestionPage.css";
-import "../assets/stylesheets/SuggestionPage.css";
-import "../assets/stylesheets/SuggestionPage.css";
-import "../assets/stylesheets/SuggestionPage.css";
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/MainPages.css";
+import "../assets/stylesheets/SuggestionPage.css";
+import "../assets/stylesheets/SuggestionPage.css";
+import "../assets/stylesheets/SuggestionPage.css";
+import "../assets/stylesheets/SuggestionPage.css";
 import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
