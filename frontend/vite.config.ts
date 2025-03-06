@@ -15,18 +15,20 @@ export default defineConfig({
         }
     },
     plugins: [
+        react(),
         electron({
             entry: "electron/main.ts",
             vite: {
-                plugins: [react()],
-                server: {
-                    port: 3000
-                },
                 build: {
-                    minify: true,
                     outDir: "dist-electron"
                 }
             }
         })
-    ]
+    ],
+    server: {
+        port: 3000,
+    },
+    build: {
+        minify: true,
+    }
 });
