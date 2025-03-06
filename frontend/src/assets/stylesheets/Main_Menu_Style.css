@@ -93,7 +93,6 @@ body {
 
 /* Navigation Links */
 
-
 .nav-links {
     display: flex;
     gap: 30px;
@@ -332,7 +331,6 @@ body {
     transition: background-color 0.3s ease;
 }
 
-
 .song-name {
     font-family: "Lemon", sans-serif;
     font-weight: 400;
@@ -398,7 +396,6 @@ body {
     background-color: #240b36; /* Scrollbar color */
     border-radius: 10px; /* Rounded corners */
 }
-
 
 .sidebar .sidebar-header {
     display: flex;

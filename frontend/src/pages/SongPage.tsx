@@ -2,13 +2,13 @@ import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import profilePicPlaceholder from "../assets/profile.png";
 import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
 import { StarlightSong, StarlightUser } from "../index";
-import profilePicPlaceholder from "../assets/profile.png";
 import "../stylesheets/Main_Menu_Style.css";
 
 function SongPage() {

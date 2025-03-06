@@ -7,8 +7,8 @@ import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
-import "../stylesheets/Main_Menu_Style.css";
 import "../stylesheets//SuggestionPage.css";
+import "../stylesheets/Main_Menu_Style.css";
 
 function SuggestionPage() {
     const location = useLocation();

@@ -338,7 +338,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    font-family: 'Karla', sans-serif;
+    font-family: "Karla", sans-serif;
     background-color: #f0f0f0;
 }
 
@@ -358,7 +358,7 @@
 }
 
 .suggestion-form h2 {
-    font-family: 'Keania One', sans-serif;
+    font-family: "Keania One", sans-serif;
     color: #240b36;
     margin-bottom: 20px;
     font-size: 24px;
@@ -382,7 +382,7 @@
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-family: 'Karla', sans-serif;
+    font-family: "Karla", sans-serif;
     font-size: 16px;
 }
 
@@ -400,7 +400,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-family: 'Karla', sans-serif;
+    font-family: "Karla", sans-serif;
     font-weight: bold;
 }
 
@@ -415,7 +415,7 @@
 }
 
 .suggestions-list h2 {
-    font-family: 'Keania One', sans-serif;
+    font-family: "Keania One", sans-serif;
     color: #240b36;
     margin-bottom: 20px;
     font-size: 24px;
@@ -446,7 +446,7 @@
     font-weight: bold;
     font-size: 18px;
     color: #240b36;
-    font-family: 'Lemon', sans-serif;
+    font-family: "Lemon", sans-serif;
 }
 
 .suggestion-date {
@@ -539,7 +539,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-family: 'Karla', sans-serif;
+    font-family: "Karla", sans-serif;
 }
 
 .reset-button:hover {
@@ -578,13 +578,13 @@
     .suggestion-content {
         flex-direction: column;
     }
-    
+
     .suggestion-form,
     .suggestions-list {
         width: 100%;
         margin-right: 0;
     }
-    
+
     .suggestion-form {
         margin-bottom: 20px;
     }

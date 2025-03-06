@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
-import { requestFullScreen } from "./utils.ts";
 import "../assets/stylesheets/styleoflandingpage.css";
-
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -17,10 +15,11 @@ import {
     FormContainer,
     FormWrapper,
     GirlImage2,
-    GlobalStyle,  // Make sure this is correctly imported
+    GlobalStyle,
+    // Make sure this is correctly imported
     Hero,
-    LogoImage2,
     LoginButton,
+    LogoImage2,
     Modal,
     ModalBackground2,
     ModalContent,
@@ -31,7 +30,10 @@ import {
     SignUpButton,
     SubmitButton,
     TextFieldContainer
-} from "../modelstyle/LandingPageStyles.tsx";  // Correct path to the file
+} from "../modelstyle/LandingPageStyles.tsx";
+import { requestFullScreen } from "./utils.ts";
+
+// Correct path to the file
 
 const rootUrl = "http://localhost:5000";
 
@@ -427,9 +429,7 @@ function LandingPage() {
                             <LogoImage2 src={LogoImage} alt="Logo" />
                             <ModalTitle style={{ marginLeft: "50px" }}>Log In</ModalTitle>
                             <form onSubmit={handleLogin}>
-                                <FormContainer
-                                    style={{ flexDirection: "column", justifyContent: "content-between" }}
-                                >
+                                <FormContainer style={{ flexDirection: "column", justifyContent: "content-between" }}>
                                     <TextFieldContainer>
                                         <label htmlFor="loginEmail">Email:</label>
                                         <TextField
@@ -497,7 +497,10 @@ function LandingPage() {
                                             }}
                                         >
                                             Don't have an account?{" "}
-                                            <span style={{ cursor: "pointer", color: "#0090AA" }} onClick={switchToSignUp}>
+                                            <span
+                                                style={{ cursor: "pointer", color: "#0090AA" }}
+                                                onClick={switchToSignUp}
+                                            >
                                                 Sign Up
                                             </span>
                                             .
@@ -514,7 +517,11 @@ function LandingPage() {
                                             }}
                                         >
                                             <span
-                                                style={{ color: "#686161", textDecoration: "underline", cursor: "pointer" }}
+                                                style={{
+                                                    color: "#686161",
+                                                    textDecoration: "underline",
+                                                    cursor: "pointer"
+                                                }}
                                                 onClick={openForgotPasswordModal}
                                             >
                                                 Forgot your password?
@@ -596,7 +603,9 @@ function LandingPage() {
                                             required
                                         />
                                         {forgotPasswordError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>{forgotPasswordError}</span>
+                                            <span style={{ color: "red", fontSize: "10px" }}>
+                                                {forgotPasswordError}
+                                            </span>
                                         )}
                                     </TextFieldContainer>
                                     <ButtonContainer>

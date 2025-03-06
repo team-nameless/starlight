@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -80,7 +81,6 @@ body {
     transform: translateY(-50%);
     cursor: pointer;
 }
-
 
 body {
     background: #292826;
@@ -178,8 +178,8 @@ body {
     text-decoration: none;
     font-size: 18px;
     transition:
-            color 0.3s ease,
-            transform 0.3s ease; /* Add transition for smooth effect */
+        color 0.3s ease,
+        transform 0.3s ease; /* Add transition for smooth effect */
 }
 
 .nav-links a span {
@@ -225,8 +225,8 @@ body {
     height: 2px; /* Adjust as needed */
     background-color: white;
     transition:
-            width 0.3s ease,
-            left 0.3s ease;
+        width 0.3s ease,
+        left 0.3s ease;
 }
 
 .nav-links.left a:hover::after,
@@ -402,7 +402,6 @@ body {
     background-color: #ff8a05;
     transition: background-color 0.3s ease;
 }
-
 
 .song-name {
     font-family: "Lemon", sans-serif;
@@ -674,9 +673,9 @@ body {
     font-style: italic;
     font-size: 18px;
     transition:
-            clip-path 0.3s ease,
-            padding-left 0.3s ease,
-            opacity 0.3s ease;
+        clip-path 0.3s ease,
+        padding-left 0.3s ease,
+        opacity 0.3s ease;
 }
 
 /* Hover Effects */
@@ -927,4 +926,3 @@ body {
     z-index: 3; /* Ensure text is in front of the overlay-layer */
     text-align: center; /* Ensure text is centered */
 }
-

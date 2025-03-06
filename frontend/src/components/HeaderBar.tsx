@@ -3,6 +3,7 @@ import Fuse from "fuse.js";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link, Route, Routes } from "react-router-dom";
+
 import songSidebarIcon from "../assets/Collapsed_Sidebar/Song-sidebar-icon.png";
 import bgSidebarImage from "../assets/Collapsed_Sidebar/sidebar-bg.png";
 import leaveIcon from "../assets/Header_Items/Leave-icon.png";
@@ -11,7 +12,6 @@ import historyIcon from "../assets/Header_Items/history-icon.png";
 import songsIcon from "../assets/Header_Items/songs-icon.png";
 import storeIcon from "../assets/Header_Items/store-icon.png";
 import logoIcon from "../assets/Starlight-logo.png";
-
 import { apiHost } from "../common/site_setting.ts";
 import GameApp from "../game/GameApp.tsx";
 import { StarlightSong } from "../index";

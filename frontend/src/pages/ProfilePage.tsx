@@ -2,13 +2,6 @@ import axios from "axios";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-import { ScoreRecord, StarlightSong } from "../index";
-import HistoryPage from "./HistoryPage";
-import LandingPage from "./LandingPage";
-import "../stylesheets/ProfilePageStyle.css";
-import SongPage from "./SongPage";
-import StorePage from "./StorePage";
-import SuggestionPage from "./SuggestionPage";
 import BeatAchieve from "../assets/Achievement-icons/Beat_achieve.png";
 import CrownAchieve from "../assets/Achievement-icons/Crown_achieve.png";
 import NonStopAchieve from "../assets/Achievement-icons/Non-stop_achieve.png";
@@ -22,6 +15,13 @@ import cameraIcon from "../assets/camera-icon.png";
 import chatimage from "../assets/modal-image/chat.png";
 import girlImage from "../assets/modal-image/girlimage.png";
 import profilePicPlaceholder from "../assets/profile.png";
+import { ScoreRecord, StarlightSong } from "../index";
+import "../stylesheets/ProfilePageStyle.css";
+import HistoryPage from "./HistoryPage";
+import LandingPage from "./LandingPage";
+import SongPage from "./SongPage";
+import StorePage from "./StorePage";
+import SuggestionPage from "./SuggestionPage";
 
 const rootUrl = "http://localhost:5000";
 

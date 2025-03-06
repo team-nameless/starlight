@@ -5,14 +5,14 @@ import * as assert from "node:assert";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
+import sparkle from "../assets/sparkle.png";
 import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
-import testHeatmapData from "../test_heatmap.json";
-import sparkle from "../assets/sparkle.png";
 import "../stylesheets/Heatmap_Style.css";
 import "../stylesheets/Main_Menu_Style.css";
+import testHeatmapData from "../test_heatmap.json";
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();
