@@ -14,7 +14,7 @@
     object-fit: cover;
     object-position: center;
     transition: opacity 0.5s ease-in-out;
-    filter: blur(100%); /* Apply blur effect */
+    filter: blur(100%);
 }
 
 .overlay-30 {
@@ -131,10 +131,10 @@
 
 .play-card-button-container {
     position: absolute;
-    width: 50px; /* Reduced size */
-    height: 50px; /* Reduced size */
-    bottom: 20px; /* Position at the bottom */
-    right: 20px; /* Position at the right */
+    width: 50px; 
+    height: 50px; 
+    bottom: 20px; 
+    right: 20px; 
     z-index: 2;
 }
 

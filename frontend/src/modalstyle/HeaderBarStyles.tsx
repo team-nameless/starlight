@@ -3,13 +3,13 @@ import styled, { css } from "styled-components";
 
 // Common styling that can be reused across pages
 const activeLinkStyles = css`
-    color: #67d920;
+    color:rgb(255, 255, 255);
     font-weight: bold;
 
     &::after {
         width: 100%;
         left: 0;
-        background-color: #67d920;
+        background-color:rgb(255, 255, 255);
     }
 `;
 
@@ -96,7 +96,7 @@ export const NavIconToggle = styled.div`
 export const NavLinksContainer = styled.nav`
     display: flex;
     gap: 30px;
-    z-index: 1; /* Ensure links are above the logo */
+    z-index: 1; 
     font-family: "Keania One", sans-serif;
 
     &.left {
@@ -171,7 +171,7 @@ export const LogoContainer = styled.div`
 export const LogoWrapper = styled(Link)`
     background-color: #240b36;
     width: 200px;
-    height: 85px;
+    height: 75px;
     border-radius: 100% 100% 20% 20%;
     display: flex;
     justify-content: center;

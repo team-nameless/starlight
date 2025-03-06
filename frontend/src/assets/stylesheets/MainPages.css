@@ -200,7 +200,6 @@ body {
     z-index: -1;
 }
 
-/* Date, Song Info Layout */
 .song-identity {
     position: absolute;
     top: 10px;
@@ -272,12 +271,12 @@ body {
 /* Play Button */
 .play-button-container {
     position: absolute;
-    width: 75px; /* Inner circle slightly smaller */
+    width: 75px; 
     height: 75px;
     bottom: 10px;
-    left: -35px; /* Positioning at the left corner of the song-container */
+    left: -35px; 
     z-index: 2;
-    margin-left: 0; /* Remove the negative margin */
+    margin-left: 0; 
 }
 
 .play-button {
