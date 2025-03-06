@@ -15,7 +15,7 @@ function createWindow() {
     win = new BrowserWindow({
         autoHideMenuBar: true,
         fullscreen: true,
-        alwaysOnTop: true
+        alwaysOnTop: false
     });
 
     if (VITE_DEV_SERVER_URL) {
