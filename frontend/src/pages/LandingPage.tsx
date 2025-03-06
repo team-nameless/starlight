@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
 import "../assets/stylesheets/LandingPage.css";
+import { apiHost } from "../common/site_setting.ts";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -34,7 +35,6 @@ import {
     TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-import { apiHost } from "../common/site_setting.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
