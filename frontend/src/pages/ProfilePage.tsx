@@ -23,7 +23,7 @@ import SongPage from "./SongPage";
 import StorePage from "./StorePage";
 import SuggestionPage from "./SuggestionPage";
 
-const rootUrl = "http://localhost:5000";
+import { apiHost } from "../common/site_setting";
 
 const ProgressBar = ({ current, total, level }: { current: number; total: number; level: number }) => {
     const percentage = Math.floor((current / total) * 10000) / 100;
@@ -89,7 +89,7 @@ function ProfilePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`${rootUrl}/api/user`, {
+                const userResponse = await axios.get(`${apiHost}/api/user`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -124,7 +124,7 @@ function ProfilePage() {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get(`${rootUrl}/api/track/all`, {
+                const response = await axios.get(`${apiHost}/api/track/all`, {
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -203,7 +203,7 @@ function ProfilePage() {
         }
 
         try {
-            const userResponse = await axios.get(`${rootUrl}/api/user`, {
+            const userResponse = await axios.get(`${apiHost}/api/user`, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true
             });
@@ -241,7 +241,7 @@ function ProfilePage() {
 
         try {
             const response = await axios.patch(
-                `${rootUrl}/api/user/profile`,
+                `${apiHost}/api/user/profile`,
                 {
                     password: passwordUpdate.currentPassword,
                     newPassword: passwordUpdate.newPassword
@@ -283,7 +283,7 @@ function ProfilePage() {
         }
 
         try {
-            const userResponse = await axios.get(`${rootUrl}/api/user`, {
+            const userResponse = await axios.get(`${apiHost}/api/user`, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true
             });
@@ -310,7 +310,7 @@ function ProfilePage() {
 
         try {
             const loginResponse = await axios.post(
-                `${rootUrl}/api/login`,
+                `${apiHost}/api/login`,
                 {
                     email: emailUpdate.email,
                     password: emailUpdate.password
@@ -338,7 +338,7 @@ function ProfilePage() {
 
         try {
             const response = await axios.patch(
-                `${rootUrl}/api/user/profile`,
+                `${apiHost}/api/user/profile`,
                 {
                     email: emailUpdate.newEmail,
                     password: emailUpdate.password
@@ -373,7 +373,7 @@ function ProfilePage() {
             formData.append("file", file);
 
             try {
-                const response = await axios.put(`${rootUrl}/api/user/profile/image`, formData, {
+                const response = await axios.put(`${apiHost}/api/user/profile/image`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     },

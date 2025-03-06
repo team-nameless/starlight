@@ -34,8 +34,7 @@ import {
     TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-
-const rootUrl = "http://localhost:5000";
+import { apiHost } from "../common/site_setting.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -112,7 +111,7 @@ function LandingPage() {
 
         try {
             const response = await axios.post(
-                `${rootUrl}/api/register`,
+                `${apiHost}/api/register`,
                 { handle, email, password },
                 {
                     headers: {
@@ -152,7 +151,7 @@ function LandingPage() {
 
         try {
             const response = await axios.post(
-                `${rootUrl}/api/login`,
+                `${apiHost}/api/login`,
                 { email: loginEmail, password: loginPassword },
                 {
                     headers: {
@@ -234,7 +233,7 @@ function LandingPage() {
 
         try {
             const response = await axios.post(
-                `${rootUrl}/api/forgotPassword`,
+                `${apiHost}/api/forgotPassword`,
                 { email: forgotPasswordEmail },
                 {
                     headers: { "Content-Type": "application/json" }
@@ -271,7 +270,7 @@ function LandingPage() {
 
         try {
             const response = await axios.post(
-                `${rootUrl}/api/resetPassword`,
+                `${apiHost}/api/resetPassword`,
                 { email: forgotPasswordEmail, code: forgotPasswordCode, newPassword },
                 {
                     headers: { "Content-Type": "application/json" }
