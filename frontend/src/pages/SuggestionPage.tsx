@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import "../assets/stylesheets//SuggestionPage.css";
@@ -11,6 +11,9 @@ import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
+import "../assets/stylesheets//SuggestionPage.css";
+import "../assets/stylesheets/MainPages.css";
+
 
 function SuggestionPage() {
     const location = useLocation();
@@ -170,7 +173,7 @@ function SuggestionPage() {
     };
 
     return (
-        <Fragment>
+        <>
             <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
@@ -235,7 +238,8 @@ function SuggestionPage() {
                 </div>
             </div>
             {currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}
-        </Fragment>
+        </>
+
     );
 }
 

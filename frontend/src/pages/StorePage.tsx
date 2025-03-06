@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
@@ -49,7 +49,7 @@ function StorePage() {
     };
 
     return (
-        <Fragment>
+        <>
             <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
@@ -85,7 +85,7 @@ function StorePage() {
                     <div className="coming-soon-text">Coming soon...</div>
                 </div>
             </div>
-        </Fragment>
+        </>
     );
 }
 

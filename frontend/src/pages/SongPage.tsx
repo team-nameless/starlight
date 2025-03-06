@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import profilePicPlaceholder from "../assets/images/profile.png";
@@ -149,7 +149,7 @@ function SongPage() {
     };
 
     return (
-        <Fragment>
+        <>
             {currentSong && (
                 <HeaderBar
                     currentSong={currentSong}
@@ -228,7 +228,7 @@ function SongPage() {
                 </div>
             </div>
             {currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}
-        </Fragment>
+        </>
     );
 }
 
