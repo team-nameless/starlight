@@ -17,7 +17,6 @@
         "@testing-library/user-event": "^14.6.1",
         "axios": "^1.8.1",
         "d3": "^7.9.0",
-        "electron": "^35.0.0",
         "fuse.js": "^7.1.0",
         "phaser": "^3.88.2",
         "react": "^18.3.1",
