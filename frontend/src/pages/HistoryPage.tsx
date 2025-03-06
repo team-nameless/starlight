@@ -1,27 +1,22 @@
 import axios from "axios";
 import * as d3 from "d3";
 import "d3-scale-chromatic";
-import * as assert from "node:assert";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import sparkle from "../assets/images/sparkle.png";
+import "../assets/stylesheets/HeatmapStyle.css";
+import "../assets/stylesheets/MainPages.css";
 import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
-import "../assets/stylesheets/HeatmapStyle.css";
-import "../assets/stylesheets/MainPages.css";
 import testHeatmapData from "../test_heatmap.json";
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();
-
-    assert(songId !== undefined);
-    assert(songIndex !== undefined);
-
     const [currentSong, setCurrentSong] = useState<StarlightSong>();
-    const [currentSongIndex, setCurrentSongIndex] = useState(parseInt(songIndex));
+    const [currentSongIndex, setCurrentSongIndex] = useState(parseInt(songIndex!));
     const [_bestScore, setBestScore] = useState<string | null>(null);
     const [songs, setSongs] = useState([]);
     const heatmapContainer1Ref = useRef(null);
@@ -46,7 +41,7 @@ function HistoryPage() {
                     withCredentials: true
                 });
                 setCurrentSong(response.data);
-                setCurrentSongIndex(parseInt(songIndex));
+                setCurrentSongIndex(parseInt(songIndex!));
             } catch (error) {
                 console.error("Error fetching song data:", error);
             }

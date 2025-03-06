@@ -1,0 +1,36 @@
+{
+    "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/refs/heads/master/packages/app-builder-lib/scheme.json",
+    "appId": "org.nameless.starlight",
+    "productName": "Starlight",
+    "asar": true,
+    "icon": "./public/appicon.png",
+    "npmRebuild": false,
+    "directories": {
+        "output": "release"
+    },
+    "files": ["dist-electron", "dist"],
+    "mac": {
+        "artifactName": "${productName}.${ext}",
+        "target": ["dmg"]
+    },
+    "win": {
+        "target": [
+            {
+                "target": "portable",
+                "arch": ["x64"]
+            }
+        ],
+        "signAndEditExecutable": false,
+        "artifactName": "${productName}.${ext}"
+    },
+    "linux": {
+        "target": "AppImage",
+        "category": "Game"
+    },
+    "nsis": {
+        "oneClick": false,
+        "perMachine": false,
+        "allowToChangeInstallationDirectory": true,
+        "deleteAppDataOnUninstall": false
+    }
+}

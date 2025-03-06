@@ -1,13 +1,11 @@
 import TextField from "@atlaskit/textfield";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
 import "../assets/stylesheets/LandingPage.css";
-import { apiHost } from "../common/site_setting.ts";
-import { handleApiError } from "../common/errorHandlers.ts";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -36,6 +34,7 @@ import {
     TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
+import { apiHost } from "../common/site_setting.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -75,7 +74,7 @@ function LandingPage() {
         }
     }, [showSuccessModal]);
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setHandleError("");
         setSignUpEmailError("");
@@ -127,29 +126,57 @@ function LandingPage() {
             setShowSignUpModal(false);
             setShowSuccessModal(true);
         } catch (error: unknown) {
-            handleApiError(error, {
-                onBadRequest: (message) => {
-                    if (message.includes("DuplicateEmail")) {
+            console.error("Error fetching data:", error);
+
+            // Type narrowing for proper error handling
+            if (
+                typeof error === "object" && 
+                error !== null && 
+                "response" in error &&
+                error.response && 
+                typeof error.response === "object" &&
+                "status" in error.response &&
+                "data" in error.response
+            ) {
+                // Now TypeScript knows it's an object with response property
+                const axiosError = error as AxiosError<string>;
+                
+                if (axiosError.response?.status === 400 && axiosError.response.data) {
+                    const errorMessage = String(axiosError.response.data);
+                    
+                    if (errorMessage.includes("DuplicateEmail")) {
                         setSignUpEmailError("Email already exists");
                     } else {
-                        alert(`Registration failed: ${message}`);
+                        // Handle other specific error messages
+                        alert(`Registration failed: ${errorMessage}`);
                     }
-                },
-                onNetworkError: () => {
-                    alert("Network error: Cannot connect to server.");
-                },
-                onDefault: (message) => {
-                    alert(`Registration failed: ${message || "Please try again"}`);
+                } else {
+                    alert("Registration failed with status: " + axiosError.response?.status);
                 }
-            });
+            } else if (
+                typeof error === "object" &&
+                error !== null &&
+                "message" in error &&
+                typeof error.message === "string"
+            ) {
+                // Handle network errors
+                if (error.message === "Network Error") {
+                    alert("Network error: Cannot connect to server. Please check your connection and try again.");
+                } else {
+                    alert(`Error: ${error.message}`);
+                }
+            } else {
+                // Unknown error type
+                alert("Registration failed. Please try again.");
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleLogin = async (e: { preventDefault: () => void; }) => {
+    const handleLogin = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        setHandleError("");
+
         setLoginEmailError("");
         setLoginPasswordError("");
         setIsLoading(true);
@@ -177,21 +204,41 @@ function LandingPage() {
                 localStorage.setItem("user", JSON.stringify(response.data.user));
             }
         } catch (error: unknown) {
-            handleApiError(error, {
-                onUnauthorized: () => {
+            // Type narrowing for proper error handling
+            if (
+                typeof error === "object" && 
+                error !== null && 
+                "response" in error &&
+                error.response && 
+                typeof error.response === "object"
+            ) {
+                // Now TypeScript knows it's an object with response property
+                const axiosError = error as AxiosError;
+                
+                if (axiosError.response?.status === 401) {
                     setLoginEmailError("User not found. Please check your email and password.");
-                },
-                onBadRequest: (message) => {
-                    setLoginEmailError(message || "Invalid login credentials");
-                },
-                onNetworkError: () => {
-                    alert("Network error: Cannot connect to server.");
-                },
-                onDefault: () => {
+                } else if (axiosError.response?.status === 400) {
+                    const errorData = axiosError.response.data as string;
+                    setLoginEmailError(errorData || "Invalid login credentials");
+                } else {
                     console.error("Error logging in:", error);
-                    alert("An unexpected error occurred. Please try again later.");
+                    alert("Login failed. Please try again.");
                 }
-            });
+            } else if (
+                typeof error === "object" &&
+                error !== null &&
+                "message" in error &&
+                typeof error.message === "string"
+            ) {
+                if (error.message === "Network Error") {
+                    alert("Network error: Cannot connect to server. Please check your connection and try again.");
+                } else {
+                    alert(`Error: ${error.message}`);
+                }
+            } else {
+                console.error("Error logging in:", error);
+                alert("An unexpected error occurred. Please try again later.");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -234,9 +281,8 @@ function LandingPage() {
         setShowLoginPassword(!showLoginPassword);
     };
 
-    const handleForgotPassword = async (e: { preventDefault: () => void; }) => {
+    const handleForgotPassword = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        setHandleError
         setForgotPasswordError("");
         setIsLoading(true);
 
@@ -264,11 +310,17 @@ function LandingPage() {
                 setShowNotificationModal(true);
             }
         } catch (error: unknown) {
-            handleApiError(error, {
-                setErrorState: (message) => {
-                    setForgotPasswordError(`Failed to send reset code: ${message}`);
-                }
-            });
+            // Type narrowing for proper error handling
+            if (
+                typeof error === "object" &&
+                error !== null &&
+                "message" in error &&
+                typeof error.message === "string"
+            ) {
+                setForgotPasswordError(`Failed to send reset code: ${error.message}`);
+            } else {
+                setForgotPasswordError("Failed to send reset code. Please try again.");
+            }
         } finally {
             setIsLoading(false);
         }

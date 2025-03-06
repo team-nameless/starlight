@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import "../assets/stylesheets/MainPages.css";
+import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
-import "./assets/stylesheets/MainPages.css";
-import { apiHost } from "../common/site_setting";
 
 function StorePage() {
     const [currentSong, setCurrentSong] = useState<any>(null);
@@ -42,13 +42,13 @@ function StorePage() {
             setCurrentSong(song);
         }
     };
-    
+
     const toggleSongList = () => {
         setIsSongListOpen(!isSongListOpen);
     };
 
     return (
-        <Fragment>
+        <>
             <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
@@ -60,7 +60,16 @@ function StorePage() {
                 isSongListOpen={isSongListOpen}
             />
 
-                <div className="content-layer">
+            <div className="content-layer">
+                <div className="background-image">
+                    <img
+                        src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                        alt="Background"
+                    />
+                </div>
+
+                <div className="store-content">
+                    {/* Background Image */}
                     <div className="background-image">
                         <img
                             src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
@@ -68,23 +77,14 @@ function StorePage() {
                         />
                     </div>
 
-                    <div className="store-content">
-                        {/* Background Image */}
-                        <div className="background-image">
-                            <img
-                                src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
-                                alt="Background"
-                            />
-                        </div>
+                    {/* Overlay Layer */}
+                    <div className="overlay-layer" style={{ height: "1000px" }}></div>
 
-                        {/* Overlay Layer */}
-                        <div className="overlay-layer" style={{ height: "1000px" }}></div>
-
-                        {/* Coming Soon Text */}
-                        <div className="coming-soon-text">Coming soon...</div>
-                    </div>
+                    {/* Coming Soon Text */}
+                    <div className="coming-soon-text">Coming soon...</div>
                 </div>
-        </Fragment>
+            </div>
+        </>
     );
 }
 

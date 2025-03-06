@@ -16,15 +16,13 @@ import cameraIcon from "../assets/images/camera-icon.png";
 import chatimage from "../assets/images/modal-image/chat.png";
 import girlImage from "../assets/images/modal-image/girlimage.png";
 import profilePicPlaceholder from "../assets/images/profile.png";
-import { ScoreRecord, StarlightSong } from "../index";
 import "../assets/stylesheets/ProfilePage.css";
+import { ScoreRecord, StarlightSong } from "../index";
 import HistoryPage from "./HistoryPage";
 import LandingPage from "./LandingPage";
 import SongPage from "./SongPage";
 import StorePage from "./StorePage";
 import SuggestionPage from "./SuggestionPage";
-
-
 
 const ProgressBar = ({ current, total, level }: { current: number; total: number; level: number }) => {
     const percentage = Math.floor((current / total) * 10000) / 100;

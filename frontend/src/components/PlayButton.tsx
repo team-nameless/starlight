@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { apiHost } from "../common/site_setting.ts";
-import { requestFullScreen } from "../common/utils";
 import { PlayButtonProps } from "./props";
 
 function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayButtonProps) {
@@ -19,7 +18,6 @@ function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayBu
         if (currentSong) {
             try {
                 await axios.post(`${apiHost}/api/game/start`, { songId: currentSong.id }, { withCredentials: true });
-                requestFullScreen();
                 navigate(`/TestGame`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
             } catch (error) {
                 console.error("Error starting game:", error);
