@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
-import { ComingSoonContainer, ComingSoonText, OverlayLayer, PageContainer } from "../modalstyle/HeaderBarStyles";
+import "./assets/stylesheets/MainPages.css";
+
 
 const rootUrl = "http://localhost:5000";
 
@@ -49,7 +50,7 @@ function StorePage() {
     };
 
     return (
-        <PageContainer>
+        <Fragment>
             <HeaderBar
                 currentSong={currentSong}
                 currentSongIndex={currentSongIndex}
@@ -61,11 +62,31 @@ function StorePage() {
                 isSongListOpen={isSongListOpen}
             />
 
-            <ComingSoonContainer>
-                <OverlayLayer />
-                <ComingSoonText>Coming soon...</ComingSoonText>
-            </ComingSoonContainer>
-        </PageContainer>
+                <div className="content-layer">
+                    <div className="background-image">
+                        <img
+                            src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                            alt="Background"
+                        />
+                    </div>
+
+                    <div className="store-content">
+                        {/* Background Image */}
+                        <div className="background-image">
+                            <img
+                                src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                                alt="Background"
+                            />
+                        </div>
+
+                        {/* Overlay Layer */}
+                        <div className="overlay-layer" style={{ height: "1000px" }}></div>
+
+                        {/* Coming Soon Text */}
+                        <div className="coming-soon-text">Coming soon...</div>
+                    </div>
+                </div>
+        </Fragment>
     );
 }
 

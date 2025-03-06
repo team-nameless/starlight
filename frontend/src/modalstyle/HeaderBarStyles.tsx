@@ -447,46 +447,5 @@ export const SongItem = styled.li`
     }
 `;
 
-// Add the PageContainer and related components for consistency
-export const PageContainer = styled.div`
-    padding-top: 50px; /* Space for the header */
-    min-height: 100vh;
-    background-color: #292826;
-    color: white;
-`;
 
-export const ContentContainer = styled.div`
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-`;
 
-// Special container for Store and Suggestion pages with "Coming Soon" overlay
-export const ComingSoonContainer = styled.div`
-    position: relative;
-    height: calc(100vh - 50px);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-export const OverlayLayer = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(360deg, rgba(27, 0, 64, 1) 0%, rgba(0, 10, 39, 0.45) 100%);
-    z-index: 2;
-`;
-
-export const ComingSoonText = styled.h1`
-    position: relative;
-    font-family: "Kotta One", sans-serif;
-    font-size: 50px;
-    color: #bde4f4;
-    z-index: 3;
-    text-align: center;
-`;
