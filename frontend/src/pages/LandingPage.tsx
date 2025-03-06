@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
 import "../assets/stylesheets/LandingPage.css";
+import { apiHost } from "../common/site_setting.ts";
+import { handleApiError } from "../common/errorHandlers.ts";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -26,15 +28,14 @@ import {
     NavButtons,
     PlayButton,
     PlayIconContainer,
-    SignUpButton,
-    SubmitButton,
-    TextFieldContainer,
-    PopupOverlay,
     PopupContent,
-    StayButton
-} from "../modalstyle/PopUpModals.tsx";  
+    PopupOverlay,
+    SignUpButton,
+    StayButton,
+    SubmitButton,
+    TextFieldContainer
+} from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-import { apiHost } from "../common/site_setting.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -64,7 +65,6 @@ function LandingPage() {
     const navigate = useNavigate();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
 
-
     useEffect(() => {
         if (showSuccessModal) {
             const timer = setTimeout(() => {
@@ -75,7 +75,7 @@ function LandingPage() {
         }
     }, [showSuccessModal]);
 
-    const handleSubmit = async (e: { preventDefault: () => void }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         setHandleError("");
         setSignUpEmailError("");
@@ -126,26 +126,30 @@ function LandingPage() {
             setData(response.data);
             setShowSignUpModal(false);
             setShowSuccessModal(true);
-        } catch (error: any) {
-            console.error("Error fetching data:", error);
-
-            if (error.response && error.response.status === 400 && error.response.data) {
-                const errorMessage = error.response.data;
-
-                if (errorMessage.includes("DuplicateEmail")) {
-                    setSignUpEmailError("Email already exists");
+        } catch (error: unknown) {
+            handleApiError(error, {
+                onBadRequest: (message) => {
+                    if (message.includes("DuplicateEmail")) {
+                        setSignUpEmailError("Email already exists");
+                    } else {
+                        alert(`Registration failed: ${message}`);
+                    }
+                },
+                onNetworkError: () => {
+                    alert("Network error: Cannot connect to server.");
+                },
+                onDefault: (message) => {
+                    alert(`Registration failed: ${message || "Please try again"}`);
                 }
-            } else {
-                alert("Registration failed. Please try again.");
-            }
+            });
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleLogin = async (e: { preventDefault: () => void }) => {
+    const handleLogin = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-
+        setHandleError("");
         setLoginEmailError("");
         setLoginPasswordError("");
         setIsLoading(true);
@@ -167,14 +171,27 @@ function LandingPage() {
             setShowLoginModal(false);
             setShowLoginSuccessModal(true);
             localStorage.setItem("login", "true");
-        } catch (error: any) {
-            if (error.response && error.response.status === 401) {
-                setLoginEmailError("User not found. Please check your email and password.");
-                setLoginPasswordError("");
-            } else {
-                console.error("Error logging in:", error);
-                alert("An unexpected error occurred. Please try again later.");
+            
+            // Store user info if available
+            if (response.data && response.data.user) {
+                localStorage.setItem("user", JSON.stringify(response.data.user));
             }
+        } catch (error: unknown) {
+            handleApiError(error, {
+                onUnauthorized: () => {
+                    setLoginEmailError("User not found. Please check your email and password.");
+                },
+                onBadRequest: (message) => {
+                    setLoginEmailError(message || "Invalid login credentials");
+                },
+                onNetworkError: () => {
+                    alert("Network error: Cannot connect to server.");
+                },
+                onDefault: () => {
+                    console.error("Error logging in:", error);
+                    alert("An unexpected error occurred. Please try again later.");
+                }
+            });
         } finally {
             setIsLoading(false);
         }
@@ -185,7 +202,7 @@ function LandingPage() {
             setShowLoginReminderModal(true);
         } else {
             requestFullScreen();
-            navigate("/SongPage"); 
+            navigate("/SongPage");
         }
     };
 
@@ -217,8 +234,9 @@ function LandingPage() {
         setShowLoginPassword(!showLoginPassword);
     };
 
-    const handleForgotPassword = async (e: { preventDefault: () => void }) => {
+    const handleForgotPassword = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
+        setHandleError
         setForgotPasswordError("");
         setIsLoading(true);
 
@@ -245,8 +263,12 @@ function LandingPage() {
                 closeModal();
                 setShowNotificationModal(true);
             }
-        } catch (error: any) {
-            setForgotPasswordError("Failed to send reset code. Please try again.");
+        } catch (error: unknown) {
+            handleApiError(error, {
+                setErrorState: (message) => {
+                    setForgotPasswordError(`Failed to send reset code: ${message}`);
+                }
+            });
         } finally {
             setIsLoading(false);
         }
@@ -530,15 +552,12 @@ function LandingPage() {
                     </Modal>
                 )}
 
-
                 {showSuccessModal && (
                     <PopupOverlay>
                         <PopupContent>
                             <h2>Register successful</h2>
                             <p>Please log in to play the game.</p>
-                            <StayButton onClick={closeModal}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}
@@ -569,9 +588,7 @@ function LandingPage() {
                                 You have successfully logged in. Please click the "Start Game" button to enter the song
                                 page.
                             </p>
-                            <StayButton onClick={closeModal}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}
@@ -614,9 +631,7 @@ function LandingPage() {
                         <PopupContent>
                             <h2>Notification</h2>
                             <p>Please log in to continue.</p>
-                            <StayButton onClick={() => setShowLoginReminderModal(false)}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={() => setShowLoginReminderModal(false)}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}

@@ -2,13 +2,13 @@ import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import "../assets/stylesheets//SuggestionPage.css";
+import "../assets/stylesheets/MainPages.css";
 import { apiHost } from "../common/site_setting.ts";
 import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
-import "../assets/stylesheets//SuggestionPage.css";
-import "../assets/stylesheets/MainPages.css";
 
 
 function SuggestionPage() {
