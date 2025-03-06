@@ -1,16 +1,16 @@
-import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 // Common styling that can be reused across pages
 const activeLinkStyles = css`
-  color: #67d920;
-  font-weight: bold;
-  
-  &::after {
-    width: 100%;
-    left: 0;
-    background-color: #67d920;
-  }
+    color: #67d920;
+    font-weight: bold;
+
+    &::after {
+        width: 100%;
+        left: 0;
+        background-color: #67d920;
+    }
 `;
 
 // Navbar related styled components
@@ -120,7 +120,9 @@ export const StyledLink = styled(Link)<StyledLinkProps>`
     align-items: center;
     text-decoration: none;
     font-size: 18px;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
     position: relative;
 
     span {
@@ -136,7 +138,9 @@ export const StyledLink = styled(Link)<StyledLinkProps>`
         width: 0;
         height: 2px;
         background-color: white;
-        transition: width 0.3s ease, left 0.3s ease;
+        transition:
+            width 0.3s ease,
+            left 0.3s ease;
     }
 
     &:hover::after {
@@ -410,7 +414,10 @@ export const SongItem = styled.li`
         font-weight: 600;
         font-style: italic;
         font-size: 18px;
-        transition: clip-path 0.3s ease, padding-left 0.3s ease, opacity 0.3s ease;
+        transition:
+            clip-path 0.3s ease,
+            padding-left 0.3s ease,
+            opacity 0.3s ease;
     }
 
     /* Hover Effects - Explicitly including the song-info-sidebar display: none */
@@ -483,5 +490,3 @@ export const ComingSoonText = styled.h1`
     z-index: 3;
     text-align: center;
 `;
-
-

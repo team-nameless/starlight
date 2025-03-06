@@ -6,12 +6,12 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import sparkle from "../assets/images/sparkle.png";
+import "../assets/stylesheets/HeatmapStyle.css";
+import "../assets/stylesheets/MainPages.css";
 import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
-import "../assets/stylesheets/HeatmapStyle.css";
-import "../assets/stylesheets/MainPages.css";
 import testHeatmapData from "../test_heatmap.json";
 
 function HistoryPage() {

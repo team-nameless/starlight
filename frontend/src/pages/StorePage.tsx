@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
-import {
-    PageContainer,
-    ComingSoonContainer,
-    ComingSoonText,
-    OverlayLayer
-} from "../modalstyle/HeaderBarStyles";
+import { ComingSoonContainer, ComingSoonText, OverlayLayer, PageContainer } from "../modalstyle/HeaderBarStyles";
 
 const rootUrl = "http://localhost:5000";
 
@@ -48,7 +43,7 @@ function StorePage() {
             setCurrentSong(song);
         }
     };
-    
+
     const toggleSongList = () => {
         setIsSongListOpen(!isSongListOpen);
     };

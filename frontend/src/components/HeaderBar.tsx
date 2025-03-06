@@ -14,6 +14,23 @@ import storeIcon from "../assets/images/Header_Items/store-icon.png";
 import logoIcon from "../assets/images/Starlight-logo.png";
 import { apiHost } from "../common/site_setting.ts";
 import { StarlightSong } from "../index";
+import {
+    LeaveButton as LeaveButtonStyled,
+    LeaveIcon,
+    LogoContainer,
+    LogoIconImage,
+    LogoText,
+    NavIcon,
+    NavIconToggle,
+    NavLinksContainer,
+    NavbarContainer,
+    ScreenReaderText,
+    SearchBarContainer,
+    SidebarContainer,
+    SongItem,
+    StyledLink
+} from "../modalstyle/HeaderBarStyles";
+import { LeaveButton, LogoutButton, PopupContent, PopupOverlay, StayButton } from "../modalstyle/PopUpModals";
 import HistoryPage from "../pages/HistoryPage.tsx";
 import LandingPage from "../pages/LandingPage.tsx";
 import ProfilePage from "../pages/ProfilePage.tsx";
@@ -21,29 +38,6 @@ import SongPage from "../pages/SongPage.tsx";
 import StorePage from "../pages/StorePage.tsx";
 import SuggestionPage from "../pages/SuggestionPage.tsx";
 import { HeaderBarProps } from "./props";
-import {
-    PopupOverlay,
-    PopupContent,
-    StayButton,
-    LeaveButton,
-    LogoutButton
-} from "../modalstyle/PopUpModals";
-import {
-    NavbarContainer,
-    NavIconToggle,
-    NavLinksContainer,
-    NavIcon,
-    LogoContainer,
-    LogoText,
-    LogoIconImage,
-    LeaveButton as LeaveButtonStyled,
-    LeaveIcon,
-    SidebarContainer,
-    SearchBarContainer,
-    ScreenReaderText,
-    SongItem,
-    StyledLink
-} from "../modalstyle/HeaderBarStyles";
 
 function HeaderBar({
     currentSong,
@@ -120,19 +114,15 @@ function HeaderBar({
                 </NavIconToggle>
 
                 <NavLinksContainer className="left">
-                    <StyledLink 
-                        to="/SongPage" 
-                        state={{ currentSong, currentSongIndex }}
-                        active={isActive('/SongPage')}
-                    >
+                    <StyledLink to="/SongPage" state={{ currentSong, currentSongIndex }} active={isActive("/SongPage")}>
                         <NavIcon src={songsIcon} alt="Songs" />
                         <span>Songs</span>
                     </StyledLink>
-                    
-                    <StyledLink 
+
+                    <StyledLink
                         to={`/HistoryPage/${currentSong?.id ?? 586954}/${currentSongIndex ?? 0}`}
                         state={{ currentSong, currentSongIndex }}
-                        active={isActive('/HistoryPage')}
+                        active={isActive("/HistoryPage")}
                     >
                         <NavIcon src={historyIcon} alt="History" />
                         <span>History</span>
@@ -150,19 +140,19 @@ function HeaderBar({
                 </LogoContainer>
 
                 <NavLinksContainer className="right">
-                    <StyledLink 
-                        to="/SuggestionPage" 
+                    <StyledLink
+                        to="/SuggestionPage"
                         state={{ currentSong, currentSongIndex }}
-                        active={isActive('/SuggestionPage')}
+                        active={isActive("/SuggestionPage")}
                     >
                         <NavIcon src={eventsIcon} alt="Events" />
                         <span>Events</span>
                     </StyledLink>
-                    
-                    <StyledLink 
-                        to="/StorePage" 
+
+                    <StyledLink
+                        to="/StorePage"
                         state={{ currentSong, currentSongIndex }}
-                        active={isActive('/StorePage')}
+                        active={isActive("/StorePage")}
                     >
                         <NavIcon src={storeIcon} alt="Store" />
                         <span>Store</span>
@@ -170,15 +160,14 @@ function HeaderBar({
                 </NavLinksContainer>
 
                 <LeaveButtonStyled>
-                    <LeaveIcon 
-                        src={leaveIcon}
-                        alt="Leave"
-                        onClick={handleLeaveClick}
-                    />
+                    <LeaveIcon src={leaveIcon} alt="Leave" onClick={handleLeaveClick} />
                 </LeaveButtonStyled>
             </NavbarContainer>
 
-            <SidebarContainer className={isSongListOpen ? "open" : ""} style={{ backgroundImage: `url(${bgSidebarImage})` }}>
+            <SidebarContainer
+                className={isSongListOpen ? "open" : ""}
+                style={{ backgroundImage: `url(${bgSidebarImage})` }}
+            >
                 <SearchBarContainer>
                     <form className="search-form" onSubmit={handleSearchSubmit}>
                         <ScreenReaderText>Search</ScreenReaderText>
@@ -195,13 +184,10 @@ function HeaderBar({
                         </button>
                     </form>
                 </SearchBarContainer>
-                
+
                 <ul>
                     {filteredSongs.map((song: StarlightSong, index: number) => (
-                        <SongItem
-                            key={index}
-                            onClick={handleSongClick ? handleSongClick(song) : undefined}
-                        >
+                        <SongItem key={index} onClick={handleSongClick ? handleSongClick(song) : undefined}>
                             <div className="song-info-sidebar">
                                 <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
                                 <span className="sidebar-song">{song.title}</span>
@@ -218,15 +204,9 @@ function HeaderBar({
                     <PopupContent>
                         <h2>Confirm Leave</h2>
                         <p>Are you sure you want to leave the game?</p>
-                        <StayButton onClick={handleCancelLeave}>
-                            Stay
-                        </StayButton>
-                        <LogoutButton onClick={handleLogoutRequest}>
-                            Logout
-                        </LogoutButton>
-                        <LeaveButton onClick={handleConfirmLeave}>
-                            Leave
-                        </LeaveButton>
+                        <StayButton onClick={handleCancelLeave}>Stay</StayButton>
+                        <LogoutButton onClick={handleLogoutRequest}>Logout</LogoutButton>
+                        <LeaveButton onClick={handleConfirmLeave}>Leave</LeaveButton>
                     </PopupContent>
                 </PopupOverlay>
             )}

@@ -26,15 +26,14 @@ import {
     NavButtons,
     PlayButton,
     PlayIconContainer,
-    SignUpButton,
-    SubmitButton,
-    TextFieldContainer,
-    PopupOverlay,
     PopupContent,
+    PopupOverlay,
+    SignUpButton,
     StayButton,
+    SubmitButton,
+    TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-
 
 const rootUrl = "http://localhost:5000";
 
@@ -65,7 +64,6 @@ function LandingPage() {
     const [forgotPasswordError, setForgotPasswordError] = useState("");
     const navigate = useNavigate();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
-
 
     useEffect(() => {
         if (showSuccessModal) {
@@ -187,7 +185,7 @@ function LandingPage() {
             setShowLoginReminderModal(true);
         } else {
             requestFullScreen();
-            navigate("/SongPage"); 
+            navigate("/SongPage");
         }
     };
 
@@ -532,15 +530,12 @@ function LandingPage() {
                     </Modal>
                 )}
 
-
                 {showSuccessModal && (
                     <PopupOverlay>
                         <PopupContent>
                             <h2>Register successful</h2>
                             <p>Please log in to play the game.</p>
-                            <StayButton onClick={closeModal}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}
@@ -571,9 +566,7 @@ function LandingPage() {
                                 You have successfully logged in. Please click the "Start Game" button to enter the song
                                 page.
                             </p>
-                            <StayButton onClick={closeModal}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}
@@ -616,9 +609,7 @@ function LandingPage() {
                         <PopupContent>
                             <h2>Notification</h2>
                             <p>Please log in to continue.</p>
-                            <StayButton onClick={() => setShowLoginReminderModal(false)}>
-                                Close
-                            </StayButton>
+                            <StayButton onClick={() => setShowLoginReminderModal(false)}>Close</StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}
