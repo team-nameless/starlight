@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "./modalstyle/PopUpModals";
 import HistoryPage from "./pages/HistoryPage.tsx";
@@ -11,7 +11,7 @@ import SuggestionPage from "./pages/SuggestionPage.tsx";
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
@@ -22,7 +22,7 @@ function App() {
                     <Route path="/ProfilePage" element={<ProfilePage />} />
                 </Routes>
             </Suspense>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

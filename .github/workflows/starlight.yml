@@ -23,7 +23,7 @@ jobs:
           cache: "npm"
           node-version: "23"
 
-      - name: Install npm packages
+      - name: Install (or restore) npm packages
         run: |
           npm ci
 
@@ -33,7 +33,11 @@ jobs:
 
       - name: Run test suite for backend.
         run: |
-          npm run test:server
+          npm run test --workspace server
+
+      - name: Smoke build the frontend app.
+        run: |
+          npm run build:win --workspace frontend
 
       - name: Un-shit the code.
         run: |

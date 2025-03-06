@@ -4,10 +4,7 @@
     "private": true,
     "description": "4-button VSRG on the web?",
     "scripts": {
-        "test:server": "npm run test --workspace server",
-        "prettify": "npx prettier --write .",
-        "start:server": "npm run start --workspace server",
-        "start:web": "npm run dev --workspace frontend"
+        "prettify": "npx prettier --write ."
     },
     "repository": {
         "type": "git",
@@ -44,8 +41,5 @@
         "tsx": "^4.19.3",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.26.0"
-    },
-    "dependencies": {
-        "npm-check-updates": "^17.1.15"
     }
 }

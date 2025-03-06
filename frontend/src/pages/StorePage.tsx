@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import "../assets/stylesheets/MainPages.css";
 import { apiHost } from "../common/site_setting.ts";
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
-import "./assets/stylesheets/MainPages.css";
 
 function StorePage() {
     const [currentSong, setCurrentSong] = useState<any>(null);
