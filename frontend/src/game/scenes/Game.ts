@@ -9,7 +9,7 @@ import {
     GameScoreStat,
     StarlightMap,
     StarlightNote
-} from "../game";
+} from "../../index";
 
 /*
  *  The game.
