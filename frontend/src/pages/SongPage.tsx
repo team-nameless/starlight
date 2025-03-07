@@ -142,17 +142,23 @@ function SongPage() {
         const index = songs.findIndex(s => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".background-image img");
-            if (imgElement) {
+            if (imgElement && song.backgroundUrl) {
                 imgElement.classList.add("fade-out");
+                
                 imgElement.addEventListener(
                     "transitionend",
                     () => {
                         setCurrentSongIndex(index);
                         setCurrentSong(song);
+                        // Update image src directly to ensure it changes
+                        (imgElement as HTMLImageElement).src = song.backgroundUrl || "";
                         imgElement.classList.remove("fade-out");
                     },
                     { once: true }
                 );
+            } else {
+                setCurrentSongIndex(index);
+                setCurrentSong(song);
             }
         }
     };

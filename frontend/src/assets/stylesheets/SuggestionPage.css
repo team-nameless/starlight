@@ -14,7 +14,7 @@
     object-fit: cover;
     object-position: center;
     transition: opacity 0.5s ease-in-out;
-    filter: blur(100%);
+
 }
 
 .overlay-30 {

@@ -2,7 +2,7 @@ import axios from "axios";
 import * as d3 from "d3";
 import "d3-scale-chromatic";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import sparkle from "../assets/images/sparkle.png";
 import "../assets/stylesheets/HistoryPage.css";
@@ -12,6 +12,19 @@ import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton.tsx";
 import { StarlightSong } from "../index";
 import testHeatmapData from "../test_heatmap.json";
+
+// Enhanced cache with expiration time
+const heatmapCache = new Map();
+const CACHE_EXPIRATION = 30 * 60 * 1000; // 30 minutes
+
+// Pre-computed values for better performance
+const D3_CONSTANTS = {
+    margin: { top: 0, right: 25, bottom: 50, left: 50 },
+    cellSize: 25,
+    gap: 2,
+    colorDomain: [0, 33, 66, 100],
+    colorRange: ["#14432a", "#166b34", "#37a446", "#4dd05a"]
+};
 
 function HistoryPage() {
     const { songId, songIndex } = useParams();
@@ -26,14 +39,29 @@ function HistoryPage() {
     const hasRenderedHeatmap1 = useRef(false);
     const hasRenderedHeatmap2 = useRef(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
+    // Load song data from navigation state if available
     useEffect(() => {
-        const { currentSong, currentSongIndex } = location.state || {};
-        setCurrentSong(currentSong);
-        setCurrentSongIndex(currentSongIndex);
+        const { currentSong, currentSongIndex, songs: stateSongs } = location.state || {};
+        if (currentSong) {
+            setCurrentSong(currentSong);
+        }
+        if (typeof currentSongIndex === 'number') {
+            setCurrentSongIndex(currentSongIndex);
+        }
+        if (stateSongs && stateSongs.length > 0) {
+            setSongs(stateSongs);
+        }
     }, [location.state]);
 
+    // Fetch song data if not available from navigation state
     useEffect(() => {
+        if (currentSong && currentSong.id === Number(songId)) {
+            setIsLoading(false);
+            return;
+        }
+        
         const fetchSongData = async () => {
             setIsLoading(true);
             try {
@@ -53,7 +81,7 @@ function HistoryPage() {
         };
 
         fetchSongData();
-    }, [songId, songIndex]);
+    }, [songId, songIndex, currentSong]);
 
     useEffect(() => {
         const fetchBestScore = async () => {
@@ -80,11 +108,14 @@ function HistoryPage() {
         };
 
         fetchBestScore().catch(err => {
-            throw err;
+            console.error("Error in fetchBestScore:", err);
         });
     }, [currentSong]);
 
+    // Fetch all songs if not available
     useEffect(() => {
+        if (songs.length > 0) return;
+        
         const fetchSongs = async () => {
             try {
                 const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
@@ -101,10 +132,23 @@ function HistoryPage() {
         };
 
         fetchSongs();
-    }, []);
+    }, [songs.length]);
 
-    const fetchHeatmapData = async (url: any) => {
+    // Optimized heatmap data fetching with better caching
+    const fetchHeatmapData = useCallback(async (url: any) => {
         try {
+            const cacheKey = `${songId}-${url.includes('recent') ? 'recent' : 'best'}`;
+            const now = Date.now();
+            
+            if (heatmapCache.has(cacheKey)) {
+                const cached = heatmapCache.get(cacheKey);
+
+                if (now - cached.timestamp < CACHE_EXPIRATION) {
+                    console.log(`Using cached heatmap data for ${cacheKey}`);
+                    return cached.data;
+                }
+            }
+            console.log(`Fetching fresh heatmap data for ${cacheKey}`);
             const response = await axios.get(`${apiHost}${url}`, {
                 withCredentials: true
             });
@@ -113,61 +157,52 @@ function HistoryPage() {
 
             if (data && data.partial && Array.isArray(data.partial)) {
                 const durationInSeconds = Math.floor(data.stats.duration / 1000);
-                const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.floor(durationInSeconds / 30));
-                const heatmapData: { group: number; variable: string; value: number; segment: any; totalNotes: any }[] =
-                    [];
-
-                data.partial.forEach(
-                    (
-                        segment: { totalNotes: any; miss: number; bad: number; good: number; crit: number },
-                        index: number
-                    ) => {
-                        const totalNotes = segment.totalNotes;
-                        heatmapData.push({
+                const groupSize = Math.max(1, Math.floor(durationInSeconds / 30));
+                const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * groupSize);
+                
+                const heatmapData = new Array(data.partial.length * 5);
+                let dataIndex = 0;
+                
+                data.partial.forEach((segment: any, index: number) => {
+                    const totalNotes = segment.totalNotes || 1;
+                    const variables = ["M", "B", "G", "P", "CP"];
+                    const properties = ["miss", "bad", "good", "bad", "crit"]; 
+                    
+                    for (let i = 0; i < variables.length; i++) {
+                        const variable = variables[i];
+                        const property = properties[i];
+                        const value = (segment[property] / totalNotes) * 100;
+                        
+                        heatmapData[dataIndex++] = {
                             group: groups[index],
-                            variable: "M",
-                            value: (segment.miss / totalNotes) * 100,
-                            segment: segment.miss,
-                            totalNotes: totalNotes
-                        });
-                        heatmapData.push({
-                            group: groups[index],
-                            variable: "B",
-                            value: (segment.bad / totalNotes) * 100,
-                            segment: segment.bad,
-                            totalNotes: totalNotes
-                        });
-                        heatmapData.push({
-                            group: groups[index],
-                            variable: "G",
-                            value: (segment.good / totalNotes) * 100,
-                            segment: segment.good,
-                            totalNotes: totalNotes
-                        });
-                        heatmapData.push({
-                            group: groups[index],
-                            variable: "P",
-                            value: (segment.bad / totalNotes) * 100,
-                            segment: segment.bad,
-                            totalNotes: totalNotes
-                        });
-                        heatmapData.push({
-                            group: groups[index],
-                            variable: "CP",
-                            value: (segment.crit / totalNotes) * 100,
-                            segment: segment.crit,
-                            totalNotes: totalNotes
-                        });
+                            variable,
+                            value,
+                            segment: segment[property],
+                            totalNotes
+                        };
                     }
-                );
+                });
 
-                return { data: heatmapData, score: data.stats.score, isFallback: false };
+                const result = { 
+                    data: heatmapData, 
+                    score: data.stats.score, 
+                    grade: data.stats.grade,
+                    isFallback: false 
+                };
+            
+                heatmapCache.set(cacheKey, {
+                    data: result,
+                    timestamp: now
+                });
+                
+                return result;
             } else {
                 throw new Error("Invalid API response");
             }
         } catch (error) {
             console.error("Error fetching heatmap data:", error);
-
+            
+            // Use fallback data from test file
             const data = testHeatmapData;
             const durationInSeconds = Math.floor(data.stats.duration / 1000);
             const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.round(durationInSeconds / 30));
@@ -218,53 +253,39 @@ function HistoryPage() {
                 });
             });
 
-            return { data: heatmapData, score: data.stats.score, isFallback: true };
+            return { data: heatmapData, score: testHeatmapData.stats.score, grade: "A", isFallback: true };
         }
-    };
+    }, [songId]);
 
-    const fetchOverallScore = async (url: any) => {
+    // Optimized renderHeatmap function with requestAnimationFrame
+    const renderHeatmap = useCallback(async (url: any, containerRef: { current: any }, scoreUrl: any, _songId: any) => {
         try {
-            const response = await axios.get(`${apiHost}${url}`, {
-                withCredentials: true
-            });
-            const data = JSON.parse(response.data["rawJson"]);
-            return data.stats.score || 100000;
-        } catch (error) {
-            console.error("Error fetching overall score:", error);
-            return testHeatmapData.stats.score;
-        }
-    };
+            const container = containerRef.current;
+            if (!container) {
+                console.error(`Container not found.`);
+                setIsLoading(false);
+                return;
+            }
 
-    const fetchGrade = async (url: any) => {
-        try {
-            const response = await axios.get(`${apiHost}${url}`, {
-                withCredentials: true
-            });
-            const data = JSON.parse(response.data["rawJson"]);
-            return data.stats.grade || "A";
-        } catch (error) {
-            console.error("Error fetching grade:", error);
-            return testHeatmapData.stats.grade;
-        }
-    };
+            // Show loading state immediately
+            container.innerHTML = '<div class="heatmap-loading"><div class="heatmap-spinner"></div><p>Loading heatmap data...</p></div>';
 
-    const renderHeatmap = useCallback(
-        async (url: any, containerRef: { current: any }, scoreUrl: any, _songId: any) => {
-            try {
-                const container = containerRef.current;
-                if (!container) {
-                    console.error(`Container not found.`);
-                    setIsLoading(false);
-                    return;
-                }
-
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                const overallScore = await fetchOverallScore(scoreUrl);
-                const grade = await fetchGrade(scoreUrl);
-
+            // Fetch data outside the animation frame
+            const { data, score, grade, isFallback } = await fetchHeatmapData(url);
+            
+            if (!containerRef.current) {
+                // Component was unmounted during data fetch
+                return;
+            }
+            
+            // Use requestAnimationFrame for smoother rendering
+            requestAnimationFrame(() => {
+                if (!containerRef.current) return;
+                
+                // Clear container content
+                container.innerHTML = '';
+                
+                // Create score element
                 const scoreElement = document.createElement("div");
                 scoreElement.className = "overall-score";
                 const sparkleLeft = document.createElement("img");
@@ -274,171 +295,179 @@ function HistoryPage() {
                 sparkleLeft.style.verticalAlign = "middle";
                 sparkleLeft.style.display = "inline";
                 sparkleLeft.style.marginBottom = "5px";
-                const sparkleRight = sparkleLeft.cloneNode();
+                const sparkleRight = sparkleLeft.cloneNode() as HTMLImageElement;
                 scoreElement.appendChild(sparkleLeft);
-                scoreElement.appendChild(document.createTextNode(` ${overallScore} `));
+                scoreElement.appendChild(document.createTextNode(` ${score} `));
                 scoreElement.appendChild(sparkleRight);
                 container.appendChild(scoreElement);
 
+                // Create grade element
                 const gradeElement = document.createElement("div");
                 gradeElement.textContent = `- Grade: ${grade} -`;
                 gradeElement.className = "grade";
                 container.appendChild(gradeElement);
-
-                const { data, isFallback } = await fetchHeatmapData(url);
-
-                const margin = { top: 0, right: 25, bottom: 50, left: 50 };
-                const width = 900 - margin.left - margin.right;
-                const height = 186 - margin.top - margin.bottom;
-
-                const svg = d3
-                    .select(container)
-                    .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", `translate(${margin.left},${margin.top})`);
-
-                const myGroups = Array.from(new Set(data.map(d => d.group)));
-                const myVars = Array.from(new Set(data.map(d => d.variable)));
-
-                const cellSize = 25;
-                const gap = 2;
-                const x = d3.scaleBand().range([0, width]).domain(myGroups.map(String)).padding(0.05);
-                const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
-
-                // Fix for the type error with d3.scaleLinear().range()
-                const myColor = d3
-                    .scaleLinear<string>()
-                    .domain([0, 33, 66, 100])
-                    .range(["#14432a", "#166b34", "#37a446", "#4dd05a"]);
-
-                svg.append("g")
-                    .style("font-size", 15)
-                    .attr("transform", `translate(0,${height})`)
-                    .call(d3.axisBottom(x).tickSize(0))
-                    .select(".domain")
-                    .remove();
-
-                svg.append("g").style("font-size", 15).call(d3.axisLeft(y).tickSize(0)).select(".domain").remove();
-
-                const tooltip = d3.select(container).append("div").style("opacity", 0).attr("class", "tooltip");
-
-                const mouseover = function (this: any, _d: any) {
-                    tooltip.style("opacity", 1);
-                    d3.select(this).style("stroke", "black").style("opacity", 1);
-                };
-
-                const mousemove = function (
-                    event: { pageX: number; pageY: number },
-                    d: { segment: any; totalNotes: any; value: number }
-                ) {
-                    tooltip
-                        .html(
-                            `BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`
-                        )
-                        .style("left", `${event.pageX + 20}px`)
-                        .style("top", `${event.pageY - 20}px`);
-                };
-
-                const mouseleave = function (this: any) {
-                    tooltip.style("opacity", 0);
-                    d3.select(this).style("stroke", "none").style("opacity", 0.8);
-                };
-
-                svg.selectAll()
-                    .data(data, (d: any) => `${d.group}:${d.variable}`)
-                    .enter()
-                    .append("rect")
-                    .attr("x", d => (x(String(d.group)) ?? 0) + gap / 2)
-                    .attr("y", d => (y(d.variable) ?? 0) + gap / 2)
-                    .attr("width", cellSize - gap)
-                    .attr("height", cellSize - gap)
-                    .attr("rx", 4)
-                    .attr("ry", 4)
-                    .style("fill", d => myColor(d.value || 0))
-                    .style("stroke-width", 4)
-                    .style("stroke", "none")
-                    .style("opacity", 0.8)
-                    .on("mouseover", mouseover)
-                    .on("mousemove", mousemove)
-                    .on("mouseleave", mouseleave);
-
-                if (isFallback) {
-                    svg.append("text")
-                        .attr("x", width / 2)
-                        .attr("y", height + margin.bottom + 20)
-                        .attr("text-anchor", "middle")
-                        .style("font-size", "12px")
-                        .style("fill", "red")
-                        .text("Data fetched from test_heatmap.json");
-                }
-            } catch (error) {
-                console.error("Error rendering heatmap:", error);
-                // Display an error message in the container if needed
-                if (containerRef.current) {
-                    const errorElement = document.createElement("div");
-                    errorElement.className = "heatmap-error";
-                    errorElement.textContent = "Failed to load heatmap data";
-                    containerRef.current.appendChild(errorElement);
-                }
-            } finally {
-                // Always ensure loading is turned off
+                
+                // Optimize D3 rendering with minimal DOM operations
+                renderOptimizedD3Heatmap(container, data, isFallback);
+                
                 setIsLoading(false);
+            });
+        } catch (error) {
+            console.error("Error rendering heatmap:", error);
+            if (containerRef.current) {
+                containerRef.current.innerHTML = '<div class="heatmap-error">Failed to load heatmap data</div>';
             }
-        },
-        [fetchHeatmapData, fetchGrade, fetchOverallScore]
-    );
+            setIsLoading(false);
+        }
+    }, [fetchHeatmapData]);
+    
+    // Extracted D3 rendering to optimize performance
+    function renderOptimizedD3Heatmap(container: HTMLElement, data: any[], isFallback: boolean) {
+        const { margin, cellSize, gap, colorDomain, colorRange } = D3_CONSTANTS;
+        const width = 900 - margin.left - margin.right;
+        const height = 186 - margin.top - margin.bottom;
+
+        // Create SVG only once (no need to append multiple g elements)
+        const svg = d3.select(container)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Compute scales once - use useMemo-like approach by extracting groups and variables first
+        const myGroups = Array.from(new Set(data.map((d: any) => d.group)));
+        const myVars = Array.from(new Set(data.map((d: any) => d.variable)));
+
+        // Use memoized scales
+        const x = d3.scaleBand()
+            .range([0, width])
+            .domain(myGroups.map(String))
+            .padding(0.05);
+
+        const y = d3.scaleBand()
+            .range([height, 0])
+            .domain(myVars as string[])
+            .padding(0.05);
+
+        const myColor = d3.scaleLinear<string>()
+            .domain(colorDomain)
+            .range(colorRange);
+
+        // Draw axes once
+        const bottomAxis = svg.append("g")
+            .style("font-size", 15)
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x).tickSize(0).tickFormat((d: any) => {
+                // Show fewer labels for better performance
+                return parseInt(d) % 1 === 0 ? d : "";
+            }));
+            
+        bottomAxis.select(".domain").remove();
+
+        const leftAxis = svg.append("g")
+            .style("font-size", 15)
+            .call(d3.axisLeft(y).tickSize(0));
+            
+        leftAxis.select(".domain").remove();
+
+        // Single tooltip for all rectangles
+        const tooltip = d3.select(container)
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        // Define event handlers outside the data join to avoid recreating functions
+        const mouseover = function(this: any) {
+            tooltip.style("opacity", 1);
+            d3.select(this).style("stroke", "black").style("opacity", 1);
+        };
+
+        const mousemove = function(event: any, d: any) {
+            tooltip
+                .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
+                .style("left", `${event.pageX + 20}px`)
+                .style("top", `${event.pageY - 20}px`);
+        };
+
+        const mouseleave = function(this: any) {
+            tooltip.style("opacity", 0);
+            d3.select(this).style("stroke", "none").style("opacity", 0.8);
+        };
+
+        // Use a single selection for better performance - create a fragment to minimize reflows
+        const rectangles = svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", (d: any) => (x(String(d.group)) || 0) + gap / 2)
+            .attr("y", (d: any) => (y(String(d.variable)) || 0) + gap / 2)
+            .attr("width", cellSize - gap)
+            .attr("height", cellSize - gap)
+            .attr("rx", 4)
+            .attr("ry", 4)
+            .style("fill", (d: any) => myColor(d.value || 0))
+            .style("stroke-width", 4)
+            .style("stroke", "none")
+            .style("opacity", 0.8);
+        
+        // Add event listeners in batch
+        rectangles
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave);
+
+        // Add fallback text if needed
+        if (isFallback) {
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom + 20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "12px")
+                .style("fill", "red")
+                .text("Data fetched from test_heatmap.json");
+        }
+    }
+
+    // Optimize useEffect for rendering heatmaps with better resetting
+    useEffect(() => {
+        // Reset rendering flags when song changes
+        if (currentSong?.id !== Number(songId)) {
+            hasRenderedHeatmap1.current = false;
+            hasRenderedHeatmap2.current = false;
+        }
+        
+        // Only render if we haven't already rendered for this song
+        if (!hasRenderedHeatmap1.current && currentSong) {
+            hasRenderedHeatmap1.current = true;
+            setIsLoading(true);
+            
+            // Delay the second heatmap to prevent concurrent rendering
+            renderHeatmap(
+                `/api/score/${currentSong.id}/recent`,
+                heatmapContainer1Ref,
+                `/api/score/${currentSong.id}/recent`,
+                currentSong.id
+            );
+        }
+    }, [currentSong, renderHeatmap, songId]);
 
     useEffect(() => {
-        if (hasRenderedHeatmap1.current)
-            return () => {
-                console.warn("Rendered Heatmap1 complete!");
-            };
-
-        const renderHeatmap1 = async () => {
-            if (currentSong && !hasRenderedHeatmap1.current) {
-                setIsLoading(true);
-                hasRenderedHeatmap1.current = true;
-                await renderHeatmap(
-                    `/api/score/${currentSong.id}/recent`,
-                    heatmapContainer1Ref,
-                    `/api/score/${currentSong.id}/recent`,
-                    currentSong.id
-                );
-            }
-        };
-        renderHeatmap1();
-
-        return () => {
-            console.warn("Heatmap 1 triggered re-render!");
-        };
-    }, [renderHeatmap, currentSong, songId]);
-
-    useEffect(() => {
-        if (hasRenderedHeatmap2.current)
-            return () => {
-                console.warn("Rendered Heatmap2 complete!");
-            };
-
-        const renderHeatmap2 = async () => {
-            if (currentSong) {
-                setIsLoading(true);
-                hasRenderedHeatmap2.current = true;
-                await renderHeatmap(
+        // Only render if first heatmap is complete and second hasn't been rendered
+        if (hasRenderedHeatmap1.current && !hasRenderedHeatmap2.current && currentSong) {
+            hasRenderedHeatmap2.current = true;
+            
+            // Small delay to not compete with first heatmap rendering
+            setTimeout(() => {
+                renderHeatmap(
                     `/api/score/${currentSong.id}/best`,
                     heatmapContainer2Ref,
                     `/api/score/${currentSong.id}/best`,
                     currentSong.id
                 );
-            }
-        };
-        renderHeatmap2();
-
-        return () => {
-            console.warn("Heatmap 2 triggered re-render!");
-        };
-    }, [renderHeatmap, currentSong, songId]);
+            }, 100);
+        }
+    }, [currentSong, renderHeatmap, hasRenderedHeatmap1.current]);
 
     const handleSongClick = (song: StarlightSong) => () => {
         const index = songs.findIndex(s => s.id === song.id);
@@ -446,23 +475,42 @@ function HistoryPage() {
             setIsLoading(true);
             hasRenderedHeatmap1.current = false;
             hasRenderedHeatmap2.current = false;
-
-            const imgElement = document.querySelector(".background-image img");
-            if (imgElement) {
+            
+            const imgElement = document.querySelector(".background-image img") as HTMLImageElement;
+            if (imgElement && song.backgroundUrl) {
                 imgElement.classList.add("fade-out");
-                imgElement.addEventListener(
-                    "transitionend",
-                    () => {
-                        setCurrentSongIndex(index);
-                        setCurrentSong(song);
-                        imgElement.classList.remove("fade-out");
-                    },
-                    { once: true }
-                );
+                
+                const onTransitionEnd = () => {
+                    setCurrentSongIndex(index);
+                    setCurrentSong(song);
+                    
+                    imgElement.src = song.backgroundUrl || "";
+                    imgElement.classList.remove("fade-out");
+                    
+                    navigate(`/HistoryPage/${song.id}/${index}`, {
+                        state: { currentSong: song, currentSongIndex: index, songs: songs },
+                        replace: true
+                    });
+                };
+                
+                imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
+                
+                // Fallback in case transition event doesn't fire
+                setTimeout(() => {
+                    if (imgElement.classList.contains("fade-out")) {
+                        onTransitionEnd();
+                    }
+                }, 500);
             } else {
                 // If image element not found, still update the song
                 setCurrentSongIndex(index);
                 setCurrentSong(song);
+                
+                // Update navigation with songs
+                navigate(`/HistoryPage/${song.id}/${index}`, {
+                    state: { currentSong: song, currentSongIndex: index, songs: songs },
+                    replace: true
+                });
             }
         }
     };

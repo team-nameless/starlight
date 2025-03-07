@@ -18,7 +18,7 @@ function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayBu
         if (currentSong) {
             try {
                 await axios.post(`${apiHost}/api/game/start`, { songId: currentSong.id }, { withCredentials: true });
-                navigate(`/TestGame`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
+                navigate(`/GamePlay`, { state: { songId: currentSong.id, songIndex: currentSongIndex } });
             } catch (error) {
                 console.error("Error starting game:", error);
             } finally {

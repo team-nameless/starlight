@@ -50,7 +50,7 @@ function GameApp() {
                     withCredentials: true
                 })
                 .then(response => {
-                    navigate(`/history/${songId}/${songIndex}`, {
+                    navigate(`/HistoryPage/${songId}/${songIndex}`, {
                         state: { currentSong: response.data, currentSongIndex: songIndex }
                     });
                 });
