@@ -6,7 +6,7 @@ import profilePicPlaceholder from "../assets/images/profile.png";
 import "../assets/stylesheets/MainPages.css";
 import { handleApiError } from "../common/errorHandlers.ts";
 import { apiHost } from "../common/site_setting.ts";
-import AudioPlayer from "../components/AudioPlayer";
+//import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar.tsx";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
@@ -246,7 +246,7 @@ function SongPage() {
                     </div>
                 </div>
             </div>
-            {currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}
+            {/*{currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}*/}
         </>
     );
 }

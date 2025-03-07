@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/SuggestionPage.css";
 import { apiHost } from "../common/site_setting.ts";
-import AudioPlayer from "../components/AudioPlayer";
+//import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
@@ -231,7 +231,7 @@ function SuggestionPage() {
                     </div>
                 </div>
             </div>
-            {currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}
+            {/*{currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}*/}
         </>
     );
 }
