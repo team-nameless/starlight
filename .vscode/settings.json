@@ -14,6 +14,6 @@
         "**/node_modules": true,
         ".prettierignore": true,
         "eslint.config.mjs": true,
-        "prettier.config.mjs": true,
+        "prettier.config.mjs": true
     }
 }
