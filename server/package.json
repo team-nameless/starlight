@@ -25,6 +25,7 @@
     "devDependencies": {
         "@jest/globals": "^29.7.0",
         "@types/bcrypt": "^5.0.2",
+        "@types/cookie-parser": "^1.4.8",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
         "@types/jest": "^29.5.14",

@@ -9,9 +9,9 @@ generator client {
 
 model Player {
     Id                      String        @id @default(uuid())
-    NumericId               BigInt
+    NumericId               BigInt        @unique
     Handle                  String
-    Email                   String
+    Email                   String        @unique
     HashedPassword          String
     HashedTemporaryPassword String
     TotalPlayTime           BigInt

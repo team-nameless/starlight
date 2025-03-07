@@ -1,3 +1,3 @@
-import * as crypto from "node:crypto";
+import crypto from "crypto";
 
 console.log(crypto.randomBytes(16).toString("hex"));

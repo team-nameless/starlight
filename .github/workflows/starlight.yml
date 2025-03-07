@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  SERVER_SECRET_KEY: 9e3466f46e5516ee45250d0dfe3d514b
+  SERVER_KEY: 6e0ba13f301b7f96abb7db39da13d678012b36d1be084fb82606f2c2755fc730
   SERVER_PORT: 6969
 
 permissions:
