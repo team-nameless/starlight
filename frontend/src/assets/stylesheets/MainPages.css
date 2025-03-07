@@ -271,12 +271,12 @@ body {
 /* Play Button */
 .play-button-container {
     position: absolute;
-    width: 75px; 
+    width: 75px;
     height: 75px;
     bottom: 10px;
-    left: -35px; 
+    left: -35px;
     z-index: 2;
-    margin-left: 0; 
+    margin-left: 0;
 }
 
 .play-button {

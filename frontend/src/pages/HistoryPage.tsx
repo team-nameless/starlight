@@ -248,142 +248,147 @@ function HistoryPage() {
         }
     };
 
-    const renderHeatmap = useCallback(async (url: any, containerRef: { current: any }, scoreUrl: any, _songId: any) => {
-        try {
-            const container = containerRef.current;
-            if (!container) {
-                console.error(`Container not found.`);
+    const renderHeatmap = useCallback(
+        async (url: any, containerRef: { current: any }, scoreUrl: any, _songId: any) => {
+            try {
+                const container = containerRef.current;
+                if (!container) {
+                    console.error(`Container not found.`);
+                    setIsLoading(false);
+                    return;
+                }
+
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+
+                const overallScore = await fetchOverallScore(scoreUrl);
+                const grade = await fetchGrade(scoreUrl);
+
+                const scoreElement = document.createElement("div");
+                scoreElement.className = "overall-score";
+                const sparkleLeft = document.createElement("img");
+                sparkleLeft.src = sparkle;
+                sparkleLeft.style.width = "32px";
+                sparkleLeft.style.height = "32px";
+                sparkleLeft.style.verticalAlign = "middle";
+                sparkleLeft.style.display = "inline";
+                sparkleLeft.style.marginBottom = "5px";
+                const sparkleRight = sparkleLeft.cloneNode();
+                scoreElement.appendChild(sparkleLeft);
+                scoreElement.appendChild(document.createTextNode(` ${overallScore} `));
+                scoreElement.appendChild(sparkleRight);
+                container.appendChild(scoreElement);
+
+                const gradeElement = document.createElement("div");
+                gradeElement.textContent = `- Grade: ${grade} -`;
+                gradeElement.className = "grade";
+                container.appendChild(gradeElement);
+
+                const { data, isFallback } = await fetchHeatmapData(url);
+
+                const margin = { top: 0, right: 25, bottom: 50, left: 50 };
+                const width = 900 - margin.left - margin.right;
+                const height = 186 - margin.top - margin.bottom;
+
+                const svg = d3
+                    .select(container)
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+                const myGroups = Array.from(new Set(data.map(d => d.group)));
+                const myVars = Array.from(new Set(data.map(d => d.variable)));
+
+                const cellSize = 25;
+                const gap = 2;
+                const x = d3.scaleBand().range([0, width]).domain(myGroups.map(String)).padding(0.05);
+                const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
+
+                // Fix for the type error with d3.scaleLinear().range()
+                const myColor = d3
+                    .scaleLinear<string>()
+                    .domain([0, 33, 66, 100])
+                    .range(["#14432a", "#166b34", "#37a446", "#4dd05a"]);
+
+                svg.append("g")
+                    .style("font-size", 15)
+                    .attr("transform", `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickSize(0))
+                    .select(".domain")
+                    .remove();
+
+                svg.append("g").style("font-size", 15).call(d3.axisLeft(y).tickSize(0)).select(".domain").remove();
+
+                const tooltip = d3.select(container).append("div").style("opacity", 0).attr("class", "tooltip");
+
+                const mouseover = function (this: any, _d: any) {
+                    tooltip.style("opacity", 1);
+                    d3.select(this).style("stroke", "black").style("opacity", 1);
+                };
+
+                const mousemove = function (
+                    event: { pageX: number; pageY: number },
+                    d: { segment: any; totalNotes: any; value: number }
+                ) {
+                    tooltip
+                        .html(
+                            `BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`
+                        )
+                        .style("left", `${event.pageX + 20}px`)
+                        .style("top", `${event.pageY - 20}px`);
+                };
+
+                const mouseleave = function (this: any) {
+                    tooltip.style("opacity", 0);
+                    d3.select(this).style("stroke", "none").style("opacity", 0.8);
+                };
+
+                svg.selectAll()
+                    .data(data, (d: any) => `${d.group}:${d.variable}`)
+                    .enter()
+                    .append("rect")
+                    .attr("x", d => (x(String(d.group)) ?? 0) + gap / 2)
+                    .attr("y", d => (y(d.variable) ?? 0) + gap / 2)
+                    .attr("width", cellSize - gap)
+                    .attr("height", cellSize - gap)
+                    .attr("rx", 4)
+                    .attr("ry", 4)
+                    .style("fill", d => myColor(d.value || 0))
+                    .style("stroke-width", 4)
+                    .style("stroke", "none")
+                    .style("opacity", 0.8)
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave);
+
+                if (isFallback) {
+                    svg.append("text")
+                        .attr("x", width / 2)
+                        .attr("y", height + margin.bottom + 20)
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "12px")
+                        .style("fill", "red")
+                        .text("Data fetched from test_heatmap.json");
+                }
+            } catch (error) {
+                console.error("Error rendering heatmap:", error);
+                // Display an error message in the container if needed
+                if (containerRef.current) {
+                    const errorElement = document.createElement("div");
+                    errorElement.className = "heatmap-error";
+                    errorElement.textContent = "Failed to load heatmap data";
+                    containerRef.current.appendChild(errorElement);
+                }
+            } finally {
+                // Always ensure loading is turned off
                 setIsLoading(false);
-                return;
             }
-
-            while (container.firstChild) {
-                container.removeChild(container.firstChild);
-            }
-
-            const overallScore = await fetchOverallScore(scoreUrl);
-            const grade = await fetchGrade(scoreUrl);
-
-            const scoreElement = document.createElement("div");
-            scoreElement.className = "overall-score";
-            const sparkleLeft = document.createElement("img");
-            sparkleLeft.src = sparkle;
-            sparkleLeft.style.width = "32px";
-            sparkleLeft.style.height = "32px";
-            sparkleLeft.style.verticalAlign = "middle";
-            sparkleLeft.style.display = "inline";
-            sparkleLeft.style.marginBottom = "5px";
-            const sparkleRight = sparkleLeft.cloneNode();
-            scoreElement.appendChild(sparkleLeft);
-            scoreElement.appendChild(document.createTextNode(` ${overallScore} `));
-            scoreElement.appendChild(sparkleRight);
-            container.appendChild(scoreElement);
-
-            const gradeElement = document.createElement("div");
-            gradeElement.textContent = `- Grade: ${grade} -`;
-            gradeElement.className = "grade";
-            container.appendChild(gradeElement);
-
-            const { data, isFallback } = await fetchHeatmapData(url);
-
-            const margin = { top: 0, right: 25, bottom: 50, left: 50 };
-            const width = 900 - margin.left - margin.right;
-            const height = 186 - margin.top - margin.bottom;
-
-            const svg = d3
-                .select(container)
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const myGroups = Array.from(new Set(data.map(d => d.group)));
-            const myVars = Array.from(new Set(data.map(d => d.variable)));
-
-            const cellSize = 25;
-            const gap = 2;
-            const x = d3.scaleBand().range([0, width]).domain(myGroups.map(String)).padding(0.05);
-            const y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.05);
-
-            // Fix for the type error with d3.scaleLinear().range()
-            const myColor = d3
-                .scaleLinear<string>()
-                .domain([0, 33, 66, 100])
-                .range(["#14432a", "#166b34", "#37a446", "#4dd05a"]);
-
-            svg.append("g")
-                .style("font-size", 15)
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickSize(0))
-                .select(".domain")
-                .remove();
-
-            svg.append("g").style("font-size", 15).call(d3.axisLeft(y).tickSize(0)).select(".domain").remove();
-
-            const tooltip = d3.select(container).append("div").style("opacity", 0).attr("class", "tooltip");
-
-            const mouseover = function (this: any, _d: any) {
-                tooltip.style("opacity", 1);
-                d3.select(this).style("stroke", "black").style("opacity", 1);
-            };
-
-            const mousemove = function (
-                event: { pageX: number; pageY: number },
-                d: { segment: any; totalNotes: any; value: number }
-            ) {
-                tooltip
-                    .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
-                    .style("left", `${event.pageX + 20}px`)
-                    .style("top", `${event.pageY - 20}px`);
-            };
-
-            const mouseleave = function (this: any) {
-                tooltip.style("opacity", 0);
-                d3.select(this).style("stroke", "none").style("opacity", 0.8);
-            };
-
-            svg.selectAll()
-                .data(data, (d: any) => `${d.group}:${d.variable}`)
-                .enter()
-                .append("rect")
-                .attr("x", d => (x(String(d.group)) ?? 0) + gap / 2)
-                .attr("y", d => (y(d.variable) ?? 0) + gap / 2)
-                .attr("width", cellSize - gap)
-                .attr("height", cellSize - gap)
-                .attr("rx", 4)
-                .attr("ry", 4)
-                .style("fill", d => myColor(d.value || 0))
-                .style("stroke-width", 4)
-                .style("stroke", "none")
-                .style("opacity", 0.8)
-                .on("mouseover", mouseover)
-                .on("mousemove", mousemove)
-                .on("mouseleave", mouseleave);
-
-            if (isFallback) {
-                svg.append("text")
-                    .attr("x", width / 2)
-                    .attr("y", height + margin.bottom + 20)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "12px")
-                    .style("fill", "red")
-                    .text("Data fetched from test_heatmap.json");
-            }
-        } catch (error) {
-            console.error("Error rendering heatmap:", error);
-            // Display an error message in the container if needed
-            if (containerRef.current) {
-                const errorElement = document.createElement("div");
-                errorElement.className = "heatmap-error";
-                errorElement.textContent = "Failed to load heatmap data";
-                containerRef.current.appendChild(errorElement);
-            }
-        } finally {
-            // Always ensure loading is turned off
-            setIsLoading(false);
-        }
-    }, [fetchHeatmapData, fetchGrade, fetchOverallScore]);
+        },
+        [fetchHeatmapData, fetchGrade, fetchOverallScore]
+    );
 
     useEffect(() => {
         if (hasRenderedHeatmap1.current)
@@ -441,7 +446,7 @@ function HistoryPage() {
             setIsLoading(true);
             hasRenderedHeatmap1.current = false;
             hasRenderedHeatmap2.current = false;
-            
+
             const imgElement = document.querySelector(".background-image img");
             if (imgElement) {
                 imgElement.classList.add("fade-out");
@@ -480,14 +485,14 @@ function HistoryPage() {
                     isSongListOpen={isSongListOpen}
                 />
             )}
-            
+
             {isLoading && (
                 <div className="loader">
                     <div className="one"></div>
                     <div className="two"></div>
                 </div>
             )}
-            
+
             <div className="historypage">
                 <Suspense fallback={<div>Loading...</div>}>
                     <div className="content-layer">

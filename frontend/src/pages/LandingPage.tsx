@@ -33,9 +33,8 @@ import {
     StayButton,
     SubmitButton,
     TextFieldContainer
-} from "../modalstyle/PopUpModals.tsx";  
+} from "../modalstyle/PopUpModals.tsx";
 import { requestFullScreen } from "./utils.ts";
-
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -64,7 +63,6 @@ function LandingPage() {
     const [forgotPasswordError, setForgotPasswordError] = useState("");
     const navigate = useNavigate();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*]).{8,}$/;
-
 
     useEffect(() => {
         if (showSuccessModal) {
@@ -605,7 +603,6 @@ function LandingPage() {
                         </ModalContent>
                     </Modal>
                 )}
-
 
                 {showSuccessModal && (
                     <PopupOverlay>

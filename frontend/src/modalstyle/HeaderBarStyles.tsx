@@ -3,13 +3,13 @@ import styled, { css } from "styled-components";
 
 // Common styling that can be reused across pages
 const activeLinkStyles = css`
-    color:rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
     font-weight: bold;
 
     &::after {
         width: 100%;
         left: 0;
-        background-color:rgb(255, 255, 255);
+        background-color: rgb(255, 255, 255);
     }
 `;
 
@@ -96,7 +96,7 @@ export const NavIconToggle = styled.div`
 export const NavLinksContainer = styled.nav`
     display: flex;
     gap: 30px;
-    z-index: 1; 
+    z-index: 1;
     font-family: "Keania One", sans-serif;
 
     &.left {
