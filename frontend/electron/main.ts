@@ -14,8 +14,7 @@ let win: BrowserWindow | null;
 function createWindow() {
     win = new BrowserWindow({
         autoHideMenuBar: true,
-        fullscreen: true,
-        alwaysOnTop: false
+        fullscreen: true
     });
 
     if (VITE_DEV_SERVER_URL) {
