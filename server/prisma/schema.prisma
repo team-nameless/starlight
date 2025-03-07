@@ -64,3 +64,17 @@ model Setting {
     PlayerId          String @unique
     Player            Player @relation(fields: [PlayerId], references: [Id])
 }
+
+model Track {
+    id                     Int     @id
+    title                  String
+    artist                 String
+    source                 String
+    noteDesigner           String
+    difficulty             Float
+    difficultyFavorText    String
+    duration               Int
+    dataFileLocation       String
+    backgroundFileLocation String
+    audioFileLocation      String
+}
