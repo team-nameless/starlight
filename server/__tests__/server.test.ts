@@ -1,6 +1,7 @@
 import HttpStatus from "http-status-codes";
-import app, {server} from "../server";
 import supertest from "supertest";
+
+import app, { server } from "../server";
 
 const testAgent = supertest(app);
 

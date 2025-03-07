@@ -24,7 +24,7 @@ class GameFinalizer extends Phaser.Scene {
 
         axios
             .post(url, this.collectedGameData, { withCredentials: true })
-            .then(_ => {
+            .then(() => {
                 EventEmitter.emit("game-finished");
                 this.scene.stop("GameFinalizer");
             })

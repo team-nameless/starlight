@@ -7,6 +7,7 @@
         "start": "npx tsx ./server.ts",
         "test": "npx jest",
         "prisma": "npx prisma db push",
+        "prisma:seed": "npx tsx ./scripts/upsert_songs.ts",
         "generate:secret": "npx tsx ./scripts/gen_secret_key.ts"
     },
     "dependencies": {

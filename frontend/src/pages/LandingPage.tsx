@@ -34,7 +34,6 @@ import {
     SubmitButton,
     TextFieldContainer
 } from "../modalstyle/PopUpModals.tsx";
-import { requestFullScreen } from "./utils.ts";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");
@@ -248,7 +247,6 @@ function LandingPage() {
         if (!isLoggedIn) {
             setShowLoginReminderModal(true);
         } else {
-            requestFullScreen();
             navigate("/SongPage");
         }
     };
@@ -566,7 +564,7 @@ function LandingPage() {
                                                 marginRight: "0px"
                                             }}
                                         >
-                                            Don't have an account?{" "}
+                                            Don&apos;t have an account?{" "}
                                             <span
                                                 style={{ cursor: "pointer", color: "#0090AA" }}
                                                 onClick={switchToSignUp}
@@ -637,8 +635,8 @@ function LandingPage() {
                         <PopupContent>
                             <h2>Login Successful</h2>
                             <p>
-                                You have successfully logged in. Please click the "Start Game" button to enter the song
-                                page.
+                                You have successfully logged in. Please click the &quot;Start Game&quot; button to enter
+                                the song page.
                             </p>
                             <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>

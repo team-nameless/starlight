@@ -7,7 +7,7 @@ import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
 
 function StorePage() {
-    const [currentSong, setCurrentSong] = useState<any>(null);
+    const [currentSong, setCurrentSong] = useState<StarlightSong>();
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [songs, setSongs] = useState<StarlightSong[]>([]);
     const [isSongListOpen, setIsSongListOpen] = useState(false);

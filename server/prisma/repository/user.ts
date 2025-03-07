@@ -1,22 +1,20 @@
 import type { Player } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import { RegisterIdentity } from "../../routes/requests/auth";
+import { RegisterIdentity } from "../../types/auth";
 import { prisma } from "../client";
 
 /**
- * Create an user entry.
+ * Create a user entry.
  *
- * @param handle The display name.
- * @param email The email.
- * @param password The password, the raw one.
+ * @param request Identity request.
  * @returns The created user entry.
  */
 export async function createUserByEmail(request: RegisterIdentity): Promise<Player> {
     const HASH_ROUND = 5;
     const HASH_PASSWORD = await bcrypt.hash(request.password, HASH_ROUND);
 
-    return await prisma.player.create({
+    return prisma.player.create({
         data: {
             NumericId: Date.now(),
             Handle: request.handle,
@@ -37,7 +35,7 @@ export async function createUserByEmail(request: RegisterIdentity): Promise<Play
  * @returns The user model.
  */
 export async function findUserByEmail(email: string): Promise<Player | null> {
-    return await prisma.player.findFirst({
+    return prisma.player.findFirst({
         where: {
             Email: email
         }

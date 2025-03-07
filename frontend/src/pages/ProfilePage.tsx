@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 import BeatAchieve from "../assets/images/Achievement-icons/Beat_achieve.png";
@@ -173,11 +173,11 @@ function ProfilePage() {
         setActiveTab(tab);
     };
 
-    const handlePasswordChange = (e: { target: { name: any; value: any } }) => {
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPasswordUpdate({ ...passwordUpdate, [e.target.name]: e.target.value });
     };
 
-    const handleEmailChange = (e: { target: { name: any; value: any } }) => {
+    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmailUpdate({ ...emailUpdate, [e.target.name]: e.target.value });
     };
 

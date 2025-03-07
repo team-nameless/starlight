@@ -1,73 +1,78 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; 
-  height: 100vh;
-  width: 100vw;
-  touch-action: none;
-  -webkit-overflow-scrolling: none;
-  overscroll-behavior: none;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    touch-action: none;
+    -webkit-overflow-scrolling: none;
+    overscroll-behavior: none;
 }
 
 body {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden !important; /* Enforce no scrolling with !important */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important; /* Enforce no scrolling with !important */
 }
 
 #root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  position: fixed;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
 }
 
 /* Make all container elements fit within viewport */
-.songpage, .historypage, .profilepage, .storepage, .suggestionpage {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
+.songpage,
+.historypage,
+.profilepage,
+.storepage,
+.suggestionpage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 /* Content should be visible without scrolling */
 .content-layer {
-  position: relative;
-  z-index: 1;
-  height: calc(100vh - 50px); /* Subtract header height */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    position: relative;
+    z-index: 1;
+    height: calc(100vh - 50px); /* Subtract header height */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Only specific containers should scroll if needed */
 .scrollable-container {
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .scrollable-container::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 /* Sidebar still needs scrollbar */
 .SidebarContainer {
-  overflow-y: auto !important;
-  max-height: 100%;
+    overflow-y: auto !important;
+    max-height: 100%;
 }
 
 /* Disable scroll on mobile */
 @media (max-width: 768px) {
-  body {
-    touch-action: none;
-    overflow-y: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-  }
+    body {
+        touch-action: none;
+        overflow-y: hidden !important;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
 }

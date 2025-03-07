@@ -10,7 +10,7 @@ import auth from "./routes/auth";
 // import game from "./routes/game";
 // import song from "./routes/song";
 // import user from "./routes/user";
-import { SERVER_KEY, SERVER_PORT } from "./secrets";
+import { SERVER_PORT } from "./secrets";
 
 const app = express();
 const port = SERVER_PORT;
@@ -23,7 +23,7 @@ app.use(morgan("combined", { immediate: true }))
             standardHeaders: "draft-8",
             legacyHeaders: true,
             message: "Slow TF down, choom.",
-            skip: function (req, _res) {
+            skip: function (req, _) {
                 return req.get("User-Agent") === "Starlight";
             }
         })
@@ -36,7 +36,6 @@ app.use(morgan("combined", { immediate: true }))
             origin: true
         })
     );
-
 
 app.use("/api", alive);
 app.use("/api", auth);

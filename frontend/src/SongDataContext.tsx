@@ -1,13 +1,14 @@
 import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
 
+import { PersistentSongData, StarlightSong } from ".";
 import { apiHost } from "./common/site_setting";
 
-const SongDataContext = createContext<any>(null);
+const SongDataContext = createContext<PersistentSongData | null>(null);
 
 export const SongDataProvider = ({ children }: { children: ReactNode }) => {
     const [songs, setSongs] = useState([]);
-    const [currentSong, setCurrentSong] = useState(null);
+    const [currentSong, setCurrentSong] = useState<StarlightSong>();
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
     useEffect(() => {
@@ -23,7 +24,7 @@ export const SongDataProvider = ({ children }: { children: ReactNode }) => {
                 setSongs(fetchedSongs);
                 if (fetchedSongs.length > 0) {
                     setCurrentSongIndex(0);
-                    setCurrentSong(fetchedSongs[0]);
+                    setCurrentSong(fetchedSongs[0]!);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);

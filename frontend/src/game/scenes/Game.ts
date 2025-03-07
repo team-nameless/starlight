@@ -476,7 +476,7 @@ class Game extends Phaser.Scene {
         else if (65 <= this.accuracy && this.accuracy < 80) grade = "C";
         else grade = "D";
 
-        this.collectedGameData!.trackId = this.gameData?.metadata.map_set_id!;
+        this.collectedGameData!.trackId = this.gameData!.metadata.map_set_id!;
         this.collectedGameData!.stats = {
             duration: this.duration,
             crit: this.totalCritical,

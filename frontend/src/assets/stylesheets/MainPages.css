@@ -23,10 +23,10 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 50px); 
+    height: calc(100vh - 50px);
     overflow: hidden;
     z-index: -1;
-    opacity: 1
+    opacity: 1;
 }
 
 .background-image img {
@@ -267,19 +267,19 @@ body {
 .play-btn {
     position: absolute;
     bottom: 20px;
-    left: calc(100% - 70px); 
+    left: calc(100% - 70px);
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #67d920; 
+    background-color: #67d920;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    color: #000000; 
+    color: #000000;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Play Button */

@@ -221,12 +221,12 @@ function SuggestionPage() {
                         </div>
 
                         {currentSong && songs.length > 0 && (
-                                <PlayButton
-                                    currentSongIndex={currentSongIndex}
-                                    isLoading={isLoading}
-                                    setIsLoading={setIsLoading}
-                                    songs={songs}
-                                />
+                            <PlayButton
+                                currentSongIndex={currentSongIndex}
+                                isLoading={isLoading}
+                                setIsLoading={setIsLoading}
+                                songs={songs}
+                            />
                         )}
                     </div>
                 </div>

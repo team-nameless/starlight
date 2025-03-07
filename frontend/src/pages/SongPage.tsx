@@ -144,7 +144,7 @@ function SongPage() {
             const imgElement = document.querySelector(".background-image img");
             if (imgElement && song.backgroundUrl) {
                 imgElement.classList.add("fade-out");
-                
+
                 imgElement.addEventListener(
                     "transitionend",
                     () => {

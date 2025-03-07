@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
-import "./assets/stylesheets/Global.css"; // Import global styles first
+import "./assets/stylesheets/Global.css";
+// Import global styles first
 import "./modalstyle/PopUpModals";
 import HistoryPage from "./pages/HistoryPage.tsx";
 import LandingPage from "./pages/LandingPage.tsx";

@@ -14,7 +14,6 @@
     object-fit: cover;
     object-position: center;
     transition: opacity 0.5s ease-in-out;
-
 }
 
 .overlay-30 {

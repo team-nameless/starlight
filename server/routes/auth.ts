@@ -5,7 +5,7 @@ import HttpStatus from "http-status-codes";
 import { generateAccessToken } from "../jwt";
 import { mustBeLoggedIn } from "../middleware/auth";
 import { createUserByEmail, findUserByEmail } from "../prisma/repository/user";
-import { AuthenticatedRequest, BasicUserIdentity, RegisterIdentity } from "./requests/auth";
+import { AuthenticatedRequest, BasicUserIdentity, RegisterIdentity } from "../types/auth";
 
 const router = express.Router();
 

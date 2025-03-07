@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { AuthenticatedRequest } from "../routes/requests/auth";
 import { SERVER_KEY } from "../secrets";
+import { AuthenticatedRequest } from "../types/auth";
 
 /**
  * Middleware for requiring users to logged in.

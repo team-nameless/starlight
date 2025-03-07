@@ -13,7 +13,7 @@ type AudioPlayerProps = {
  * components/HeaderBar.tsx props.
  */
 type HeaderBarProps = {
-    currentSong: StarlightSong;
+    currentSong?: StarlightSong;
     currentSongIndex: number;
     songs: StarlightSong[];
     setCurrentSong: Dispatch<SetStateAction<StarlightSong | undefined>>;

@@ -89,7 +89,6 @@ describe("/api/logout", () => {
         await prisma.player.deleteMany({});
     });
 
-
     afterAll(async () => {
         server.close();
     });

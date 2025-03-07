@@ -5,7 +5,7 @@ const config: Config = {
     preset: "ts-jest",
     detectOpenHandles: true,
     forceExit: true,
-    silent: false,
+    silent: false
 };
 
 export default config;
