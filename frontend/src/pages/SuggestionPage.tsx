@@ -239,19 +239,19 @@ function SuggestionPage() {
                     <div className="score-panel">
                         <h2 className="score-panel-header">Latest Play</h2>
 
-                        <div className="score-rank">A</div>
+                        <div className="score-rank">{record.grade}</div>
                         <div className="score-value">
-                            <span>★</span> 1000000 <span>★</span>
+                            <span>★</span> {record.totalPoints} <span>★</span>
                         </div>
 
                         <div className="stats-grid">
                             <div>
                                 <span>ACCURACY</span>
-                                <strong>97.89%</strong>
+                                <strong>{(record.accuracy * 100).toFixed(2)}%</strong>
                             </div>
                             <div>
                                 <span>MAX COMBO</span>
-                                <strong>22934</strong>
+                                <strong>{record.maxCombo}</strong>
                             </div>
                             <div>
                                 <span>MENTAL TENDENCY</span>
@@ -275,23 +275,23 @@ function SuggestionPage() {
                         <div className="grade-grid">
                             <div className="critical-perfect">
                                 <span>CRITICAL PERFECT</span>
-                                <strong>345</strong>
+                                <strong>{record.critical}</strong>
                             </div>
                             <div className="perfect">
                                 <span>PERFECT</span>
-                                <strong>16</strong>
+                                <strong>{record.perfect}</strong>
                             </div>
                             <div className="good">
                                 <span>GOOD</span>
-                                <strong>3</strong>
+                                <strong>{record.good}</strong>
                             </div>
                             <div className="bad">
                                 <span>BAD</span>
-                                <strong>0</strong>
+                                <strong>{record.bad}</strong>
                             </div>
                             <div className="miss">
                                 <span>MISS</span>
-                                <strong>1</strong>
+                                <strong>{record.miss}</strong>
                             </div>
                         </div>
 
