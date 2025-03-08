@@ -238,10 +238,12 @@ function SuggestionPage() {
                     </div>
                     <div className="score-panel">
                         <h2 className="score-panel-header">Latest Play</h2>
-                        
+
                         <div className="score-rank">A</div>
-                        <div className="score-value"><span>★</span> 1000000 <span>★</span></div>
-                        
+                        <div className="score-value">
+                            <span>★</span> 1000000 <span>★</span>
+                        </div>
+
                         <div className="stats-grid">
                             <div>
                                 <span>ACCURACY</span>
@@ -258,7 +260,7 @@ function SuggestionPage() {
                             <div className="suggestion-rate-container">
                                 <span>SUGGESTION RATE</span>
                                 <strong>0.169</strong>
-                                
+
                                 {/* Tooltip that shows on hover */}
                                 <div className="stats-indicators">
                                     <div>Focus: 4.32</div>
@@ -269,7 +271,7 @@ function SuggestionPage() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="grade-grid">
                             <div className="critical-perfect">
                                 <span>CRITICAL PERFECT</span>
@@ -292,9 +294,9 @@ function SuggestionPage() {
                                 <strong>1</strong>
                             </div>
                         </div>
-                        
+
                         <div className="played-date">Played on 25 February 2025 8:08 AM</div>
-                        </div>
+                    </div>
                 </div>
             </div>
             {/*{currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}*/}
