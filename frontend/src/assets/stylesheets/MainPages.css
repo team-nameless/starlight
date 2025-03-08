@@ -49,7 +49,7 @@ body {
 .content-layer {
     position: relative;
     z-index: 1;
-    height: calc(100vh - 50px); 
+    height: calc(100vh - 50px);
     padding-top: 60px;
     padding-bottom: 20px;
     display: flex;

@@ -48,7 +48,6 @@
 
     border-radius: 8px;
     color: white;
-
 }
 
 #heatmap-latest-container,
@@ -141,7 +140,7 @@
 
 #heatmap-container-1,
 #heatmap-container-2 {
-    margin: -100px 300px 0px 300px; 
+    margin: -100px 300px 0px 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -177,5 +176,3 @@
 .best-score-title {
     color: #dd2e44;
 }
-
-
