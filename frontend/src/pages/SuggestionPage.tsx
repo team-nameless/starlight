@@ -230,7 +230,7 @@ function SuggestionPage() {
                                 isLoading={isLoading}
                                 setIsLoading={setIsLoading}
                                 songs={songs}
-                                variant="card" 
+                                variant="card"
                             />
                         )}
                     </div>
