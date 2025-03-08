@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "@atlaskit/textfield": "^8.0.1",
-        "axios": "^1.8.1",
+        "axios": "^1.8.2",
         "d3": "^7.9.0",
         "fuse.js": "^7.1.0",
         "phaser": "^3.88.2",
