@@ -55,7 +55,7 @@ function SuggestionPage() {
                     });
                     const fetchedSongs = songsResponse.data;
                     setSongs(fetchedSongs);
-                    
+
                     // Only set current song if not already set from location
                     if (!currentSong && fetchedSongs.length > 0) {
                         setCurrentSongIndex(0);
@@ -133,28 +133,35 @@ function SuggestionPage() {
     }, [currentSong, fetchBestScore]);
 
     // Fix handleSongClick to properly update the background image
-    const handleSongClick = useCallback((song: StarlightSong) => () => {
-        const index = songs.findIndex(s => s.id === song.id);
-        if (index !== -1) {
-            // Find the background image - look for both selectors
-            const imgElement = document.querySelector(".background-image img");
-            if (imgElement && song.backgroundUrl) {
-                imgElement.classList.add("fade-out");
-                
-                imgElement.addEventListener("transitionend", () => {
+    const handleSongClick = useCallback(
+        (song: StarlightSong) => () => {
+            const index = songs.findIndex(s => s.id === song.id);
+            if (index !== -1) {
+                // Find the background image - look for both selectors
+                const imgElement = document.querySelector(".background-image img");
+                if (imgElement && song.backgroundUrl) {
+                    imgElement.classList.add("fade-out");
+
+                    imgElement.addEventListener(
+                        "transitionend",
+                        () => {
+                            setCurrentSongIndex(index);
+                            setCurrentSong(song);
+                            // Update image src directly to ensure it changes
+                            (imgElement as HTMLImageElement).src = song.backgroundUrl;
+                            imgElement.classList.remove("fade-out");
+                        },
+                        { once: true }
+                    );
+                } else {
+                    // If no image element is found, just update the state
                     setCurrentSongIndex(index);
                     setCurrentSong(song);
-                    // Update image src directly to ensure it changes
-                    (imgElement as HTMLImageElement).src = song.backgroundUrl;
-                    imgElement.classList.remove("fade-out");
-                }, { once: true });
-            } else {
-                // If no image element is found, just update the state
-                setCurrentSongIndex(index);
-                setCurrentSong(song);
+                }
             }
-        }
-    }, [songs]);
+        },
+        [songs]
+    );
 
     const toggleSongList = useCallback(() => {
         setIsSongListOpen(!isSongListOpen);
@@ -172,7 +179,7 @@ function SuggestionPage() {
                 toggleSongList={toggleSongList}
                 isSongListOpen={isSongListOpen}
             />
-            
+
             <div className="songpage">
                 <div className="content-layer">
                     <div className="background-image">
@@ -224,7 +231,7 @@ function SuggestionPage() {
                                     isLoading={isLoading}
                                     setIsLoading={setIsLoading}
                                     songs={songs}
-                                    variant="card" 
+                                    variant="card"
                                 />
                             )}
                         </div>
