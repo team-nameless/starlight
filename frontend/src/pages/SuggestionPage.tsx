@@ -197,16 +197,20 @@ function SuggestionPage() {
 
                     <div className="content-layer">
                         <div className="track-info">
-                            <h2>{currentSong?.title}</h2>
+                            <h1>{currentSong?.title}</h1>
                             <p>{currentSong?.artist}</p>
                             <p>ID: {currentSong?.id}</p>
-                            <p>Best Score: {bestScore}</p>
+                        </div>
+
+                        <div className="best-score-container">
+                            <div className="best-score-label">Best Score:</div>
+                            <div className="best-score-value">{bestScore}</div>
                         </div>
 
                         <div className="performance-info">
                             <div className="performance-column">
                                 <p className="tier-label">Tier</p>
-                                <p className="grade">{record.grade}</p>
+                                <p className="grade-card">{record.grade}</p>
                             </div>
                             <div className="performance-column">
                                 <p>Difficulty: {currentSong?.difficulty}</p>
@@ -226,6 +230,7 @@ function SuggestionPage() {
                                 isLoading={isLoading}
                                 setIsLoading={setIsLoading}
                                 songs={songs}
+                                variant="card" 
                             />
                         )}
                     </div>

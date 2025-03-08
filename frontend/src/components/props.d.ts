@@ -42,4 +42,5 @@ export interface PlayButtonProps {
     isLoading?: boolean;
     setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
     songs?: StarlightSong[];
+    variant?: 'default' | 'card';
 }

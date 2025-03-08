@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { apiHost } from "../common/site_setting.ts";
 import { PlayButtonProps } from "./props";
 
-function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayButtonProps) {
+function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs, variant = 'default' }: PlayButtonProps) {
     const navigate = useNavigate();
 
     const handlePlayButtonClick = useCallback(async () => {
@@ -27,11 +27,17 @@ function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs }: PlayBu
         }
     }, [currentSongIndex, navigate, setIsLoading, songs]);
 
+    // Use different class names based on the variant
+    const containerClass = variant === 'card' ? 'play-card-button-container' : 'play-button-container';
+    const buttonClass = variant === 'card' ? 'play-card-button' : 'play-button';
+    const iconContainerClass = variant === 'card' ? 'play-card-icon-container' : 'play-icon-container';
+    const iconClass = variant === 'card' ? 'play-card-icon' : 'play-icon';
+
     return (
-        <div className="play-button-container">
-            <button className="play-button" onClick={handlePlayButtonClick} disabled={isLoading}>
-                <div className="play-icon-container">
-                    <span className="play-icon">▶</span>
+        <div className={containerClass}>
+            <button className={buttonClass} onClick={handlePlayButtonClick} disabled={isLoading}>
+                <div className={iconContainerClass}>
+                    <span className={iconClass}>▶</span>
                 </div>
             </button>
             {isLoading && (

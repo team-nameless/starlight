@@ -116,11 +116,13 @@
     font-family: "Kaushan Script", cursive;
     font-weight: 400;
     color: #fe364f;
-    margin-right: -12px;
     margin-top: 20px;
     margin-bottom: 0px;
+    margin-left: 0;
+    margin-right: 0;
     font-size: 40px;
     text-align: center;
+    width: 100%;
 }
 
 .overall-score {
