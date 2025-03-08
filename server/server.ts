@@ -7,7 +7,7 @@ import morgan from "morgan";
 
 import alive from "./routes/alive";
 import auth from "./routes/auth";
-// import game from "./routes/game";
+import track from "./routes/track";
 // import song from "./routes/song";
 // import user from "./routes/user";
 import { SERVER_PORT } from "./secrets";
@@ -39,7 +39,7 @@ app.use(morgan("combined", { immediate: true }))
 
 app.use("/api", alive);
 app.use("/api", auth);
-// app.use("/api/song", song);
+app.use("/api/tracks", track);
 // app.use("/api/game", game);
 // app.use("/api/user", user);
 app.use("/api/static", express.static("__data__"));

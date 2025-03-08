@@ -22,17 +22,9 @@ describe("/api/register", () => {
     });
 
     it("should return FORBIDDEN if user already exists", async () => {
-        await testAgent
-            .post("/api/register")
-            .set("User-Agent", "Starlight")
-            .set("User-Agent", "Starlight")
-            .send(mockUser);
+        await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const response = await testAgent
-            .post("/api/register")
-            .set("User-Agent", "Starlight")
-            .set("User-Agent", "Starlight")
-            .send(mockUser);
+        const response = await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
@@ -95,7 +87,9 @@ describe("/api/logout", () => {
 
     it("should return REDIRECT if user valid", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
+
         const login = await testAgent.post("/api/login").set("User-Agent", "Starlight").send(mockUser);
+        
         const response = await testAgent
             .get("/api/logout")
             .set("User-Agent", "Starlight")

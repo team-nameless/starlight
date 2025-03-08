@@ -15,6 +15,9 @@ export type RegisterIdentity = BasicUserIdentity & {
     handle: string;
 };
 
-export interface AuthenticatedRequest extends Request {
+/**
+ * An Express request object that ensure user is logged in.
+ */
+export type AuthenticatedRequest = Request & {
     email?: string;
-}
+};

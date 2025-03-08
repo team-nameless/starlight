@@ -65,4 +65,8 @@ async function main() {
     }
 }
 
-main().then();
+main()
+    .then()
+    .catch(err => {
+        throw err;
+    });
