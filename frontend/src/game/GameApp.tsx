@@ -1,15 +1,14 @@
 import axios from "axios";
 import Phaser from "phaser";
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 import { EventEmitter } from "./EventEmitter";
-import AssetLoader from "./scenes/AssetLoader.ts";
-import DataLoader from "./scenes/DataLoader.ts";
-import Game from "./scenes/Game.ts";
-import GameFinalizer from "./scenes/GameFinalizer.ts";
+import AssetLoader from "./scenes/AssetLoader";
+import DataLoader from "./scenes/DataLoader";
+import Game from "./scenes/Game";
+import GameFinalizer from "./scenes/GameFinalizer";
 
 function GameApp() {
     const gameRef = useRef(null);

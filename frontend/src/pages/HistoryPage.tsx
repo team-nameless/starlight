@@ -7,9 +7,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import sparkle from "../assets/images/sparkle.png";
 import "../assets/stylesheets/HistoryPage.css";
 import "../assets/stylesheets/MainPages.css";
-import { apiHost } from "../common/site_setting.ts";
-import HeaderBar from "../components/HeaderBar.tsx";
-import NextPreviousButton from "../components/NextPreviousButton.tsx";
+import { apiHost } from "../common/site_setting";
+import HeaderBar from "../components/HeaderBar";
+import NextPreviousButton from "../components/NextPreviousButton";
 import { GameScoreStat, StarlightSong, ThePMGonnaHaveAFunTimeWithMe } from "../index";
 import testHeatmapData from "../test_heatmap.json";
 

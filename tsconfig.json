@@ -4,14 +4,13 @@
         "target": "ES2020",
         "jsx": "react-jsx",
         "moduleDetection": "auto",
-        "module": "commonjs",
-        "allowJs": true,
-        "checkJs": true,
-        "maxNodeModuleJsDepth": 1,
+        "noEmit": true,
+        "module": "CommonJS",
+        "esModuleInterop": true,
         "removeComments": true,
         "importHelpers": true,
-        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
+        "allowImportingTsExtensions": false,
         "strict": true,
         "noImplicitThis": true,
         "useUnknownInCatchVariables": true,
@@ -21,6 +20,8 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": false
     },
-    "include": ["frontend/**/*.ts", "server/**/*.ts", "server/__tests__/**/*.ts", "emotiv/**/*.ts"],
-    "exclude": ["frontend/webpack.config.js"]
+    "include": [
+        "server",
+        "emotiv"
+    ]
 }

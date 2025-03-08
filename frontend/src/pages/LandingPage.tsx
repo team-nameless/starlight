@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LogoImage from "../assets/images/background-image/logoo.png";
 import GirlImage from "../assets/images/modal-image/girlimage.png";
 import "../assets/stylesheets/LandingPage.css";
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 import {
     AppContainer,
     BackgroundLandingPage,
@@ -33,7 +33,7 @@ import {
     StayButton,
     SubmitButton,
     TextFieldContainer
-} from "../modalstyle/PopUpModals.tsx";
+} from "../modalstyle/PopUpModals";
 
 function LandingPage() {
     const [handle, setHandle] = useState("");

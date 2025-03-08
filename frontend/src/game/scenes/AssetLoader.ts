@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import { apiHost } from "../../common/site_setting.ts";
+import { apiHost } from "../../common/site_setting";
 import { StarlightMap } from "../../index";
 import indicator from "../assets/indicator.png";
 import noteRing from "../assets/ring.png";

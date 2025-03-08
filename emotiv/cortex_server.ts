@@ -1,5 +1,5 @@
+import assert from "assert";
 import dotenv from "dotenv";
-import assert from "node:assert";
 import { WebSocket, WebSocketServer } from "ws";
 
 import Cortex from "./cortex";

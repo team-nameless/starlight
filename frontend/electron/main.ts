@@ -1,5 +1,5 @@
 import { BrowserWindow, app } from "electron";
-import path from "node:path";
+import path from "path";
 
 process.env.APP_ROOT = path.join(__dirname, "..");
 

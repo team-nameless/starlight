@@ -1,4 +1,3 @@
-import * as assert from "node:assert";
 import Phaser from "phaser";
 
 import {
@@ -143,14 +142,12 @@ class Game extends Phaser.Scene {
         this.isScenePaused = false;
 
         // input
-        assert(this.input !== null);
-        assert(this.input.keyboard !== null);
-        this.noteOuter1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.noteInner1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.noteInner2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-        this.noteOuter2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
-        this.replayKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
-        this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        this.noteOuter1Key = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.noteInner1Key = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.noteInner2Key = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        this.noteOuter2Key = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+        this.replayKey = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
+        this.pauseKey = this.input!.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // long note status
         this.key1_LN_active = false;

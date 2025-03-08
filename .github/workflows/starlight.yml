@@ -38,11 +38,11 @@ jobs:
 
       - name: Smoke build the frontend app.
         run: |
-          npm run build:win --workspace frontend
+          npm run build:electron --workspace frontend
 
       - name: Un-shit the code.
         run: |
-          npm run prettify
+          npm run clean
 
       - name: Commit formatted code.
         uses: stefanzweifel/git-auto-commit-action@v5

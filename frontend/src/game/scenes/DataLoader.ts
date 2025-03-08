@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import { apiHost } from "../../common/site_setting.ts";
+import { apiHost } from "../../common/site_setting";
 
 /**
  *  Class used for loading all the meta stuffs into the game.

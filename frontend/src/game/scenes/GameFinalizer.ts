@@ -1,9 +1,9 @@
 import axios from "axios";
 import Phaser from "phaser";
 
-import { apiHost } from "../../common/site_setting.ts";
+import { apiHost } from "../../common/site_setting";
 import { GameScoreStat } from "../../index";
-import { EventEmitter } from "../EventEmitter.js";
+import { EventEmitter } from "../EventEmitter";
 
 class GameFinalizer extends Phaser.Scene {
     private collectedGameData: GameScoreStat | null = null;

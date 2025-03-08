@@ -4,12 +4,12 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import "./assets/stylesheets/Global.css";
 // Import global styles first
 import "./modalstyle/PopUpModals";
-import HistoryPage from "./pages/HistoryPage.tsx";
-import LandingPage from "./pages/LandingPage.tsx";
-import ProfilePage from "./pages/ProfilePage.tsx";
-import SongPage from "./pages/SongPage.tsx";
-import StorePage from "./pages/StorePage.tsx";
-import SuggestionPage from "./pages/SuggestionPage.tsx";
+import HistoryPage from "./pages/HistoryPage";
+import LandingPage from "./pages/LandingPage";
+import ProfilePage from "./pages/ProfilePage";
+import SongPage from "./pages/SongPage";
+import StorePage from "./pages/StorePage";
+import SuggestionPage from "./pages/SuggestionPage";
 
 function App() {
     return (

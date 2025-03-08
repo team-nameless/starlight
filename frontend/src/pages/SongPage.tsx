@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 
 import profilePicPlaceholder from "../assets/images/profile.png";
 import "../assets/stylesheets/MainPages.css";
-import { handleApiError } from "../common/errorHandlers.ts";
-import { apiHost } from "../common/site_setting.ts";
-//import AudioPlayer from "../components/AudioPlayer";
-import HeaderBar from "../components/HeaderBar.tsx";
+import { handleApiError } from "../common/errorHandlers";
+import { apiHost } from "../common/site_setting";
+// import AudioPlayer from "../components/AudioPlayer";
+import HeaderBar from "../components/HeaderBar";
 import NextPreviousButton from "../components/NextPreviousButton";
 import PlayButton from "../components/PlayButton";
 import { StarlightSong, StarlightUser } from "../index";

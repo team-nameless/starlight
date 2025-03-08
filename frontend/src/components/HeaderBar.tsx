@@ -12,7 +12,7 @@ import historyIcon from "../assets/images/Header_Items/history-icon.png";
 import songsIcon from "../assets/images/Header_Items/songs-icon.png";
 import storeIcon from "../assets/images/Header_Items/store-icon.png";
 import logoIcon from "../assets/images/Starlight-logo.png";
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 import { StarlightSong } from "../index";
 import {
     LeaveButton as LeaveButtonStyled,
@@ -31,12 +31,12 @@ import {
     StyledLink
 } from "../modalstyle/HeaderBarStyles";
 import { LeaveButton, LogoutButton, PopupContent, PopupOverlay, StayButton } from "../modalstyle/PopUpModals";
-import HistoryPage from "../pages/HistoryPage.tsx";
-import LandingPage from "../pages/LandingPage.tsx";
-import ProfilePage from "../pages/ProfilePage.tsx";
-import SongPage from "../pages/SongPage.tsx";
-import StorePage from "../pages/StorePage.tsx";
-import SuggestionPage from "../pages/SuggestionPage.tsx";
+import HistoryPage from "../pages/HistoryPage";
+import LandingPage from "../pages/LandingPage";
+import ProfilePage from "../pages/ProfilePage";
+import SongPage from "../pages/SongPage";
+import StorePage from "../pages/StorePage";
+import SuggestionPage from "../pages/SuggestionPage";
 import { HeaderBarProps } from "./props";
 
 function HeaderBar({

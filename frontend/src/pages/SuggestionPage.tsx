@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/SuggestionPage.css";
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 //import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";

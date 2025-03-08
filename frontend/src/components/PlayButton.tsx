@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 import { PlayButtonProps } from "./props";
 
 function PlayButton({ currentSongIndex, isLoading, setIsLoading, songs, variant = "default" }: PlayButtonProps) {

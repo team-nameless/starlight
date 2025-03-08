@@ -26,4 +26,21 @@ describe("hammering the server", () => {
         const response = await testAgent.get("/api");
         expect(response.status).toBe(HttpStatus.TOO_MANY_REQUESTS);
     });
+
+    it("should verify that Starlight UA passes the rate-limit", async () => {
+        // hammer the first 10 requests to trigger the limit.
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+        await testAgent.get("/api").set("User-Agent", "Starlight");
+
+        const response = await testAgent.get("/api").set("User-Agent", "Starlight");
+        expect(response.status).toBe(HttpStatus.OK);
+    });
 });

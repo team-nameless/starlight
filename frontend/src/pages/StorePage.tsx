@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import "../assets/stylesheets/MainPages.css";
-import { apiHost } from "../common/site_setting.ts";
+import { apiHost } from "../common/site_setting";
 import HeaderBar from "../components/HeaderBar";
 import { StarlightSong } from "../index";
 
