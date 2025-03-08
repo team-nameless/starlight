@@ -1,3 +1,4 @@
+import { Player } from "@prisma/client";
 import { Request } from "express";
 
 /**
@@ -20,4 +21,5 @@ export type RegisterIdentity = BasicUserIdentity & {
  */
 export type AuthenticatedRequest = Request & {
     email?: string;
+    record?: Player;
 };

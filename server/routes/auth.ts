@@ -43,7 +43,7 @@ router.post("/login", async (req: Request<unknown, unknown, BasicUserIdentity>, 
 
     const token = generateAccessToken(req.body.email);
 
-    res.cookie("Token", token);
+    res.cookie("Token", token, { signed: true });
 
     res.sendStatus(HttpStatus.OK);
 });

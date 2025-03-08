@@ -10,7 +10,7 @@ import auth from "./routes/auth";
 import track from "./routes/track";
 // import song from "./routes/song";
 // import user from "./routes/user";
-import { SERVER_PORT } from "./secrets";
+import { SERVER_KEY, SERVER_PORT } from "./secrets";
 
 const app = express();
 const port = SERVER_PORT;
@@ -28,7 +28,7 @@ app.use(morgan("combined", { immediate: true }))
             }
         })
     )
-    .use(cookieParser())
+    .use(cookieParser(SERVER_KEY))
     .use(bodyParser.json())
     .use(
         cors({

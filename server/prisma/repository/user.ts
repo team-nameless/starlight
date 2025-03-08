@@ -41,3 +41,16 @@ export async function findUserByEmail(email: string): Promise<Player | null> {
         }
     });
 }
+
+/**
+ * Delete a player. THIS IS NOT A DRILL.
+ *
+ * @param email The email address.
+ */
+export async function deleteUserByEmail(email: string): Promise<void> {
+    await prisma.player.delete({
+        where: {
+            Email: email
+        }
+    });
+}

@@ -1,11 +1,15 @@
 import express from "express";
 
+import { mustBeLoggedIn } from "../middleware/auth";
+import { deleteUserByEmail } from "../prisma/repository/user";
+import { AuthenticatedRequest } from "../types/auth";
+
 const router = express.Router();
 
 /**
  * Get the user.
  */
-router.get("/", (req, res) => {
+router.get("/", mustBeLoggedIn, (req: AuthenticatedRequest, res) => {
     res.sendStatus(200);
 });
 
@@ -45,9 +49,10 @@ router.patch("/settings", (req, res) => {
 });
 
 /**
- * Delete the user.
+ * Delete the user. Literally.
  */
-router.delete("/", (req, res) => {
+router.delete("/", async (req: AuthenticatedRequest, res) => {
+    await deleteUserByEmail(req.email!);
     res.sendStatus(200);
 });
 
