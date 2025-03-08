@@ -217,12 +217,14 @@ function SongPage() {
                             </table>
                         </div>
 
-                        <NextPreviousButton
-                            currentSongIndex={currentSongIndex}
-                            setCurrentSongIndex={setCurrentSongIndex}
-                            songs={songs}
-                            setCurrentSong={setCurrentSong}
-                        />
+                        <div className="song-navigation">
+                            <NextPreviousButton
+                                currentSongIndex={currentSongIndex}
+                                setCurrentSongIndex={setCurrentSongIndex}
+                                songs={songs}
+                                setCurrentSong={setCurrentSong}
+                            />
+                        </div>
 
                         <div className="song-container">
                             <div className="song-identity">

@@ -49,7 +49,7 @@ body {
 .content-layer {
     position: relative;
     z-index: 1;
-    height: calc(100vh - 50px); /* Subtract header height */
+    height: calc(100vh - 50px); 
     padding-top: 60px;
     padding-bottom: 20px;
     display: flex;
@@ -118,7 +118,17 @@ body {
 .song-navigation {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    width: 100%;
+    margin: 20px 0 -50px;
+    position: relative;
+    z-index: 2;
+}
+
+.song-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .nav-btn {
@@ -133,13 +143,13 @@ body {
     font-size: 20px;
     color: white;
     cursor: pointer;
-    margin-top: -30px; /* Move up by 10px */
     z-index: 3;
 }
 
 .nav-btn + .nav-btn {
-    margin-left: 280px; /* Distance between buttons */
+    margin-left: 280px;
 }
+
 .nav-btn:hover {
     background-color: #ff8a05;
     transition: background-color 0.3s ease;

@@ -1,7 +1,7 @@
 .historypage {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 90%;
     overflow-x: hidden;
     background-color: #000;
 }
@@ -10,7 +10,7 @@
     position: relative;
     z-index: 1;
     height: calc(100vh - 50px);
-    padding: 60px 20px 20px;
+    padding: 50px 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,10 +45,10 @@
 /*Edit here*/
 .heatmap-section {
     background: rgba(34, 39, 45, 0.8);
-    padding: 20px;
+
     border-radius: 8px;
     color: white;
-    margin: 20px 0;
+
 }
 
 #heatmap-latest-container,
@@ -116,10 +116,6 @@
     font-family: "Kaushan Script", cursive;
     font-weight: 400;
     color: #fe364f;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    margin-left: 0;
-    margin-right: 0;
     font-size: 40px;
     text-align: center;
     width: 100%;
@@ -145,15 +141,10 @@
 
 #heatmap-container-1,
 #heatmap-container-2 {
-    background: rgba(34, 39, 45, 0.8);
-    padding: 20px;
-    border-radius: 8px;
-    color: white;
-    margin: 0px 300px 0px 300px;
+    margin: -100px 300px 0px 300px; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1000;
     width: 900px;
     height: 270px;
 }
@@ -187,13 +178,4 @@
     color: #dd2e44;
 }
 
-.heatmap-error {
-    color: #ff5555;
-    font-size: 16px;
-    text-align: center;
-    padding: 30px;
-    background-color: rgba(255, 0, 0, 0.1);
-    border-radius: 4px;
-    width: 100%;
-    margin: 20px 0;
-}
+
