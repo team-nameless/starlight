@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import "../assets/stylesheets/MainPages.css";
 import "../assets/stylesheets/SuggestionPage.css";
 import { apiHost } from "../common/site_setting.ts";
+//import AudioPlayer from "../components/AudioPlayer";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
@@ -132,7 +133,6 @@ function SuggestionPage() {
         }
     }, [currentSong, fetchBestScore]);
 
-    // Fix handleSongClick to properly update the background image
     const handleSongClick = useCallback(
         (song: StarlightSong) => () => {
             const index = songs.findIndex(s => s.id === song.id);
@@ -236,8 +236,68 @@ function SuggestionPage() {
                             )}
                         </div>
                     </div>
+                    <div className="score-panel">
+                        <h2 className="score-panel-header">Latest Play</h2>
+                        
+                        <div className="score-rank">A</div>
+                        <div className="score-value"><span>★</span> 1000000 <span>★</span></div>
+                        
+                        <div className="stats-grid">
+                            <div>
+                                <span>ACCURACY</span>
+                                <strong>97.89%</strong>
+                            </div>
+                            <div>
+                                <span>MAX COMBO</span>
+                                <strong>22934</strong>
+                            </div>
+                            <div>
+                                <span>MENTAL TENDENCY</span>
+                                <strong className="mental-tendency">Deep Relax</strong>
+                            </div>
+                            <div className="suggestion-rate-container">
+                                <span>SUGGESTION RATE</span>
+                                <strong>0.169</strong>
+                                
+                                {/* Tooltip that shows on hover */}
+                                <div className="stats-indicators">
+                                    <div>Focus: 4.32</div>
+                                    <div>Relaxation: 2.78</div>
+                                    <div>Engagement: 0.12</div>
+                                    <div>Excitement: 4.32</div>
+                                    <div>Stress: 0.12</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="grade-grid">
+                            <div className="critical-perfect">
+                                <span>CRITICAL PERFECT</span>
+                                <strong>345</strong>
+                            </div>
+                            <div className="perfect">
+                                <span>PERFECT</span>
+                                <strong>16</strong>
+                            </div>
+                            <div className="good">
+                                <span>GOOD</span>
+                                <strong>3</strong>
+                            </div>
+                            <div className="bad">
+                                <span>BAD</span>
+                                <strong>0</strong>
+                            </div>
+                            <div className="miss">
+                                <span>MISS</span>
+                                <strong>1</strong>
+                            </div>
+                        </div>
+                        
+                        <div className="played-date">Played on 25 February 2025 8:08 AM</div>
+                        </div>
                 </div>
             </div>
+            {/*{currentSong && <AudioPlayer audioUrl={currentSong.audioUrl} />}*/}
         </>
     );
 }

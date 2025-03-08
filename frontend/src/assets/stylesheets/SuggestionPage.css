@@ -32,6 +32,7 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     margin-left: 50px; /* Add margin from the left edge of the screen */
+    max-width: 90vw; /* Responsive width - maximum 90% of viewport width */
 }
 
 .track-card-background {
@@ -222,4 +223,221 @@
 
 .play-card-button:hover .play-card-icon {
     color: black;
+}
+
+/* Score Panel */
+.score-panel {
+    background: rgba(16, 16, 24, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: white;
+    margin-top: 20px;
+    margin-left: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    width: 500px;
+    max-width: 90vw;
+    height: 266.8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.score-panel-header {
+    text-align: center;
+    margin: 0 0 5px; 
+    font-weight: 500;
+    font-size: 1rem; 
+    letter-spacing: 0.5px;
+}
+
+.score-rank {
+    text-align: center;
+    font-size: 2.8rem; 
+    font-weight: bold;
+    margin: 2px 0; 
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); 
+}
+
+.score-value {
+    text-align: center;
+    font-size: 1.6rem; 
+    font-weight: bold;
+    margin: 2px 0 8px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; 
+}
+
+.score-value span {
+    color: #ffd700;
+    font-size: 0.8rem; 
+}
+
+.stats-indicators {
+    visibility: hidden;
+    position: absolute;
+    background: rgba(16, 16, 24, 0.95);
+    color: #fff;
+    text-align: left;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 120px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.stats-indicators div {
+    white-space: nowrap;
+    padding: 3px 6px;
+    font-size: 0.6rem;
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.stats-indicators div:last-child {
+    margin-bottom: 0;
+}
+
+.suggestion-rate-container {
+    position: relative;
+    cursor: help;
+}
+
+.suggestion-rate-container:hover .stats-indicators {
+    visibility: visible;
+    opacity: 1;
+}
+
+.stats-indicators::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(16, 16, 24, 0.95) transparent transparent transparent;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 2px;
+}
+
+.stats-grid div {
+    background: rgba(30, 30, 40, 0.7);
+    padding: 5px;
+    border-radius: 6px; 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0; 
+}
+
+.stats-grid span {
+    font-size: 0.55rem; 
+    letter-spacing: 0.3px; 
+    color: #aaa;
+}
+
+.stats-grid strong {
+    font-size: 0.85rem;
+}
+
+.mental-tendency {
+    color: #4ecca3;
+}
+
+.grade-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px; 
+    margin-top: 2px; 
+}
+
+.grade-grid div {
+    border-radius: 4px; 
+    padding: 3px 2px; 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1px; 
+}
+
+.grade-grid span {
+    font-size: 0.45rem; 
+    letter-spacing: 0.3px; 
+}
+
+.grade-grid strong {
+    font-size: 0.8rem; 
+}
+
+.played-date {
+    text-align: center;
+    margin-top: 6px; 
+    font-size: 0.6rem; 
+    color: #aaa;
+}
+
+/* Responsive media queries */
+@media (max-width: 768px) {
+    .track-card, .score-panel {
+        margin-left: 20px;
+        width: calc(100% - 40px);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .grade-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    
+    .grade-grid div:nth-child(4), .grade-grid div:nth-child(5) {
+        grid-column: span 1.5;
+    }
+    
+    .stats-indicators {
+        position: relative;
+        top: unset;
+        right: unset;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 500px) {
+    .track-card, .score-panel {
+        margin-left: 10px;
+        width: calc(100% - 20px);
+    }
+    
+    .performance-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .performance-column:first-child {
+        width: 100%;
+        margin-right: 0;
+    }
 }
