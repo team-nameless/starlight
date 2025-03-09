@@ -435,7 +435,8 @@
 .suggestion-page {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(135deg, rgba(60, 0, 60, 0.8), rgba(0, 0, 30, 0.8)), url('../assets/images/background.jpg');
+    background:
+        linear-gradient(135deg, rgba(60, 0, 60, 0.8), rgba(0, 0, 30, 0.8)), url("../assets/images/background.jpg");
     background-size: cover;
     background-position: center;
     padding: 20px;
@@ -447,8 +448,8 @@
     width: 100%;
     max-width: 1000px;
     flex: 1;
-    max-width: calc(100% - 500px - 58px - 8px); 
-    height: calc(400px + 8px + 266.8px); 
+    max-width: calc(100% - 500px - 58px - 8px);
+    height: calc(400px + 8px + 266.8px);
     display: flex;
     flex-direction: column;
     background: rgba(16, 16, 24, 0.7);
@@ -460,7 +461,7 @@
 
 .search-filter-container {
     display: flex;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
     gap: 10px;
 }
 
@@ -609,7 +610,6 @@
     align-items: center;
 }
 
-
 .track-thumbnail {
     width: 50px;
     height: 50px;
@@ -711,16 +711,15 @@
     gap: 8px;
     height: auto;
     min-height: calc(100vh - 50px);
-    padding-right: 8px; 
+    padding-right: 8px;
 }
 
 .left-column {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-left: 50px; 
+    margin-left: 50px;
 }
-
 
 .track-list-item {
     display: flex;

@@ -10,11 +10,11 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
     const navigate = useNavigate();
     const isHistoryPage = location.pathname.includes("/HistoryPage");
     const [isDisabled, setIsDisabled] = useState(false);
-    
+
     // Keep track of the current index
     const indexRef = useRef(currentSongIndex);
     const songsRef = useRef(songs);
-    
+
     // Update refs when props change
     useEffect(() => {
         indexRef.current = currentSongIndex;
@@ -29,35 +29,35 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             console.warn("Cannot navigate: no songs or only one song available");
             return;
         }
-        
+
         const currentIndex = indexRef.current;
         const songList = songsRef.current;
         const newIndex = (currentIndex + 1) % songList.length;
         const nextSong = songList[newIndex];
-        
+
         console.log(`Next song: ${newIndex} out of ${songList.length}`);
-        
+
         // Update background image
         const imgElement = document.querySelector(".background-image img");
         if (imgElement && nextSong && nextSong.backgroundUrl) {
             imgElement.classList.add("fade-out");
-            
+
             // Handle transition
             const onTransitionEnd = () => {
                 // Update state
                 setCurrentSongIndex(newIndex);
                 setCurrentSong(nextSong);
                 indexRef.current = newIndex;
-                
+
                 // Update image source
                 (imgElement as HTMLImageElement).src = nextSong.backgroundUrl;
                 imgElement.classList.remove("fade-out");
-                
+
                 // Navigate if on history page
                 if (isHistoryPage) {
                     navigate(`/HistoryPage/${nextSong.id}/${newIndex}`, {
-                        state: { 
-                            currentSong: nextSong, 
+                        state: {
+                            currentSong: nextSong,
                             currentSongIndex: newIndex,
                             songs: songList
                         },
@@ -65,9 +65,9 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                     });
                 }
             };
-            
+
             imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
-            
+
             // Fallback timer in case transition event doesn't fire
             setTimeout(() => {
                 if (imgElement.classList.contains("fade-out")) {
@@ -80,12 +80,12 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             setCurrentSongIndex(newIndex);
             setCurrentSong(nextSong);
             indexRef.current = newIndex;
-            
+
             // Navigate if on history page
             if (isHistoryPage && nextSong) {
                 navigate(`/HistoryPage/${nextSong.id}/${newIndex}`, {
-                    state: { 
-                        currentSong: nextSong, 
+                    state: {
+                        currentSong: nextSong,
                         currentSongIndex: newIndex,
                         songs: songList
                     },
@@ -100,35 +100,35 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             console.warn("Cannot navigate: no songs or only one song available");
             return;
         }
-        
+
         const currentIndex = indexRef.current;
         const songList = songsRef.current;
         const newIndex = (currentIndex - 1 + songList.length) % songList.length;
         const prevSong = songList[newIndex];
-        
+
         console.log(`Previous song: ${newIndex} out of ${songList.length}`);
-        
+
         // Update background image
         const imgElement = document.querySelector(".background-image img");
         if (imgElement && prevSong && prevSong.backgroundUrl) {
             imgElement.classList.add("fade-out");
-            
+
             // Handle transition
             const onTransitionEnd = () => {
                 // Update state
                 setCurrentSongIndex(newIndex);
                 setCurrentSong(prevSong);
                 indexRef.current = newIndex;
-                
+
                 // Update image source
                 (imgElement as HTMLImageElement).src = prevSong.backgroundUrl;
                 imgElement.classList.remove("fade-out");
-                
+
                 // Navigate if on history page
                 if (isHistoryPage) {
                     navigate(`/HistoryPage/${prevSong.id}/${newIndex}`, {
-                        state: { 
-                            currentSong: prevSong, 
+                        state: {
+                            currentSong: prevSong,
                             currentSongIndex: newIndex,
                             songs: songList
                         },
@@ -136,9 +136,9 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                     });
                 }
             };
-            
+
             imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
-            
+
             // Fallback timer in case transition event doesn't fire
             setTimeout(() => {
                 if (imgElement.classList.contains("fade-out")) {
@@ -151,12 +151,12 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             setCurrentSongIndex(newIndex);
             setCurrentSong(prevSong);
             indexRef.current = newIndex;
-            
+
             // Navigate if on history page
             if (isHistoryPage && prevSong) {
                 navigate(`/HistoryPage/${prevSong.id}/${newIndex}`, {
-                    state: { 
-                        currentSong: prevSong, 
+                    state: {
+                        currentSong: prevSong,
                         currentSongIndex: newIndex,
                         songs: songList
                     },
@@ -180,10 +180,12 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
     // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.keyCode === 39) { // Right arrow key
+            if (event.keyCode === 39) {
+                // Right arrow key
                 handleNextSong();
                 triggerButtonHoverEffect(".next-btn");
-            } else if (event.keyCode === 37) { // Left arrow key
+            } else if (event.keyCode === 37) {
+                // Left arrow key
                 handlePreviousSong();
                 triggerButtonHoverEffect(".prev-btn");
             }
@@ -197,8 +199,8 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
 
     return (
         <div className="song-navigation">
-            <button 
-                className="nav-btn prev-btn" 
+            <button
+                className="nav-btn prev-btn"
                 onClick={handlePreviousSong}
                 disabled={isDisabled}
                 aria-label="Previous song"
@@ -206,26 +208,21 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                 <img
                     src={previousArrow}
                     alt="Previous"
-                    style={{ 
-                        width: "21px", 
-                        height: "21px", 
+                    style={{
+                        width: "21px",
+                        height: "21px",
                         transition: "transform 0.3s",
                         opacity: isDisabled ? 0.5 : 1
                     }}
                 />
             </button>
-            <button 
-                className="nav-btn next-btn" 
-                onClick={handleNextSong}
-                disabled={isDisabled}
-                aria-label="Next song"
-            >
+            <button className="nav-btn next-btn" onClick={handleNextSong} disabled={isDisabled} aria-label="Next song">
                 <img
                     src={nextArrow}
                     alt="Next"
-                    style={{ 
-                        width: "21px", 
-                        height: "21px", 
+                    style={{
+                        width: "21px",
+                        height: "21px",
                         transition: "transform 0.3s",
                         opacity: isDisabled ? 0.5 : 1
                     }}

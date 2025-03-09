@@ -1,4 +1,5 @@
 import axios from "axios";
+import Fuse from "fuse.js";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -9,7 +10,6 @@ import { apiHost } from "../common/site_setting";
 import HeaderBar from "../components/HeaderBar";
 import PlayButton from "../components/PlayButton";
 import { ScoreRecord, StarlightSong } from "../index";
-import Fuse from "fuse.js";
 
 function SuggestionPage() {
     const location = useLocation();
@@ -36,33 +36,32 @@ function SuggestionPage() {
     const [isSongListOpen, setIsSongListOpen] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
     const [filteredSongs, setFilteredSongs] = useState<StarlightSong[]>([]);
-    const [selectedGenre, setSelectedGenre] = useState('');
-    const [selectedMood, setSelectedMood] = useState('');
+    const [selectedGenre, setSelectedGenre] = useState("");
+    const [selectedMood, setSelectedMood] = useState("");
     const [genreDropdownOpen, setGenreDropdownOpen] = useState(false);
     const [moodDropdownOpen, setMoodDropdownOpen] = useState(false);
 
     // Genre options
     const genreOptions = [
-        { value: '', label: '-- GENRE --' },
-        { value: 'Electrical Dance', label: 'Electrical Dance' },
-        { value: 'Pop', label: 'Pop' },
-        { value: 'Rock', label: 'Rock' },
-        { value: 'Hip Hop', label: 'Hip Hop' },
-        { value: 'Jazz', label: 'Jazz' }
+        { value: "", label: "-- GENRE --" },
+        { value: "Electrical Dance", label: "Electrical Dance" },
+        { value: "Pop", label: "Pop" },
+        { value: "Rock", label: "Rock" },
+        { value: "Hip Hop", label: "Hip Hop" },
+        { value: "Jazz", label: "Jazz" }
     ];
 
     // Mood options
     const moodOptions = [
-        { value: '', label: '-- MOOD --' },
-        { value: 'Relaxation', label: 'Relaxation' },
-        { value: 'Focus', label: 'Focus' },
-        { value: 'Excitement', label: 'Excitement' },
-        { value: 'Engagement', label: 'Engagement' },
-        { value: 'Interest', label: 'Interest' }
-    ]; 
+        { value: "", label: "-- MOOD --" },
+        { value: "Relaxation", label: "Relaxation" },
+        { value: "Focus", label: "Focus" },
+        { value: "Excitement", label: "Excitement" },
+        { value: "Engagement", label: "Engagement" },
+        { value: "Interest", label: "Interest" }
+    ];
 
     // Update current song from location on navigation
     useEffect(() => {
@@ -162,22 +161,21 @@ function SuggestionPage() {
         }
     }, [currentSong, fetchBestScore]);
 
-    
     // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
-            if (!target.closest('.genre-dropdown') && !target.closest('.genre-dropdown-button')) {
+            if (!target.closest(".genre-dropdown") && !target.closest(".genre-dropdown-button")) {
                 setGenreDropdownOpen(false);
             }
-            if (!target.closest('.mood-dropdown') && !target.closest('.mood-dropdown-button')) {
+            if (!target.closest(".mood-dropdown") && !target.closest(".mood-dropdown-button")) {
                 setMoodDropdownOpen(false);
             }
         };
 
-        document.addEventListener('click', handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
         return () => {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         };
     }, []);
 
@@ -200,7 +198,7 @@ function SuggestionPage() {
         // Apply search query if exists
         if (searchQuery.trim()) {
             const fuseOptions = {
-                keys: ['title', 'artist'],
+                keys: ["title", "artist"],
                 threshold: 0.3
             };
             const fuse = new Fuse(filtered, fuseOptions);
@@ -226,10 +224,9 @@ function SuggestionPage() {
     };
 
     const getDifficultyColor = (difficulty: number) => {
-        const hue = Math.max(0, 120 - (difficulty * 12)); 
+        const hue = Math.max(0, 120 - difficulty * 12);
         return `hsl(${hue}, 70%, 50%)`;
     };
- 
 
     const handleSongClick = useCallback(
         (song: StarlightSong) => () => {
@@ -335,7 +332,7 @@ function SuggestionPage() {
                                 )}
                             </div>
                         </div>
-                        
+
                         <div className="score-panel">
                             <h2 className="score-panel-header">Latest Play</h2>
 
@@ -406,30 +403,30 @@ function SuggestionPage() {
                                     type="text"
                                     placeholder="-- SEARCH ME --"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onChange={e => setSearchQuery(e.target.value)}
                                 />
                                 <i className="search-icon">🔍</i>
                             </div>
                             <div className="filter-selects">
                                 {/* Custom Genre Dropdown */}
                                 <div className="dropdown-container">
-                                    <button 
-                                        className="dropdown-button genre-dropdown-button" 
-                                        onClick={(e) => {
+                                    <button
+                                        className="dropdown-button genre-dropdown-button"
+                                        onClick={e => {
                                             e.stopPropagation();
                                             setGenreDropdownOpen(!genreDropdownOpen);
                                             setMoodDropdownOpen(false);
                                         }}
                                     >
-                                        {selectedGenre || '-- GENRE --'}
+                                        {selectedGenre || "-- GENRE --"}
                                         <span className="dropdown-arrow">▼</span>
                                     </button>
                                     {genreDropdownOpen && (
                                         <div className="dropdown-menu genre-dropdown">
-                                            {genreOptions.map((option) => (
-                                                <div 
-                                                    key={option.value} 
-                                                    className="dropdown-item" 
+                                            {genreOptions.map(option => (
+                                                <div
+                                                    key={option.value}
+                                                    className="dropdown-item"
                                                     onClick={() => handleGenreSelect(option.value, option.label)}
                                                 >
                                                     {option.label}
@@ -441,23 +438,23 @@ function SuggestionPage() {
 
                                 {/* Custom Mood Dropdown */}
                                 <div className="dropdown-container">
-                                    <button 
-                                        className="dropdown-button mood-dropdown-button" 
-                                        onClick={(e) => {
+                                    <button
+                                        className="dropdown-button mood-dropdown-button"
+                                        onClick={e => {
                                             e.stopPropagation();
                                             setMoodDropdownOpen(!moodDropdownOpen);
                                             setGenreDropdownOpen(false);
                                         }}
                                     >
-                                        {selectedMood || '-- MOOD --'}
+                                        {selectedMood || "-- MOOD --"}
                                         <span className="dropdown-arrow">▼</span>
                                     </button>
                                     {moodDropdownOpen && (
                                         <div className="dropdown-menu mood-dropdown">
-                                            {moodOptions.map((option) => (
-                                                <div 
-                                                    key={option.value} 
-                                                    className="dropdown-item" 
+                                            {moodOptions.map(option => (
+                                                <div
+                                                    key={option.value}
+                                                    className="dropdown-item"
                                                     onClick={() => handleMoodSelect(option.value, option.label)}
                                                 >
                                                     {option.label}
@@ -485,29 +482,26 @@ function SuggestionPage() {
                                     filteredSongs.map((song, index) => (
                                         <div
                                             key={index}
-                                            className={`track-list-item ${currentSongIndex === index ? 'active' : ''}`}
+                                            className={`track-list-item ${currentSongIndex === index ? "active" : ""}`}
                                             onClick={() => handleSongItemClick(index)}
                                         >
                                             <div className="track-thumbnail">
-                                                <img 
-                                                    src={song.thumbnail || 'default-thumbnail.jpg'} 
-                                                    alt={song.title} 
-                                                />
+                                                <img src={song.thumbnail || "default-thumbnail.jpg"} alt={song.title} />
                                             </div>
                                             <div className="track-info">
                                                 <div className="track-title">{song.title || `Song ${index + 1}`}</div>
-                                                <div className="track-artist">{song.artist || 'Artist name'}</div>
+                                                <div className="track-artist">{song.artist || "Artist name"}</div>
                                             </div>
                                             <div className="track-details">
-                                                <div className="track-genre">{song.genre || 'Electrical Dance'}</div>
-                                                <div className="track-melody">{song.melodyType || 'Energetic'}</div>
-                                                <div 
+                                                <div className="track-genre">{song.genre || "Electrical Dance"}</div>
+                                                <div className="track-melody">{song.melodyType || "Energetic"}</div>
+                                                <div
                                                     className="track-difficulty"
                                                     style={{ color: getDifficultyColor(song.difficulty || 5.2) }}
                                                 >
-                                                    {song.difficulty?.toFixed(1) || '5.2'}
+                                                    {song.difficulty?.toFixed(1) || "5.2"}
                                                 </div>
-                                                <div className="track-metric">{song.metric || 'Relaxation'}</div>
+                                                <div className="track-metric">{song.metric || "Relaxation"}</div>
                                             </div>
                                         </div>
                                     ))
