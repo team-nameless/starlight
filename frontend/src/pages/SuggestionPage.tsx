@@ -187,12 +187,12 @@ function SuggestionPage() {
 
         // Apply genre filter if selected
         if (selectedGenre) {
-            filtered = filtered.filter(song => song.genre === selectedGenre);
+            filtered = filtered.filter((song) => song.genre === selectedGenre);
         }
 
         // Apply mood filter if selected
         if (selectedMood) {
-            filtered = filtered.filter(song => song.metric === selectedMood);
+            filtered = filtered.filter((song) => song.metric === selectedMood);
         }
 
         // Apply search query if exists
@@ -202,7 +202,7 @@ function SuggestionPage() {
                 threshold: 0.3
             };
             const fuse = new Fuse(filtered, fuseOptions);
-            filtered = fuse.search(searchQuery).map(result => result.item);
+            filtered = fuse.search(searchQuery).map((result) => result.item);
         }
 
         setFilteredSongs(filtered);
@@ -279,7 +279,11 @@ function SuggestionPage() {
                 <div className="content-layer">
                     <div className="background-image">
                         <img
-                            src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                            src={
+                                currentSong && currentSong.backgroundUrl
+                                    ? `${currentSong.backgroundUrl}`
+                                    : ""
+                            }
                             alt="Background"
                         />
                     </div>
@@ -403,7 +407,7 @@ function SuggestionPage() {
                                     type="text"
                                     placeholder="-- SEARCH ME --"
                                     value={searchQuery}
-                                    onChange={e => setSearchQuery(e.target.value)}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                                 <i className="search-icon">🔍</i>
                             </div>
@@ -412,7 +416,7 @@ function SuggestionPage() {
                                 <div className="dropdown-container">
                                     <button
                                         className="dropdown-button genre-dropdown-button"
-                                        onClick={e => {
+                                        onClick={(e) => {
                                             e.stopPropagation();
                                             setGenreDropdownOpen(!genreDropdownOpen);
                                             setMoodDropdownOpen(false);
@@ -423,11 +427,16 @@ function SuggestionPage() {
                                     </button>
                                     {genreDropdownOpen && (
                                         <div className="dropdown-menu genre-dropdown">
-                                            {genreOptions.map(option => (
+                                            {genreOptions.map((option) => (
                                                 <div
                                                     key={option.value}
                                                     className="dropdown-item"
-                                                    onClick={() => handleGenreSelect(option.value, option.label)}
+                                                    onClick={() =>
+                                                        handleGenreSelect(
+                                                            option.value,
+                                                            option.label
+                                                        )
+                                                    }
                                                 >
                                                     {option.label}
                                                 </div>
@@ -440,7 +449,7 @@ function SuggestionPage() {
                                 <div className="dropdown-container">
                                     <button
                                         className="dropdown-button mood-dropdown-button"
-                                        onClick={e => {
+                                        onClick={(e) => {
                                             e.stopPropagation();
                                             setMoodDropdownOpen(!moodDropdownOpen);
                                             setGenreDropdownOpen(false);
@@ -451,11 +460,13 @@ function SuggestionPage() {
                                     </button>
                                     {moodDropdownOpen && (
                                         <div className="dropdown-menu mood-dropdown">
-                                            {moodOptions.map(option => (
+                                            {moodOptions.map((option) => (
                                                 <div
                                                     key={option.value}
                                                     className="dropdown-item"
-                                                    onClick={() => handleMoodSelect(option.value, option.label)}
+                                                    onClick={() =>
+                                                        handleMoodSelect(option.value, option.label)
+                                                    }
                                                 >
                                                     {option.label}
                                                 </div>
@@ -486,27 +497,46 @@ function SuggestionPage() {
                                             onClick={() => handleSongItemClick(index)}
                                         >
                                             <div className="track-thumbnail">
-                                                <img src={song.thumbnail || song.backgroundUrl} alt={song.title} />
+                                                <img
+                                                    src={song.thumbnail || song.backgroundUrl}
+                                                    alt={song.title}
+                                                />
                                             </div>
                                             <div className="track-info">
-                                                <div className="track-title">{song.title || `Song ${index + 1}`}</div>
-                                                <div className="track-artist">{song.artist || "Artist name"}</div>
+                                                <div className="track-title">
+                                                    {song.title || `Song ${index + 1}`}
+                                                </div>
+                                                <div className="track-artist">
+                                                    {song.artist || "Artist name"}
+                                                </div>
                                             </div>
                                             <div className="track-details">
-                                                <div className="track-genre">{song.genre || "Electrical Dance"}</div>
-                                                <div className="track-melody">{song.melodyType || "Energetic"}</div>
+                                                <div className="track-genre">
+                                                    {song.genre || "Electrical Dance"}
+                                                </div>
+                                                <div className="track-melody">
+                                                    {song.melodyType || "Energetic"}
+                                                </div>
                                                 <div
                                                     className="track-difficulty"
-                                                    style={{ color: getDifficultyColor(song.difficulty || 5.2) }}
+                                                    style={{
+                                                        color: getDifficultyColor(
+                                                            song.difficulty || 5.2
+                                                        )
+                                                    }}
                                                 >
                                                     {song.difficulty?.toFixed(1) || "5.2"}
                                                 </div>
-                                                <div className="track-metric">{song.metric || "Relaxation"}</div>
+                                                <div className="track-metric">
+                                                    {song.metric || "Relaxation"}
+                                                </div>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="no-songs">No songs found matching your criteria</div>
+                                    <div className="no-songs">
+                                        No songs found matching your criteria
+                                    </div>
                                 )}
                             </div>
                         </div>

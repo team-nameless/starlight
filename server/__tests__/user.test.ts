@@ -23,7 +23,10 @@ describe("/api/user", () => {
 
     it("should successfully delete the user", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
-        const login = await testAgent.post("/api/login").set("User-Agent", "Starlight").send(mockUser);
+        const login = await testAgent
+            .post("/api/login")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
 
         const response = await testAgent
             .delete("/api/user")

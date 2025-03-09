@@ -24,13 +24,19 @@ describe("/api/register", () => {
     it("should return FORBIDDEN if user already exists", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const response = await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
+        const response = await testAgent
+            .post("/api/register")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
 
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
 
     it("should return OK if user is new", async () => {
-        const response = await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
+        const response = await testAgent
+            .post("/api/register")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
         expect(response.status).toBe(HttpStatus.OK);
 
         const prismaUser = await prisma.player.findFirst({
@@ -53,14 +59,20 @@ describe("/api/login", () => {
     });
 
     it("should return FORBIDDEN if user does not exist", async () => {
-        const response = await testAgent.post("/api/login").set("User-Agent", "Starlight").send(mockUser);
+        const response = await testAgent
+            .post("/api/login")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
 
     it("should return OK if user valid", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const response = await testAgent.post("/api/login").set("User-Agent", "Starlight").send(mockUser);
+        const response = await testAgent
+            .post("/api/login")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
         expect(response.status).toBe(HttpStatus.OK);
     });
 
@@ -88,7 +100,10 @@ describe("/api/logout", () => {
     it("should return REDIRECT if user valid", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const login = await testAgent.post("/api/login").set("User-Agent", "Starlight").send(mockUser);
+        const login = await testAgent
+            .post("/api/login")
+            .set("User-Agent", "Starlight")
+            .send(mockUser);
 
         const response = await testAgent
             .get("/api/logout")
@@ -101,7 +116,10 @@ describe("/api/logout", () => {
     it("should return FORBIDDEN if no token", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const response = await testAgent.get("/api/logout").set("User-Agent", "Starlight").unset("Token");
+        const response = await testAgent
+            .get("/api/logout")
+            .set("User-Agent", "Starlight")
+            .unset("Token");
 
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
@@ -109,7 +127,10 @@ describe("/api/logout", () => {
     it("should return UNAUTHORIZED if token invalid", async () => {
         await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
 
-        const response = await testAgent.get("/api/logout").set("User-Agent", "Starlight").set("Token", "I am Balatro");
+        const response = await testAgent
+            .get("/api/logout")
+            .set("User-Agent", "Starlight")
+            .set("Token", "I am Balatro");
 
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
