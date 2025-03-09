@@ -53,7 +53,7 @@ function SongPage() {
                 }
             } catch (error) {
                 handleApiError(error, {
-                    onDefault: message => {
+                    onDefault: (message) => {
                         console.error("Error fetching user data:", message);
                     }
                 });
@@ -66,7 +66,7 @@ function SongPage() {
     useEffect(() => {
         const handleStorageChange = () => {
             const storedProfilePic = localStorage.getItem("userProfilePic");
-            setUserProfile(prevProfile => ({
+            setUserProfile((prevProfile) => ({
                 ...prevProfile,
                 id: prevProfile?.id || 123456,
                 name: prevProfile?.name || "Anonymous",
@@ -84,12 +84,15 @@ function SongPage() {
         const fetchBestScore = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${apiHost}/api/score/${currentSong.id}/best`, {
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        withCredentials: true
-                    });
+                    const response = await axios.get(
+                        `${apiHost}/api/score/${currentSong.id}/best`,
+                        {
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            withCredentials: true
+                        }
+                    );
                     if (response.status === 200) {
                         setBestScore(response.data.totalPoints);
                     } else if (response.status === 204) {
@@ -139,7 +142,7 @@ function SongPage() {
     }, []);
 
     const handleSongClick = (song: StarlightSong) => () => {
-        const index = songs.findIndex(s => s.id === song.id);
+        const index = songs.findIndex((s) => s.id === song.id);
         if (index !== -1) {
             const imgElement = document.querySelector(".background-image img");
             if (imgElement && song.backgroundUrl) {
@@ -191,7 +194,11 @@ function SongPage() {
                 <div className="content-layer">
                     <div className="background-image">
                         <img
-                            src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                            src={
+                                currentSong && currentSong.backgroundUrl
+                                    ? `${currentSong.backgroundUrl}`
+                                    : ""
+                            }
                             alt="Background"
                         />
                     </div>
@@ -207,7 +214,9 @@ function SongPage() {
                                     <td>
                                         <Link to="/ProfilePage">
                                             <img
-                                                src={userProfile?.profilePic || profilePicPlaceholder}
+                                                src={
+                                                    userProfile?.profilePic || profilePicPlaceholder
+                                                }
                                                 alt="Profile"
                                                 className="profile-img-table"
                                             />
@@ -234,7 +243,9 @@ function SongPage() {
                             <div className="song-info">
                                 <div className="song-name">{currentSong?.title}</div>
                                 <div className="artist-name">- {currentSong?.artist} -</div>
-                                <div className="best-score">{bestScore !== null ? bestScore : "No record"} </div>
+                                <div className="best-score">
+                                    {bestScore !== null ? bestScore : "No record"}{" "}
+                                </div>
                             </div>
                             {currentSong && (
                                 <PlayButton

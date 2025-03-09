@@ -74,7 +74,7 @@ class Cortex {
         this.socket.send(JSON.stringify(authorizeRequest));
 
         return new Promise((resolve, _reject) => {
-            this.socket.on("message", data => {
+            this.socket.on("message", (data) => {
                 const res: AuthorizationResponse = JSON.parse(data.toString());
                 if (res.result?.cortexToken !== undefined) resolve(res.result.cortexToken);
             });
@@ -95,9 +95,13 @@ class Cortex {
         this.socket.send(JSON.stringify(queryHeadsetRequest));
 
         return new Promise((resolve, _reject) => {
-            this.socket.on("message", data => {
+            this.socket.on("message", (data) => {
                 const res: HeadsetDigestionResponse = JSON.parse(data.toString());
-                if (res.result?.length !== undefined && res.result.length > 0 && res.result[0]?.id !== undefined)
+                if (
+                    res.result?.length !== undefined &&
+                    res.result.length > 0 &&
+                    res.result[0]?.id !== undefined
+                )
                     resolve(res.result[0].id);
             });
         });
@@ -149,7 +153,7 @@ class Cortex {
         this.socket.send(JSON.stringify(createSessionRequest));
 
         return new Promise((resolve, _reject) => {
-            this.socket.on("message", data => {
+            this.socket.on("message", (data) => {
                 const parsedData: SessionCreationResponse = JSON.parse(data.toString());
                 if (parsedData.result?.id !== undefined) resolve(parsedData.result.id);
             });
@@ -173,7 +177,7 @@ class Cortex {
 
         this.socket.send(JSON.stringify(subRequest));
 
-        this.socket.on("message", data => {
+        this.socket.on("message", (data) => {
             const parsedData = JSON.parse(data.toString());
             if (parsedData["met"]) console.log(parsedData["met"]);
         });

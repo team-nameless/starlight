@@ -217,7 +217,7 @@ class Game extends Phaser.Scene {
         this.pauseDimBg.setOrigin(0, 0);
         this.pauseDimBg.setDepth(10);
 
-        this.gameData?.notes.forEach(note => {
+        this.gameData?.notes.forEach((note) => {
             this.time.delayedCall(this.calculateSpawnTime(note.time), () => {
                 this.spawnNote(note);
             });
@@ -425,7 +425,12 @@ class Game extends Phaser.Scene {
      * Setup input events.
      */
     prepareInputEvent() {
-        const gameKeys = [this.noteOuter1Key, this.noteInner1Key, this.noteInner2Key, this.noteOuter2Key];
+        const gameKeys = [
+            this.noteOuter1Key,
+            this.noteInner1Key,
+            this.noteInner2Key,
+            this.noteOuter2Key
+        ];
 
         gameKeys.forEach((key, index: number) => {
             key?.on("down", () => {
@@ -489,7 +494,9 @@ class Game extends Phaser.Scene {
 
         this.collectedGameData!.partial = this.collectedGameData!.partial.slice(0, 30);
 
-        this.scene.switch("GameFinalizer", { collectedData: this.collectedGameData });
+        this.scene.switch("GameFinalizer", {
+            collectedData: this.collectedGameData
+        });
     }
 
     /**
@@ -517,9 +524,18 @@ class Game extends Phaser.Scene {
             const startTime = note.time;
             const endTime = note.lastUntil;
             const duration = endTime - startTime;
-            const height = Math.max(0, Math.ceil((duration / 1000) * this.noteSpeed * this.noteScale));
+            const height = Math.max(
+                0,
+                Math.ceil((duration / 1000) * this.noteSpeed * this.noteScale)
+            );
 
-            const longNoteBody = this.add.rectangle(noteObject.x, noteObject.y, 50, height, colorSelection[pos]);
+            const longNoteBody = this.add.rectangle(
+                noteObject.x,
+                noteObject.y,
+                50,
+                height,
+                colorSelection[pos]
+            );
             longNoteBody.setOrigin(0.5, 1);
             longNoteBody.setData("lnBody", true);
             longNoteBody.setDepth(1);
@@ -536,9 +552,12 @@ class Game extends Phaser.Scene {
      * Get X coordinate of the lane.
      */
     getLanePositionX(keyPosition: GameKeyboardPosition) {
-        return [this.noteOuter1PositionX, this.noteInner1PositionX, this.noteInner2PositionX, this.noteOuter2PositionX][
-            keyPosition
-        ];
+        return [
+            this.noteOuter1PositionX,
+            this.noteInner1PositionX,
+            this.noteInner2PositionX,
+            this.noteOuter2PositionX
+        ][keyPosition];
     }
 
     /**
@@ -563,7 +582,9 @@ class Game extends Phaser.Scene {
      * Get long note activity
      */
     getLongNoteActivity(keyPosition: GameKeyboardPosition) {
-        return [this.key1_LN_active, this.key2_LN_active, this.key3_LN_active, this.key4_LN_active][keyPosition];
+        return [this.key1_LN_active, this.key2_LN_active, this.key3_LN_active, this.key4_LN_active][
+            keyPosition
+        ];
     }
 
     /**
@@ -592,7 +613,9 @@ class Game extends Phaser.Scene {
      * Get key lock status.
      */
     getInputLockActivity(keyPosition: GameKeyboardPosition) {
-        return [this.key1_locked, this.key2_locked, this.key3_locked, this.key4_locked][keyPosition];
+        return [this.key1_locked, this.key2_locked, this.key3_locked, this.key4_locked][
+            keyPosition
+        ];
     }
 
     /**
@@ -637,9 +660,9 @@ class Game extends Phaser.Scene {
         // filter notes that are in the needed lane
         // and near the judgement box
         const notesAtWantedLanes = noteList
-            .filter(note => note.getData("lnBody") === false)
-            .filter(note => (note as GameNote).x === xPosition)
-            .filter(note => Math.abs((note as GameNote).y - 845) <= 150);
+            .filter((note) => note.getData("lnBody") === false)
+            .filter((note) => (note as GameNote).x === xPosition)
+            .filter((note) => Math.abs((note as GameNote).y - 845) <= 150);
 
         if (notesAtWantedLanes.length === 0) return;
 
@@ -750,7 +773,12 @@ class Game extends Phaser.Scene {
         Highlights the key being pressed.
      */
     drawInputIndicator(keyPosition: GameKeyboardPosition) {
-        const texts = [this.noteOuter1KeyText, this.noteInner1KeyText, this.noteInner2KeyText, this.noteOuter2KeyText];
+        const texts = [
+            this.noteOuter1KeyText,
+            this.noteInner1KeyText,
+            this.noteInner2KeyText,
+            this.noteOuter2KeyText
+        ];
         const xPosition = this.getLanePositionX(keyPosition);
         const indicator = this.add.image(xPosition, 845, "indicator");
 
@@ -758,7 +786,7 @@ class Game extends Phaser.Scene {
         texts[keyPosition]?.setColor("#1F1E33");
 
         setTimeout(
-            x => {
+            (x) => {
                 x.destroy();
                 texts[keyPosition]?.setColor("#FFFFFF");
             },
@@ -833,7 +861,7 @@ class Game extends Phaser.Scene {
                 (350.0 * this.totalNotes)) *
             100.0;
 
-        this.notes.getChildren().forEach(note => {
+        this.notes.getChildren().forEach((note) => {
             if (note.getData("lnBody")) return;
 
             const pos = parseInt(note.getData("position"));

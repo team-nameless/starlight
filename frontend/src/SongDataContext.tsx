@@ -35,7 +35,15 @@ export const SongDataProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <SongDataContext.Provider value={{ songs, currentSong, currentSongIndex, setCurrentSong, setCurrentSongIndex }}>
+        <SongDataContext.Provider
+            value={{
+                songs,
+                currentSong,
+                currentSongIndex,
+                setCurrentSong,
+                setCurrentSongIndex
+            }}
+        >
             {children}
         </SongDataContext.Provider>
     );

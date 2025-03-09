@@ -149,7 +149,7 @@ export const StyledLink = styled(Link)<StyledLinkProps>`
     }
 
     /* Apply active styles if active prop is true */
-    ${props => props.active && activeLinkStyles}
+    ${(props) => props.active && activeLinkStyles}
 `;
 
 export const NavIcon = styled.img`

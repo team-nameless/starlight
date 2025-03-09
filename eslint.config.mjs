@@ -1,20 +1,20 @@
 import eslint from "@eslint/js";
 import tsParser from "@typescript-eslint/parser";
-import eslintPluginImportX from "eslint-plugin-import-x";
+import pluginImport from "eslint-plugin-import-x";
 import pluginReact from "eslint-plugin-react";
-import preferFC from "eslint-plugin-react-prefer-function-component/config";
+import pluginReactFC from "eslint-plugin-react-prefer-function-component/config";
 import globals from "globals";
-import tseslint from "typescript-eslint";
+import eslintTypeScript from "typescript-eslint";
 
-export default tseslint.config(
+export default eslintTypeScript.config(
     eslint.configs.recommended,
-    preferFC.configs.recommended,
-    tseslint.configs.recommended,
-    eslintPluginImportX.flatConfigs.recommended,
-    eslintPluginImportX.flatConfigs.typescript,
+    pluginReactFC.configs.recommended,
+    eslintTypeScript.configs.recommended,
+    pluginImport.flatConfigs.recommended,
+    pluginImport.flatConfigs.typescript,
     pluginReact.configs.flat.recommended,
     {
-        ignores: ["eslint.config.mjs", "frontend/dist/*", "frontend/dist-electron/*", "node_modules/**/*"]
+        ignores: ["frontend/dist/*", "frontend/dist-electron/*", "node_modules/**/*"]
     },
     {
         settings: {
@@ -25,9 +25,7 @@ export default tseslint.config(
         languageOptions: {
             ...pluginReact.configs.flat.recommended.languageOptions,
             globals: { ...globals.browser, ...globals.node },
-            parser: tsParser,
-            ecmaVersion: "latest",
-            sourceType: "commonjs"
+            parser: tsParser
         },
         rules: {
             "no-unused-vars": "off",

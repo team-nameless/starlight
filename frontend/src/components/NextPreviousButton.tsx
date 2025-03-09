@@ -5,7 +5,12 @@ import nextArrow from "../assets/images/nextArrow.png";
 import previousArrow from "../assets/images/previousArrow.png";
 import { NextPrevButtonProps } from "./props";
 
-function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setCurrentSong }: NextPrevButtonProps) {
+function NextPreviousButton({
+    currentSongIndex,
+    setCurrentSongIndex,
+    songs,
+    setCurrentSong
+}: NextPrevButtonProps) {
     const location = useLocation();
     const navigate = useNavigate();
     const isHistoryPage = location.pathname.includes("/HistoryPage");
@@ -64,7 +69,9 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                 }
             };
 
-            imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
+            imgElement.addEventListener("transitionend", onTransitionEnd, {
+                once: true
+            });
 
             // Fallback timer in case transition event doesn't fire
             setTimeout(() => {
@@ -133,7 +140,9 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                 }
             };
 
-            imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
+            imgElement.addEventListener("transitionend", onTransitionEnd, {
+                once: true
+            });
 
             // Fallback timer in case transition event doesn't fire
             setTimeout(() => {
@@ -212,7 +221,12 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
                     }}
                 />
             </button>
-            <button className="nav-btn next-btn" onClick={handleNextSong} disabled={isDisabled} aria-label="Next song">
+            <button
+                className="nav-btn next-btn"
+                onClick={handleNextSong}
+                disabled={isDisabled}
+                aria-label="Next song"
+            >
                 <img
                     src={nextArrow}
                     alt="Next"

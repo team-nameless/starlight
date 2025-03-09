@@ -30,7 +30,13 @@ import {
     SongItem,
     StyledLink
 } from "../modalstyle/HeaderBarStyles";
-import { LeaveButton, LogoutButton, PopupContent, PopupOverlay, StayButton } from "../modalstyle/PopUpModals";
+import {
+    LeaveButton,
+    LogoutButton,
+    PopupContent,
+    PopupOverlay,
+    StayButton
+} from "../modalstyle/PopUpModals";
 import HistoryPage from "../pages/HistoryPage";
 import LandingPage from "../pages/LandingPage";
 import ProfilePage from "../pages/ProfilePage";
@@ -55,7 +61,9 @@ function HeaderBar({
 
     useEffect(() => {
         const fuse = new Fuse(songs, { keys: ["title"], threshold: 0.3 });
-        setFilteredSongs(searchQuery ? fuse.search(searchQuery).map(result => result.item) : songs);
+        setFilteredSongs(
+            searchQuery ? fuse.search(searchQuery).map((result) => result.item) : songs
+        );
     }, [searchQuery, songs]);
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +122,11 @@ function HeaderBar({
                 </NavIconToggle>
 
                 <NavLinksContainer className="left">
-                    <StyledLink to="/SongPage" state={{ currentSong, currentSongIndex }} active={isActive("/SongPage")}>
+                    <StyledLink
+                        to="/SongPage"
+                        state={{ currentSong, currentSongIndex }}
+                        active={isActive("/SongPage")}
+                    >
                         <NavIcon src={songsIcon} alt="Songs" />
                         <span>Songs</span>
                     </StyledLink>
@@ -187,12 +199,24 @@ function HeaderBar({
 
                 <ul>
                     {filteredSongs.map((song: StarlightSong, index: number) => (
-                        <SongItem key={index} onClick={handleSongClick ? handleSongClick(song) : undefined}>
+                        <SongItem
+                            key={index}
+                            onClick={handleSongClick ? handleSongClick(song) : undefined}
+                        >
                             <div className="song-info-sidebar">
-                                <img src={songSidebarIcon} alt="Song Sidebar Icon" className="song-sidebar-icon" />
+                                <img
+                                    src={songSidebarIcon}
+                                    alt="Song Sidebar Icon"
+                                    className="song-sidebar-icon"
+                                />
                                 <span className="sidebar-song">{song.title}</span>
                             </div>
-                            <div className="song-bg" style={{ backgroundImage: `url(${song.backgroundUrl})` }}></div>
+                            <div
+                                className="song-bg"
+                                style={{
+                                    backgroundImage: `url(${song.backgroundUrl})`
+                                }}
+                            ></div>
                             <span className="sidebar-song-title">{song.title}</span>
                         </SongItem>
                     ))}

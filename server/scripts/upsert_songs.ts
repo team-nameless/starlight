@@ -67,6 +67,6 @@ async function main() {
 
 main()
     .then()
-    .catch(err => {
+    .catch((err) => {
         throw err;
     });

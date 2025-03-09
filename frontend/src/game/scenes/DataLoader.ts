@@ -26,7 +26,10 @@ class DataLoader extends Phaser.Scene {
 
     create() {
         this.cache.json.add("gameData", this.cache.json.get("gameData"));
-        this.scene.switch("AssetLoader", { songId: this.songId, songIndex: this.songIndex });
+        this.scene.switch("AssetLoader", {
+            songId: this.songId,
+            songIndex: this.songIndex
+        });
     }
 }
 

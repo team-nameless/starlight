@@ -32,16 +32,17 @@
         "emotiv"
     ],
     "devDependencies": {
-        "@eslint/js": "^9.21.0",
+        "@eslint/js": "^9.22.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.13.9",
+        "@types/node": "^22.13.10",
+        "@typescript-eslint/parser": "^8.26.0",
         "eslint": "^9.22.0",
         "eslint-import-resolver-typescript": "^3.8.3",
         "eslint-plugin-import-x": "^4.6.1",
         "eslint-plugin-react-prefer-function-component": "^3.4.0",
         "globals": "^16.0.0",
         "npm-check-updates": "^17.1.15",
-        "prettier": "^3.5.3",
+        "prettier": "3.5.3",
         "tsx": "^4.19.3",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.26.0"

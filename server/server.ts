@@ -9,7 +9,7 @@ import alive from "./routes/alive";
 import auth from "./routes/auth";
 import track from "./routes/track";
 // import song from "./routes/song";
-// import user from "./routes/user";
+import user from "./routes/user";
 import { SERVER_KEY, SERVER_PORT } from "./secrets";
 
 const app = express();
@@ -41,7 +41,7 @@ app.use("/api", alive);
 app.use("/api", auth);
 app.use("/api/tracks", track);
 // app.use("/api/game", game);
-// app.use("/api/user", user);
+app.use("/api/user", user);
 app.use("/api/static", express.static("__data__"));
 app.use("/api/static/avatar", express.static("__data__/__avatar__"));
 

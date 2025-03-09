@@ -48,7 +48,7 @@ export async function findUserByEmail(email: string): Promise<Player | null> {
  * @param email The email address.
  */
 export async function deleteUserByEmail(email: string): Promise<void> {
-    await prisma.player.delete({
+    await prisma.player.deleteMany({
         where: {
             Email: email
         }

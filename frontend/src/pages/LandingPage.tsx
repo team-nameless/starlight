@@ -160,7 +160,9 @@ function LandingPage() {
             ) {
                 // Handle network errors
                 if (error.message === "Network Error") {
-                    alert("Network error: Cannot connect to server. Please check your connection and try again.");
+                    alert(
+                        "Network error: Cannot connect to server. Please check your connection and try again."
+                    );
                 } else {
                     alert(`Error: ${error.message}`);
                 }
@@ -230,7 +232,9 @@ function LandingPage() {
                 typeof error.message === "string"
             ) {
                 if (error.message === "Network Error") {
-                    alert("Network error: Cannot connect to server. Please check your connection and try again.");
+                    alert(
+                        "Network error: Cannot connect to server. Please check your connection and try again."
+                    );
                 } else {
                     alert(`Error: ${error.message}`);
                 }
@@ -380,8 +384,12 @@ function LandingPage() {
                         <NavButtons>
                             {!isLoggedIn && (
                                 <>
-                                    <SignUpButton onClick={() => setShowSignUpModal(true)}>Sign up</SignUpButton>
-                                    <LoginButton onClick={() => setShowLoginModal(true)}>Log in</LoginButton>
+                                    <SignUpButton onClick={() => setShowSignUpModal(true)}>
+                                        Sign up
+                                    </SignUpButton>
+                                    <LoginButton onClick={() => setShowLoginModal(true)}>
+                                        Log in
+                                    </LoginButton>
                                 </>
                             )}
                         </NavButtons>
@@ -390,7 +398,10 @@ function LandingPage() {
                         <h1>Star</h1>
                         <h2>Light</h2>
                     </Hero>
-                    <PlayButton onClick={handlePlayButtonClick} style={{ position: "relative", zIndex: 2 }}>
+                    <PlayButton
+                        onClick={handlePlayButtonClick}
+                        style={{ position: "relative", zIndex: 2 }}
+                    >
                         <PlayIconContainer>
                             <span className="play-icon">▶</span>
                         </PlayIconContainer>
@@ -407,7 +418,11 @@ function LandingPage() {
                             <LogoImage2 src={LogoImage} alt="Logo" />
                             <ModalTitle>Create Account</ModalTitle>
                             <FormContainer
-                                style={{ flexDirection: "column", justifyContent: "space-between", height: "535px" }}
+                                style={{
+                                    flexDirection: "column",
+                                    justifyContent: "space-between",
+                                    height: "535px"
+                                }}
                             >
                                 <form onSubmit={handleSubmit}>
                                     <TextFieldContainer>
@@ -415,12 +430,21 @@ function LandingPage() {
                                         <TextField
                                             id="playerName"
                                             value={handle}
-                                            onChange={e => setHandle((e.target as HTMLInputElement).value)}
+                                            onChange={(e) =>
+                                                setHandle((e.target as HTMLInputElement).value)
+                                            }
                                             maxLength={14}
                                             required
                                         />
                                         {handleError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>{handleError}</span>
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
+                                                {handleError}
+                                            </span>
                                         )}
                                     </TextFieldContainer>
                                     <TextFieldContainer>
@@ -428,11 +452,20 @@ function LandingPage() {
                                         <TextField
                                             id="email"
                                             value={email}
-                                            onChange={e => setEmail((e.target as HTMLInputElement).value)}
+                                            onChange={(e) =>
+                                                setEmail((e.target as HTMLInputElement).value)
+                                            }
                                             required
                                         />
                                         {signUpEmailError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>{signUpEmailError}</span>
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
+                                                {signUpEmailError}
+                                            </span>
                                         )}
                                     </TextFieldContainer>
                                     <TextFieldContainer>
@@ -442,7 +475,11 @@ function LandingPage() {
                                                 id="password"
                                                 type={showPassword ? "text" : "password"}
                                                 value={password}
-                                                onChange={e => setPassword((e.target as HTMLInputElement).value)}
+                                                onChange={(e) =>
+                                                    setPassword(
+                                                        (e.target as HTMLInputElement).value
+                                                    )
+                                                }
                                                 required
                                             />
                                             <EyeIcon onClick={togglePasswordVisibility}>
@@ -450,9 +487,14 @@ function LandingPage() {
                                             </EyeIcon>
                                         </div>
                                         {signUpPasswordError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>
-                                                Password must be at least 8 characters, include a number, a lowercase
-                                                letter, an uppercase letter
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
+                                                Password must be at least 8 characters, include a
+                                                number, a lowercase letter, an uppercase letter
                                                 <br />
                                                 and a special character (@, !, #, $, %, *)
                                             </span>
@@ -460,7 +502,9 @@ function LandingPage() {
                                     </TextFieldContainer>
                                     <FormWrapper>
                                         <ButtonContainer>
-                                            <SubmitButton type="submit">Create Account</SubmitButton>
+                                            <SubmitButton type="submit">
+                                                Create Account
+                                            </SubmitButton>
                                         </ButtonContainer>
                                         <div
                                             style={{
@@ -470,10 +514,19 @@ function LandingPage() {
                                                 textAlign: "left"
                                             }}
                                         >
-                                            <p style={{ margin: "0", display: "block", opacity: 0.7 }}>
+                                            <p
+                                                style={{
+                                                    margin: "0",
+                                                    display: "block",
+                                                    opacity: 0.7
+                                                }}
+                                            >
                                                 Already have an account?{" "}
                                                 <span
-                                                    style={{ cursor: "pointer", color: "#0090AA" }}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        color: "#0090AA"
+                                                    }}
                                                     onClick={switchToLogin}
                                                 >
                                                     Log In
@@ -497,17 +550,31 @@ function LandingPage() {
                             <LogoImage2 src={LogoImage} alt="Logo" />
                             <ModalTitle style={{ marginLeft: "50px" }}>Log In</ModalTitle>
                             <form onSubmit={handleLogin}>
-                                <FormContainer style={{ flexDirection: "column", justifyContent: "content-between" }}>
+                                <FormContainer
+                                    style={{
+                                        flexDirection: "column",
+                                        justifyContent: "content-between"
+                                    }}
+                                >
                                     <TextFieldContainer>
                                         <label htmlFor="loginEmail">Email:</label>
                                         <TextField
                                             id="loginEmail"
                                             value={loginEmail}
-                                            onChange={e => setLoginEmail((e.target as HTMLInputElement).value)}
+                                            onChange={(e) =>
+                                                setLoginEmail((e.target as HTMLInputElement).value)
+                                            }
                                             required
                                         />
                                         {loginEmailError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>{loginEmailError}</span>
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
+                                                {loginEmailError}
+                                            </span>
                                         )}
                                     </TextFieldContainer>
                                     <TextFieldContainer>
@@ -527,7 +594,11 @@ function LandingPage() {
                                                 id="loginPassword"
                                                 type={showLoginPassword ? "text" : "password"}
                                                 value={loginPassword}
-                                                onChange={e => setLoginPassword((e.target as HTMLInputElement).value)}
+                                                onChange={(e) =>
+                                                    setLoginPassword(
+                                                        (e.target as HTMLInputElement).value
+                                                    )
+                                                }
                                                 required
                                             />
                                             <EyeIcon onClick={toggleLoginPasswordVisibility}>
@@ -535,14 +606,32 @@ function LandingPage() {
                                             </EyeIcon>
                                         </div>
                                         {loginPasswordError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>{loginPasswordError}</span>
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
+                                                {loginPasswordError}
+                                            </span>
                                         )}
                                     </TextFieldContainer>
                                 </FormContainer>
                                 <FormWrapper>
                                     <ButtonContainer>
-                                        <div style={{ marginTop: "-80px", marginBottom: "165px" }}>
-                                            <SubmitButton type="submit" style={{ width: "470px", marginLeft: "22px" }}>
+                                        <div
+                                            style={{
+                                                marginTop: "-80px",
+                                                marginBottom: "165px"
+                                            }}
+                                        >
+                                            <SubmitButton
+                                                type="submit"
+                                                style={{
+                                                    width: "470px",
+                                                    marginLeft: "22px"
+                                                }}
+                                            >
                                                 Log In
                                             </SubmitButton>
                                         </div>
@@ -566,7 +655,10 @@ function LandingPage() {
                                         >
                                             Don&apos;t have an account?{" "}
                                             <span
-                                                style={{ cursor: "pointer", color: "#0090AA" }}
+                                                style={{
+                                                    cursor: "pointer",
+                                                    color: "#0090AA"
+                                                }}
                                                 onClick={switchToSignUp}
                                             >
                                                 Sign Up
@@ -616,8 +708,14 @@ function LandingPage() {
                     <PopupOverlay>
                         <PopupContent>
                             <h2>Notification</h2>
-                            <p>A temporary password has been sent to your email. Please use it to log in.</p>
-                            <p>*Hint*: Change your new password in Profile is advised for increased security.</p>
+                            <p>
+                                A temporary password has been sent to your email. Please use it to
+                                log in.
+                            </p>
+                            <p>
+                                *Hint*: Change your new password in Profile is advised for increased
+                                security.
+                            </p>
                             <StayButton
                                 onClick={() => {
                                     closeModal();
@@ -635,8 +733,8 @@ function LandingPage() {
                         <PopupContent>
                             <h2>Login Successful</h2>
                             <p>
-                                You have successfully logged in. Please click the &quot;Start Game&quot; button to enter
-                                the song page.
+                                You have successfully logged in. Please click the &quot;Start
+                                Game&quot; button to enter the song page.
                             </p>
                             <StayButton onClick={closeModal}>Close</StayButton>
                         </PopupContent>
@@ -645,7 +743,13 @@ function LandingPage() {
 
                 {showForgotPasswordModal && (
                     <Modal>
-                        <ModalContent style={{ maxWidth: "750px", height: "350px", top: "100px" }}>
+                        <ModalContent
+                            style={{
+                                maxWidth: "750px",
+                                height: "350px",
+                                top: "100px"
+                            }}
+                        >
                             <ModalBackground2 />
                             <CloseButton onClick={closeModal}>&times;</CloseButton>
                             <GirlImage2 src={GirlImage} alt="Girl" />
@@ -658,11 +762,20 @@ function LandingPage() {
                                         <TextField
                                             id="forgotPasswordEmail"
                                             value={forgotPasswordEmail}
-                                            onChange={e => setForgotPasswordEmail((e.target as HTMLInputElement).value)}
+                                            onChange={(e) =>
+                                                setForgotPasswordEmail(
+                                                    (e.target as HTMLInputElement).value
+                                                )
+                                            }
                                             required
                                         />
                                         {forgotPasswordError && (
-                                            <span style={{ color: "red", fontSize: "10px" }}>
+                                            <span
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "10px"
+                                                }}
+                                            >
                                                 {forgotPasswordError}
                                             </span>
                                         )}
@@ -681,7 +794,9 @@ function LandingPage() {
                         <PopupContent>
                             <h2>Notification</h2>
                             <p>Please log in to continue.</p>
-                            <StayButton onClick={() => setShowLoginReminderModal(false)}>Close</StayButton>
+                            <StayButton onClick={() => setShowLoginReminderModal(false)}>
+                                Close
+                            </StayButton>
                         </PopupContent>
                     </PopupOverlay>
                 )}

@@ -13,7 +13,10 @@ import GameFinalizer from "./scenes/GameFinalizer";
 function GameApp() {
     const gameRef = useRef(null);
     const location = useLocation();
-    const { songId, songIndex } = location.state || { songId: 586954, songIndex: 0 };
+    const { songId, songIndex } = location.state || {
+        songId: 586954,
+        songIndex: 0
+    };
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,7 +39,10 @@ function GameApp() {
             antialias: true
         });
 
-        game.scene.add("DataLoader", DataLoader, true, { songId: songId, songIndex: songIndex });
+        game.scene.add("DataLoader", DataLoader, true, {
+            songId: songId,
+            songIndex: songIndex
+        });
         game.scene.add("AssetLoader", AssetLoader);
         game.scene.add("Game", Game);
         game.scene.add("GameFinalizer", GameFinalizer);
@@ -48,9 +54,12 @@ function GameApp() {
                 .get(url, {
                     withCredentials: true
                 })
-                .then(response => {
+                .then((response) => {
                     navigate(`/HistoryPage/${songId}/${songIndex}`, {
-                        state: { currentSong: response.data, currentSongIndex: songIndex }
+                        state: {
+                            currentSong: response.data,
+                            currentSongIndex: songIndex
+                        }
                     });
                 });
         });
@@ -64,7 +73,12 @@ function GameApp() {
     return (
         <div
             ref={gameRef}
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh"
+            }}
         ></div>
     );
 }

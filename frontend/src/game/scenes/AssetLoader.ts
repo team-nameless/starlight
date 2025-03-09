@@ -42,7 +42,11 @@ class AssetLoader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.switch("Game", { gameData: this.gameData, songId: this.songId, songIndex: this.songIndex });
+        this.scene.switch("Game", {
+            gameData: this.gameData,
+            songId: this.songId,
+            songIndex: this.songIndex
+        });
     }
 }
 

@@ -24,7 +24,15 @@ import SongPage from "./SongPage";
 import StorePage from "./StorePage";
 import SuggestionPage from "./SuggestionPage";
 
-const ProgressBar = ({ current, total, level }: { current: number; total: number; level: number }) => {
+const ProgressBar = ({
+    current,
+    total,
+    level
+}: {
+    current: number;
+    total: number;
+    level: number;
+}) => {
     const percentage = Math.floor((current / total) * 10000) / 100;
 
     return (
@@ -54,20 +62,49 @@ function ProfilePage() {
     const [userProfile, setUserProfile] = useState<UserProfile>({});
     const [showPopup, setShowPopup] = useState(false);
     const [chatMessages, setChatMessages] = useState([
-        { id: 1, sender: "Phong", message: "Ê, đi đá banh k", color: "green", time: "02:02:34 PM", avatar: girlImage },
-        { id: 2, sender: "Xích", message: "Meo meo", color: "red", time: "3:35:13 AM", avatar: girlImage },
-        { id: 3, sender: "Lan", message: "Cậu ăn cơm chưa", color: "orange", time: "08:07:23 AM", avatar: girlImage }
+        {
+            id: 1,
+            sender: "Phong",
+            message: "Ê, đi đá banh k",
+            color: "green",
+            time: "02:02:34 PM",
+            avatar: girlImage
+        },
+        {
+            id: 2,
+            sender: "Xích",
+            message: "Meo meo",
+            color: "red",
+            time: "3:35:13 AM",
+            avatar: girlImage
+        },
+        {
+            id: 3,
+            sender: "Lan",
+            message: "Cậu ăn cơm chưa",
+            color: "orange",
+            time: "08:07:23 AM",
+            avatar: girlImage
+        }
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [activeTab, setActiveTab] = useState("scoreRecord");
-    const [levelData, setLevelData] = useState({ level: 1, exp: 0, expNeededForNextLevel: 100 });
+    const [levelData, setLevelData] = useState({
+        level: 1,
+        exp: 0,
+        expNeededForNextLevel: 100
+    });
     const [passwordUpdate, setPasswordUpdate] = useState({
         email: "",
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: ""
     });
-    const [emailUpdate, setEmailUpdate] = useState({ email: "", password: "", newEmail: "" });
+    const [emailUpdate, setEmailUpdate] = useState({
+        email: "",
+        password: "",
+        newEmail: ""
+    });
     const [popupMessage, setPopupMessage] = useState("");
     const [passwordError, setPasswordError] = useState({
         email: "",
@@ -76,7 +113,11 @@ function ProfilePage() {
         confirmNewPassword: ""
     });
 
-    const [emailError, setEmailError] = useState({ email: "", password: "", newEmail: "" });
+    const [emailError, setEmailError] = useState({
+        email: "",
+        password: "",
+        newEmail: ""
+    });
     const [showPopupUpdate, setShowPopupUpdate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [scoreRecords, setScoreRecords] = useState<ScoreRecord[]>([]);
@@ -174,7 +215,10 @@ function ProfilePage() {
     };
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPasswordUpdate({ ...passwordUpdate, [e.target.name]: e.target.value });
+        setPasswordUpdate({
+            ...passwordUpdate,
+            [e.target.name]: e.target.value
+        });
     };
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -182,17 +226,28 @@ function ProfilePage() {
     };
 
     const handlePasswordUpdate = async () => {
-        setPasswordError({ email: "", currentPassword: "", newPassword: "", confirmNewPassword: "" });
+        setPasswordError({
+            email: "",
+            currentPassword: "",
+            newPassword: "",
+            confirmNewPassword: ""
+        });
         setIsLoading(true);
 
-        if (!passwordUpdate.email || !passwordUpdate.newPassword || !passwordUpdate.confirmNewPassword) {
-            setPasswordError(prev => ({
+        if (
+            !passwordUpdate.email ||
+            !passwordUpdate.newPassword ||
+            !passwordUpdate.confirmNewPassword
+        ) {
+            setPasswordError((prev) => ({
                 ...prev,
                 email: !passwordUpdate.email ? "Email is required" : prev.email,
                 currentPassword: !passwordUpdate.currentPassword
                     ? "Current Password is required"
                     : prev.currentPassword,
-                newPassword: !passwordUpdate.newPassword ? "New Password is required" : prev.newPassword,
+                newPassword: !passwordUpdate.newPassword
+                    ? "New Password is required"
+                    : prev.newPassword,
                 confirmNewPassword: !passwordUpdate.confirmNewPassword
                     ? "Confirm New Password is required"
                     : prev.confirmNewPassword
@@ -210,7 +265,10 @@ function ProfilePage() {
             if (userResponse.status === 200) {
                 const userData = userResponse.data;
                 if (userData.email !== passwordUpdate.email) {
-                    setPasswordError(prev => ({ ...prev, email: "Entered email does not match your account email" }));
+                    setPasswordError((prev) => ({
+                        ...prev,
+                        email: "Entered email does not match your account email"
+                    }));
                     setIsLoading(false);
                     return;
                 }
@@ -219,21 +277,28 @@ function ProfilePage() {
             }
         } catch (error) {
             console.error("API error:", error);
-            setPasswordError(prev => ({ ...prev, email: "Unable to verify email. Please try again later." }));
+            setPasswordError((prev) => ({
+                ...prev,
+                email: "Unable to verify email. Please try again later."
+            }));
             setIsLoading(false);
             return;
         }
 
         if (!passwordRegex.test(passwordUpdate.newPassword)) {
-            setPasswordError(prev => ({
+            setPasswordError((prev) => ({
                 ...prev,
-                newPassword: "Password must be 8+ characters with uppercase, number, and special characters"
+                newPassword:
+                    "Password must be 8+ characters with uppercase, number, and special characters"
             }));
             setIsLoading(false);
             return;
         }
         if (passwordUpdate.newPassword !== passwordUpdate.confirmNewPassword) {
-            setPasswordError(prev => ({ ...prev, confirmNewPassword: "Passwords do not match" }));
+            setPasswordError((prev) => ({
+                ...prev,
+                confirmNewPassword: "Passwords do not match"
+            }));
             setIsLoading(false);
             return;
         }
@@ -271,7 +336,7 @@ function ProfilePage() {
         setIsLoading(true);
 
         if (!emailUpdate.email || !emailUpdate.password || !emailUpdate.newEmail) {
-            setEmailError(prev => ({
+            setEmailError((prev) => ({
                 ...prev,
                 email: !emailUpdate.email ? "Current email is required" : prev.email,
                 password: !emailUpdate.password ? "Password is required" : prev.password,
@@ -290,7 +355,7 @@ function ProfilePage() {
             if (userResponse.status === 200) {
                 const userData = userResponse.data;
                 if (userData.email !== emailUpdate.email) {
-                    setEmailError(prev => ({
+                    setEmailError((prev) => ({
                         ...prev,
                         email: "Entered email does not match your account email"
                     }));
@@ -302,7 +367,10 @@ function ProfilePage() {
             }
         } catch (error) {
             console.error("API error:", error);
-            setEmailError(prev => ({ ...prev, email: "Unable to verify email. Please try again later." }));
+            setEmailError((prev) => ({
+                ...prev,
+                email: "Unable to verify email. Please try again later."
+            }));
             setIsLoading(false);
             return;
         }
@@ -321,7 +389,7 @@ function ProfilePage() {
             );
 
             if (loginResponse.status !== 200) {
-                setEmailError(prev => ({
+                setEmailError((prev) => ({
                     ...prev,
                     password: "Wrong password"
                 }));
@@ -330,7 +398,7 @@ function ProfilePage() {
             }
         } catch (error) {
             console.error("Login error:", error);
-            setEmailError(prev => ({ ...prev, password: "Wrong password" }));
+            setEmailError((prev) => ({ ...prev, password: "Wrong password" }));
             setIsLoading(false);
             return;
         }
@@ -381,7 +449,7 @@ function ProfilePage() {
 
                 if (response.status === 200) {
                     const updatedImage = URL.createObjectURL(file);
-                    setUserProfile(prevProfile => ({
+                    setUserProfile((prevProfile) => ({
                         ...prevProfile,
                         profilePic: updatedImage
                     }));
@@ -400,7 +468,7 @@ function ProfilePage() {
         const inputElement = document.getElementById("profilePicInput");
         if (inputElement) {
             inputElement.click();
-            document.documentElement.requestFullscreen().catch(err => {
+            document.documentElement.requestFullscreen().catch((err) => {
                 console.error("Error attempting to enable full-screen mode:", err);
             });
         }
@@ -409,7 +477,7 @@ function ProfilePage() {
     useEffect(() => {
         const storedProfilePic = localStorage.getItem("userProfilePic");
         if (storedProfilePic) {
-            setUserProfile(prevProfile => ({
+            setUserProfile((prevProfile) => ({
                 ...prevProfile,
                 profilePic: storedProfilePic
             }));
@@ -440,16 +508,31 @@ function ProfilePage() {
                         </Link>
                         <Link
                             to={`/HistoryPage/${currentSong?.id ?? 586954}/${currentSongIndex ?? 0}`}
-                            state={{ currentSong: currentSong, currentSongIndex: 0 }}
+                            state={{
+                                currentSong: currentSong,
+                                currentSongIndex: 0
+                            }}
                         >
                             <img src={historyIcon} alt="History" className="nav-iconh" />
                             <span>History</span>
                         </Link>
-                        <Link to="/SuggestionPage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
+                        <Link
+                            to="/SuggestionPage"
+                            state={{
+                                currentSong: currentSong,
+                                currentSongIndex: 0
+                            }}
+                        >
                             <img src={eventsIcon} alt="Events" className="nav-iconh" />
                             <span>Events</span>
                         </Link>
-                        <Link to="/StorePage" state={{ currentSong: currentSong, currentSongIndex: 0 }}>
+                        <Link
+                            to="/StorePage"
+                            state={{
+                                currentSong: currentSong,
+                                currentSongIndex: 0
+                            }}
+                        >
                             <img src={storeIcon} alt="Store" className="nav-iconh" />
                             <span>Store</span>
                         </Link>
@@ -501,8 +584,12 @@ function ProfilePage() {
                                 className="camera-icon"
                                 onClick={handleCameraIconClick}
                             />
-                            <div className="profile-username-avatar">{userProfile.name || "Anonymous"}</div>
-                            <div className="profile-userid-avatar">ID: {userProfile.id || "12345"}</div>
+                            <div className="profile-username-avatar">
+                                {userProfile.name || "Anonymous"}
+                            </div>
+                            <div className="profile-userid-avatar">
+                                ID: {userProfile.id || "12345"}
+                            </div>
                         </div>
                         <div className="profile-tabs-section">
                             <div className="profile-tabs">
@@ -541,15 +628,78 @@ function ProfilePage() {
                             <>
                                 <div className="profile-score-record">
                                     <div>No</div>
-                                    <div style={{ marginLeft: "20px", marginRight: "-22px" }}>Song Name</div>
-                                    <div style={{ marginLeft: "40px", marginRight: "-35px" }}>Record</div>
-                                    <div style={{ marginRight: "225px", marginLeft: "28px" }}>Accuracy</div>
-                                    <div style={{ marginRight: "200px", marginLeft: "-250px" }}>Max Combo</div>
-                                    <div style={{ marginLeft: "-215px", marginRight: "-95px" }}>CP</div>
-                                    <div style={{ marginLeft: "110px", marginRight: "-25px" }}>P</div>
-                                    <div style={{ marginLeft: "50px", marginRight: "5px" }}>G</div>
-                                    <div style={{ marginLeft: "15px", marginRight: "10px" }}>B</div>
-                                    <div style={{ marginLeft: "15px", marginRight: "20px" }}>M</div>
+                                    <div
+                                        style={{
+                                            marginLeft: "20px",
+                                            marginRight: "-22px"
+                                        }}
+                                    >
+                                        Song Name
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "40px",
+                                            marginRight: "-35px"
+                                        }}
+                                    >
+                                        Record
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginRight: "225px",
+                                            marginLeft: "28px"
+                                        }}
+                                    >
+                                        Accuracy
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginRight: "200px",
+                                            marginLeft: "-250px"
+                                        }}
+                                    >
+                                        Max Combo
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "-215px",
+                                            marginRight: "-95px"
+                                        }}
+                                    >
+                                        CP
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "110px",
+                                            marginRight: "-25px"
+                                        }}
+                                    >
+                                        P
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "50px",
+                                            marginRight: "5px"
+                                        }}
+                                    >
+                                        G
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "15px",
+                                            marginRight: "10px"
+                                        }}
+                                    >
+                                        B
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginLeft: "15px",
+                                            marginRight: "20px"
+                                        }}
+                                    >
+                                        M
+                                    </div>
                                     <div style={{ marginRight: "20px" }}>Tier</div>
                                 </div>
                                 <div className="top-scores">
@@ -582,19 +732,55 @@ function ProfilePage() {
                         {activeTab === "achievements" && (
                             <div className="profile-achievements">
                                 <div className="achievement-row">
-                                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
-                                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
-                                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                                    <img
+                                        src={BeatAchieve}
+                                        alt="BeatAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={CrownAchieve}
+                                        alt="CrownAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={NonStopAchieve}
+                                        alt="NonStopAchieve"
+                                        className="achievement-icon"
+                                    />
                                 </div>
                                 <div className="achievement-row">
-                                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
-                                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
-                                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                                    <img
+                                        src={BeatAchieve}
+                                        alt="BeatAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={CrownAchieve}
+                                        alt="CrownAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={NonStopAchieve}
+                                        alt="NonStopAchieve"
+                                        className="achievement-icon"
+                                    />
                                 </div>
                                 <div className="achievement-row">
-                                    <img src={BeatAchieve} alt="BeatAchieve" className="achievement-icon" />
-                                    <img src={CrownAchieve} alt="CrownAchieve" className="achievement-icon" />
-                                    <img src={NonStopAchieve} alt="NonStopAchieve" className="achievement-icon" />
+                                    <img
+                                        src={BeatAchieve}
+                                        alt="BeatAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={CrownAchieve}
+                                        alt="CrownAchieve"
+                                        className="achievement-icon"
+                                    />
+                                    <img
+                                        src={NonStopAchieve}
+                                        alt="NonStopAchieve"
+                                        className="achievement-icon"
+                                    />
                                 </div>
                             </div>
                         )}
@@ -610,7 +796,9 @@ function ProfilePage() {
                                         onChange={handlePasswordChange}
                                         className="input-field"
                                     />
-                                    {passwordError.email && <div className="error-message">{passwordError.email}</div>}
+                                    {passwordError.email && (
+                                        <div className="error-message">{passwordError.email}</div>
+                                    )}
                                     <input
                                         type="password"
                                         name="currentPassword"
@@ -620,7 +808,9 @@ function ProfilePage() {
                                         className="input-field"
                                     />
                                     {passwordError.currentPassword && (
-                                        <div className="error-message">{passwordError.currentPassword}</div>
+                                        <div className="error-message">
+                                            {passwordError.currentPassword}
+                                        </div>
                                     )}
                                     <input
                                         type="password"
@@ -631,7 +821,9 @@ function ProfilePage() {
                                         className="input-field"
                                     />
                                     {passwordError.newPassword && (
-                                        <div className="error-message">{passwordError.newPassword}</div>
+                                        <div className="error-message">
+                                            {passwordError.newPassword}
+                                        </div>
                                     )}
                                     <input
                                         type="password"
@@ -642,9 +834,14 @@ function ProfilePage() {
                                         className="input-field"
                                     />
                                     {passwordError.confirmNewPassword && (
-                                        <div className="error-message">{passwordError.confirmNewPassword}</div>
+                                        <div className="error-message">
+                                            {passwordError.confirmNewPassword}
+                                        </div>
                                     )}
-                                    <button onClick={handlePasswordUpdate} className="update-button">
+                                    <button
+                                        onClick={handlePasswordUpdate}
+                                        className="update-button"
+                                    >
                                         Update
                                     </button>
                                 </div>
@@ -659,7 +856,9 @@ function ProfilePage() {
                                         onChange={handleEmailChange}
                                         className="input-field"
                                     />
-                                    {emailError.email && <div className="error-message">{emailError.email}</div>}
+                                    {emailError.email && (
+                                        <div className="error-message">{emailError.email}</div>
+                                    )}
                                     <input
                                         type="password"
                                         name="password"
@@ -668,7 +867,9 @@ function ProfilePage() {
                                         onChange={handleEmailChange}
                                         className="input-field"
                                     />
-                                    {emailError.password && <div className="error-message">{emailError.password}</div>}
+                                    {emailError.password && (
+                                        <div className="error-message">{emailError.password}</div>
+                                    )}
                                     <input
                                         type="email"
                                         name="newEmail"
@@ -691,7 +892,9 @@ function ProfilePage() {
                         <tbody>
                             <tr>
                                 <td>
-                                    <div className="username">{userProfile.name || "Anonymous"}</div>
+                                    <div className="username">
+                                        {userProfile.name || "Anonymous"}
+                                    </div>
                                     <div className="userid">ID: {userProfile.id || "12345"}</div>
                                 </td>
                                 <td>
@@ -710,7 +913,7 @@ function ProfilePage() {
                     <img src={chatimage} alt="Chat" className="chatimage" />
                     <h3>Online Chat</h3>
                     <div className="chat-body">
-                        {chatMessages.map(msg => (
+                        {chatMessages.map((msg) => (
                             <div key={msg.id} className={`chat-message ${msg.color}`}>
                                 <img src={msg.avatar} alt="Avatar" className="chat-avatar" />
                                 <div className="chat-message-content">
@@ -726,7 +929,7 @@ function ProfilePage() {
                             type="text"
                             placeholder="Write a message..."
                             value={newMessage}
-                            onChange={e => setNewMessage(e.target.value)}
+                            onChange={(e) => setNewMessage(e.target.value)}
                         />
                         <button onClick={handleSendMessage}>Send</button>
                     </div>
@@ -737,7 +940,10 @@ function ProfilePage() {
                         <div className="popup-content">
                             <h2>{popupMessage.includes("Error") ? "Error" : "Success"}</h2>
                             <p>{popupMessage}</p>
-                            <button className="stay-button" onClick={() => setShowPopupUpdate(false)}>
+                            <button
+                                className="stay-button"
+                                onClick={() => setShowPopupUpdate(false)}
+                            >
                                 Close
                             </button>
                         </div>

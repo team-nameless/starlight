@@ -230,7 +230,7 @@ function SuggestionPage() {
 
     const handleSongClick = useCallback(
         (song: StarlightSong) => () => {
-            const index = songs.findIndex(s => s.id === song.id);
+            const index = songs.findIndex((s) => s.id === song.id);
             if (index !== -1) {
                 // Find the background image - look for both selectors
                 const imgElement = document.querySelector(".background-image img");

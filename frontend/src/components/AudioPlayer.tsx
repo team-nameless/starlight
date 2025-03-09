@@ -9,7 +9,9 @@ function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         if (audioUrl) {
             audioRef.current = new Audio(audioUrl);
             audioRef.current.loop = true;
-            audioRef.current.play().catch((error: unknown) => console.error("Error playing audio:", error));
+            audioRef.current
+                .play()
+                .catch((error: unknown) => console.error("Error playing audio:", error));
         }
 
         return () => {

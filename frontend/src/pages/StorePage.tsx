@@ -36,7 +36,7 @@ function StorePage() {
     }, []);
 
     const handleSongClick = (song: StarlightSong) => () => {
-        const index = songs.findIndex(s => s.id === song.id);
+        const index = songs.findIndex((s) => s.id === song.id);
         if (index !== -1) {
             setCurrentSongIndex(index);
             setCurrentSong(song);
@@ -63,7 +63,11 @@ function StorePage() {
             <div className="content-layer">
                 <div className="background-image">
                     <img
-                        src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                        src={
+                            currentSong && currentSong.backgroundUrl
+                                ? `${currentSong.backgroundUrl}`
+                                : ""
+                        }
                         alt="Background"
                     />
                 </div>
@@ -72,7 +76,11 @@ function StorePage() {
                     {/* Background Image */}
                     <div className="background-image">
                         <img
-                            src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                            src={
+                                currentSong && currentSong.backgroundUrl
+                                    ? `${currentSong.backgroundUrl}`
+                                    : ""
+                            }
                             alt="Background"
                         />
                     </div>

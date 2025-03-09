@@ -28,7 +28,7 @@ class GameFinalizer extends Phaser.Scene {
                 EventEmitter.emit("game-finished");
                 this.scene.stop("GameFinalizer");
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
             });
     }

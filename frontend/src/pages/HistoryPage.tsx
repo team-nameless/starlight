@@ -86,12 +86,15 @@ function HistoryPage() {
         const fetchBestScore = async () => {
             if (currentSong) {
                 try {
-                    const response = await axios.get(`${apiHost}/api/score/${currentSong.id}/best`, {
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        withCredentials: true
-                    });
+                    const response = await axios.get(
+                        `${apiHost}/api/score/${currentSong.id}/best`,
+                        {
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            withCredentials: true
+                        }
+                    );
                     if (response.status === 200) {
                         setBestScore(response.data.totalPoints);
                     } else if (response.status === 204) {
@@ -106,7 +109,7 @@ function HistoryPage() {
             }
         };
 
-        fetchBestScore().catch(err => {
+        fetchBestScore().catch((err) => {
             console.error("Error in fetchBestScore:", err);
         });
     }, [currentSong]);
@@ -159,14 +162,22 @@ function HistoryPage() {
                     const groupSize = Math.max(1, Math.floor(durationInSeconds / 30));
                     const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * groupSize);
 
-                    const heatmapData = new Array<ThePMGonnaHaveAFunTimeWithMe>(data.partial.length * 5);
+                    const heatmapData = new Array<ThePMGonnaHaveAFunTimeWithMe>(
+                        data.partial.length * 5
+                    );
                     let dataIndex = 0;
 
                     data.partial.forEach((segment, index) => {
                         const totalNotes = segment.totalNotes || 1;
                         const judgements = ["M", "B", "G", "P", "CP"];
                         // const properties = ["miss", "bad", "good", "perf", "crit"];
-                        const values = [segment.miss, segment.bad, segment.good, segment.perf, segment.crit];
+                        const values = [
+                            segment.miss,
+                            segment.bad,
+                            segment.good,
+                            segment.perf,
+                            segment.crit
+                        ];
 
                         for (let i = 0; i < judgements.length; i++) {
                             const judgement = judgements[i];
@@ -206,7 +217,10 @@ function HistoryPage() {
                 // Use fallback data from test file
                 const data = testHeatmapData;
                 const durationInSeconds = Math.floor(data.stats.duration / 1000);
-                const groups = Array.from({ length: 30 }, (_, i) => (i + 1) * Math.round(durationInSeconds / 30));
+                const groups = Array.from(
+                    { length: 30 },
+                    (_, i) => (i + 1) * Math.round(durationInSeconds / 30)
+                );
                 const heatmapData: {
                     group: number;
                     variable: string;
@@ -254,7 +268,12 @@ function HistoryPage() {
                     });
                 });
 
-                return { data: heatmapData, score: testHeatmapData.stats.score, grade: "A", isFallback: true };
+                return {
+                    data: heatmapData,
+                    score: testHeatmapData.stats.score,
+                    grade: "A",
+                    isFallback: true
+                };
             }
         },
         [songId]
@@ -262,7 +281,12 @@ function HistoryPage() {
 
     // Optimized renderHeatmap function with requestAnimationFrame
     const renderHeatmap = useCallback(
-        async (url: string, containerRef: RefObject<HTMLDivElement | null>, _scoreUrl: string, _songId: number) => {
+        async (
+            url: string,
+            containerRef: RefObject<HTMLDivElement | null>,
+            _scoreUrl: string,
+            _songId: number
+        ) => {
             try {
                 const container = containerRef.current;
 
@@ -321,7 +345,8 @@ function HistoryPage() {
             } catch (error) {
                 console.error("Error rendering heatmap:", error);
                 if (containerRef.current) {
-                    containerRef.current.innerHTML = '<div class="heatmap-error">Failed to load heatmap data</div>';
+                    containerRef.current.innerHTML =
+                        '<div class="heatmap-error">Failed to load heatmap data</div>';
                 }
                 setIsLoading(false);
             }
@@ -349,8 +374,12 @@ function HistoryPage() {
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         // Compute scales once - use useMemo-like approach by extracting groups and variables first
-        const myGroups = Array.from(new Set(data.map((d: ThePMGonnaHaveAFunTimeWithMe) => d.group)));
-        const myVars = Array.from(new Set(data.map((d: ThePMGonnaHaveAFunTimeWithMe) => d.variable)));
+        const myGroups = Array.from(
+            new Set(data.map((d: ThePMGonnaHaveAFunTimeWithMe) => d.group))
+        );
+        const myVars = Array.from(
+            new Set(data.map((d: ThePMGonnaHaveAFunTimeWithMe) => d.variable))
+        );
 
         // Use memoized scales
         const x = d3.scaleBand().range([0, width]).domain(myGroups.map(String)).padding(0.05);
@@ -372,7 +401,7 @@ function HistoryPage() {
                 d3
                     .axisBottom(x)
                     .tickSize(0)
-                    .tickFormat(d => {
+                    .tickFormat((d) => {
                         // Show fewer labels for better performance
                         return parseInt(d) % 1 === 0 ? d : "";
                     })
@@ -385,7 +414,11 @@ function HistoryPage() {
         leftAxis.select(".domain").remove();
 
         // Single tooltip for all rectangles
-        const tooltip = d3.select(container).append("div").attr("class", "tooltip").style("opacity", 0);
+        const tooltip = d3
+            .select(container)
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
         // Define event handlers outside the data join to avoid recreating functions
         const mouseover = function (this: SVGRectElement) {
@@ -395,7 +428,9 @@ function HistoryPage() {
 
         const mousemove = function (event: MouseEvent, d: ThePMGonnaHaveAFunTimeWithMe) {
             tooltip
-                .html(`BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`)
+                .html(
+                    `BeatperTotal: ${d.segment} / ${d.totalNotes}<br>Beat Accuracy: (${Math.floor(d.value) || 0}%)`
+                )
                 .style("left", `${event.pageX + 20}px`)
                 .style("top", `${event.pageY - 20}px`);
         };
@@ -423,7 +458,10 @@ function HistoryPage() {
             .style("opacity", 0.8);
 
         // Add event listeners in batch
-        rectangles.on("mouseover", mouseover).on("mousemove", mousemove).on("mouseleave", mouseleave);
+        rectangles
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave);
 
         // Add fallback text if needed
         if (isFallback) {
@@ -475,7 +513,7 @@ function HistoryPage() {
     }, [currentSong, renderHeatmap, hasRenderedHeatmap1.current]);
 
     const handleSongClick = (song: StarlightSong) => () => {
-        const index = songs.findIndex(s => s.id === song.id);
+        const index = songs.findIndex((s) => s.id === song.id);
         if (index !== -1) {
             setIsLoading(true);
             hasRenderedHeatmap1.current = false;
@@ -493,12 +531,18 @@ function HistoryPage() {
                     imgElement.classList.remove("fade-out");
 
                     navigate(`/HistoryPage/${song.id}/${index}`, {
-                        state: { currentSong: song, currentSongIndex: index, songs: songs },
+                        state: {
+                            currentSong: song,
+                            currentSongIndex: index,
+                            songs: songs
+                        },
                         replace: true
                     });
                 };
 
-                imgElement.addEventListener("transitionend", onTransitionEnd, { once: true });
+                imgElement.addEventListener("transitionend", onTransitionEnd, {
+                    once: true
+                });
 
                 // Fallback in case transition event doesn't fire
                 setTimeout(() => {
@@ -512,7 +556,11 @@ function HistoryPage() {
                 setCurrentSong(song);
                 // Update navigation with songs
                 navigate(`/HistoryPage/${song.id}/${index}`, {
-                    state: { currentSong: song, currentSongIndex: index, songs: songs },
+                    state: {
+                        currentSong: song,
+                        currentSongIndex: index,
+                        songs: songs
+                    },
                     replace: true
                 });
             }
@@ -550,7 +598,11 @@ function HistoryPage() {
                     <div className="content-layer">
                         <div className="background-image">
                             <img
-                                src={currentSong && currentSong.backgroundUrl ? `${currentSong.backgroundUrl}` : ""}
+                                src={
+                                    currentSong && currentSong.backgroundUrl
+                                        ? `${currentSong.backgroundUrl}`
+                                        : ""
+                                }
                                 alt="Background"
                             />
                         </div>
@@ -568,9 +620,17 @@ function HistoryPage() {
                         />
 
                         <h3 className="heatmap-title latest-score-title">Latest Score</h3>
-                        <div id="heatmap-container-1" className="heatmap-container" ref={heatmapContainer1Ref}></div>
+                        <div
+                            id="heatmap-container-1"
+                            className="heatmap-container"
+                            ref={heatmapContainer1Ref}
+                        ></div>
                         <h3 className="heatmap-title best-score-title">Best Score</h3>
-                        <div id="heatmap-container-2" className="heatmap-container" ref={heatmapContainer2Ref}></div>
+                        <div
+                            id="heatmap-container-2"
+                            className="heatmap-container"
+                            ref={heatmapContainer2Ref}
+                        ></div>
                     </div>
                 </Suspense>
             </div>

@@ -97,4 +97,20 @@ describe("/api/logout", () => {
 
         expect(response.status).toBe(HttpStatus.PERMANENT_REDIRECT);
     });
+
+    it("should return FORBIDDEN if no token", async () => {
+        await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
+
+        const response = await testAgent.get("/api/logout").set("User-Agent", "Starlight").unset("Token");
+
+        expect(response.status).toBe(HttpStatus.FORBIDDEN);
+    });
+
+    it("should return UNAUTHORIZED if token invalid", async () => {
+        await testAgent.post("/api/register").set("User-Agent", "Starlight").send(mockUser);
+
+        const response = await testAgent.get("/api/logout").set("User-Agent", "Starlight").set("Token", "I am Balatro");
+
+        expect(response.status).toBe(HttpStatus.FORBIDDEN);
+    });
 });

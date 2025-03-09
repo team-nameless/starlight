@@ -6,6 +6,8 @@ import { AuthenticatedRequest } from "../types/auth";
 
 const router = express.Router();
 
+router.use(mustBeLoggedIn);
+
 /**
  * Get the user.
  */

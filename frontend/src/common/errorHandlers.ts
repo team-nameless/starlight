@@ -28,7 +28,9 @@ export const handleApiError = (error: unknown, handlers: ErrorHandlers): void =>
     ) {
         const axiosError = error as AxiosError<string>;
         const status = axiosError.response?.status;
-        const errorData = axiosError.response?.data ? String(axiosError.response.data) : "Unknown error";
+        const errorData = axiosError.response?.data
+            ? String(axiosError.response.data)
+            : "Unknown error";
 
         // Handle based on HTTP status
         if (status === 400 && handlers.onBadRequest) {
@@ -50,7 +52,12 @@ export const handleApiError = (error: unknown, handlers: ErrorHandlers): void =>
         } else {
             alert(`Request failed with status: ${status}. ${errorData}`);
         }
-    } else if (typeof error === "object" && error !== null && "message" in error && typeof error.message === "string") {
+    } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof error.message === "string"
+    ) {
         const message = error.message;
 
         if (message === "Network Error" && handlers.onNetworkError) {
