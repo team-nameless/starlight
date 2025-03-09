@@ -29,7 +29,6 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             console.warn("Cannot navigate: no songs or only one song available");
             return;
         }
-
         const currentIndex = indexRef.current;
         const songList = songsRef.current;
         const newIndex = (currentIndex + 1) % songList.length;
@@ -41,7 +40,6 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
         const imgElement = document.querySelector(".background-image img");
         if (imgElement && nextSong && nextSong.backgroundUrl) {
             imgElement.classList.add("fade-out");
-
             // Handle transition
             const onTransitionEnd = () => {
                 // Update state
@@ -100,7 +98,6 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
             console.warn("Cannot navigate: no songs or only one song available");
             return;
         }
-
         const currentIndex = indexRef.current;
         const songList = songsRef.current;
         const newIndex = (currentIndex - 1 + songList.length) % songList.length;
@@ -112,7 +109,6 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
         const imgElement = document.querySelector(".background-image img");
         if (imgElement && prevSong && prevSong.backgroundUrl) {
             imgElement.classList.add("fade-out");
-
             // Handle transition
             const onTransitionEnd = () => {
                 // Update state
@@ -180,12 +176,10 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
     // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.keyCode === 39) {
-                // Right arrow key
+            if (event.keyCode === 39) { // Right arrow key
                 handleNextSong();
                 triggerButtonHoverEffect(".next-btn");
-            } else if (event.keyCode === 37) {
-                // Left arrow key
+            } else if (event.keyCode === 37) { // Left arrow key
                 handlePreviousSong();
                 triggerButtonHoverEffect(".prev-btn");
             }
