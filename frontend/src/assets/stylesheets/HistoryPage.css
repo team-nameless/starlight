@@ -16,7 +16,14 @@
     align-items: center;
     overflow-y: auto;
     overflow-x: hidden;
+    overflow-x: hidden;
     z-index: 1;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.content-layer::-webkit-scrollbar {
+    display: none;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }

@@ -31,8 +31,8 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-left: 50px; /* Add margin from the left edge of the screen */
     max-width: 90vw; /* Responsive width - maximum 90% of viewport width */
+    margin-left: 0;
 }
 
 .track-card-background {
@@ -72,7 +72,8 @@
     z-index: 1;
 }
 
-.content-layer {
+/* Rename the track card's content layer to avoid conflict */
+.track-card .track-card-content {
     position: relative;
     z-index: 2;
     color: white;
@@ -82,12 +83,15 @@
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
+    width: 100%; /* Ensure full width */
 }
 
-.track-info {
+/* Track info needs to use full width */
+.track-card .track-info {
     text-align: left;
     font-family: "Didact Gothic", sans-serif;
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    width: 100%; /* Use full width */
 }
 
 .track-info h1 {
@@ -134,7 +138,6 @@
     font-size: 14px;
     width: 100%;
     gap: 25px;
-    margin-top: 10px;
 }
 
 .performance-column {
@@ -172,7 +175,7 @@
 .play-card-button-container {
     position: absolute;
     width: 80px;
-    height: 140px;
+    height: 130px;
     bottom: 20px;
     right: 20px;
     z-index: 2;
@@ -234,7 +237,6 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     color: white;
     margin-top: 8px;
-    margin-left: 50px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     width: 500px;
@@ -243,6 +245,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-left: 0;
 }
 
 .score-panel-header {
@@ -429,20 +432,357 @@
     }
 }
 
-@media (max-width: 500px) {
-    .track-card,
-    .score-panel {
-        margin-left: 10px;
-        width: calc(100% - 20px);
-    }
+.suggestion-page {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(60, 0, 60, 0.8), rgba(0, 0, 30, 0.8)), url('../assets/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
 
-    .performance-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.suggestion-container {
+    width: 100%;
+    max-width: 1000px;
+    flex: 1;
+    max-width: calc(100% - 500px - 58px - 8px); 
+    height: calc(400px + 8px + 266.8px); 
+    display: flex;
+    flex-direction: column;
+    background: rgba(16, 16, 24, 0.7);
+    backdrop-filter: blur(5px);
+    border-radius: 16px;
+    padding: 15px;
+    overflow: hidden;
+}
 
-    .performance-column:first-child {
-        width: 100%;
-        margin-right: 0;
-    }
+.search-filter-container {
+    display: flex;
+    margin-bottom: 10px; 
+    gap: 10px;
+}
+
+.search-bar {
+    flex: 1;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+}
+
+.search-bar input::placeholder {
+    color: white;
+}
+
+.search-bar input:focus {
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+}
+
+.filter-selects {
+    display: flex;
+    gap: 10px;
+    width: 60%;
+}
+
+/* Custom Dropdown Styling */
+.dropdown-container {
+    position: relative;
+    width: 50%;
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-button:focus {
+    outline: none;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(128, 0, 128, 0.4);
+}
+
+/* Track List Styling */
+.track-list-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.track-list-header {
+    display: flex;
+    background: linear-gradient(90deg, #4a0028, #2d004a);
+    padding: 15px 20px;
+    align-items: center;
+}
+
+.track-list-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    width: 25%;
+}
+
+.track-header-details {
+    display: flex;
+    width: 75%;
+    color: white;
+}
+
+.header-genre,
+.header-melody,
+.header-difficulty,
+.header-metric {
+    width: 25%;
+    text-align: center;
+}
+
+.track-list {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+    max-height: none;
+}
+
+.track-card {
+    display: flex;
+    padding: 15px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(90deg, rgba(72, 0, 72, 0.3), rgba(0, 0, 72, 0.3));
+    transition: background 0.3s;
+    cursor: pointer;
+    align-items: center;
+}
+
+
+.track-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.track-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.track-info {
+    width: calc(25% - 65px);
+}
+
+.track-title {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-details {
+    display: flex;
+    width: 75%;
+    align-items: center;
+}
+
+.track-genre,
+.track-melody,
+.track-difficulty,
+.track-metric {
+    width: 25%;
+    text-align: center;
+    color: #4abaa8;
+    font-size: 14px;
+}
+
+.track-melody {
+    color: #e9b052;
+}
+
+.track-difficulty {
+    color: #5584df;
+}
+
+.track-metric {
+    color: #44b87d;
+}
+
+.no-songs {
+    padding: 30px;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+}
+
+/* Scrollbar styling */
+.track-list::-webkit-scrollbar,
+.dropdown-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.track-list::-webkit-scrollbar-track,
+.dropdown-menu::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.track-list::-webkit-scrollbar-thumb,
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(128, 0, 128, 0.7);
+    border-radius: 4px;
+}
+
+.track-list::-webkit-scrollbar-thumb:hover,
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 0, 128, 0.9);
+}
+
+.songpage .content-layer {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    height: auto;
+    min-height: calc(100vh - 50px);
+    padding-right: 8px; 
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 50px; 
+}
+
+
+.track-list-item {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(90deg, rgba(72, 0, 72, 0.3), rgba(0, 0, 72, 0.3));
+    transition: background 0.3s;
+    cursor: pointer;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.track-list-item:hover {
+    background: linear-gradient(90deg, rgba(100, 0, 100, 0.4), rgba(0, 0, 100, 0.4));
+}
+
+.track-list-item.active {
+    background: linear-gradient(90deg, rgba(128, 0, 128, 0.5), rgba(0, 0, 128, 0.5));
+}
+
+.track-list-item .track-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.track-list-item .track-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.track-list-item .track-info {
+    width: calc(25% - 65px);
+}
+
+.track-list-item .track-title {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-list-item .track-artist {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-list-item .track-details {
+    display: flex;
+    width: 75%;
+    align-items: center;
 }

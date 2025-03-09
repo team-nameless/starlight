@@ -1,13 +1,11 @@
 import Phaser from "phaser";
 
 import { apiHost } from "../../common/site_setting";
-import { StarlightMap } from "../../index";
 import indicator from "../assets/indicator.png";
 import noteRing from "../assets/ring.png";
 import noteInner from "../assets/star_note_inner.png";
 import noteOuter from "../assets/star_note_outer.png";
-
-// import { StarlightMap } from "../game";
+import { StarlightMap } from "../../index";
 
 /**
  *  Class used for loading all the asset stuffs into the game.

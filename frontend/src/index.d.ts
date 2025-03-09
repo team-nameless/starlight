@@ -1,4 +1,7 @@
 export type StarlightSong = {
+    melodyType: string;
+    thumbnail: string;
+    metric: string;
     id: number;
     title: string;
     artist: string;

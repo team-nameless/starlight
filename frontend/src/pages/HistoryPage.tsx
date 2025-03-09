@@ -61,7 +61,6 @@ function HistoryPage() {
             setIsLoading(false);
             return;
         }
-
         const fetchSongData = async () => {
             setIsLoading(true);
             try {
@@ -115,7 +114,6 @@ function HistoryPage() {
     // Fetch all songs if not available
     useEffect(() => {
         if (songs.length > 0) return;
-
         const fetchSongs = async () => {
             try {
                 const songsResponse = await axios.get(`${apiHost}/api/track/all`, {
@@ -446,12 +444,10 @@ function HistoryPage() {
             hasRenderedHeatmap1.current = false;
             hasRenderedHeatmap2.current = false;
         }
-
         // Only render if we haven't already rendered for this song
         if (!hasRenderedHeatmap1.current && currentSong) {
             hasRenderedHeatmap1.current = true;
             setIsLoading(true);
-
             // Delay the second heatmap to prevent concurrent rendering
             renderHeatmap(
                 `/api/score/${currentSong.id}/recent`,
@@ -466,7 +462,6 @@ function HistoryPage() {
         // Only render if first heatmap is complete and second hasn't been rendered
         if (hasRenderedHeatmap1.current && !hasRenderedHeatmap2.current && currentSong) {
             hasRenderedHeatmap2.current = true;
-
             // Small delay to not compete with first heatmap rendering
             setTimeout(() => {
                 renderHeatmap(
@@ -515,7 +510,6 @@ function HistoryPage() {
                 // If image element not found, still update the song
                 setCurrentSongIndex(index);
                 setCurrentSong(song);
-
                 // Update navigation with songs
                 navigate(`/HistoryPage/${song.id}/${index}`, {
                     state: { currentSong: song, currentSongIndex: index, songs: songs },
