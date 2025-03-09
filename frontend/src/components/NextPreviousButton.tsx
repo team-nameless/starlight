@@ -176,10 +176,12 @@ function NextPreviousButton({ currentSongIndex, setCurrentSongIndex, songs, setC
     // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.keyCode === 39) { // Right arrow key
+            if (event.keyCode === 39) {
+                // Right arrow key
                 handleNextSong();
                 triggerButtonHoverEffect(".next-btn");
-            } else if (event.keyCode === 37) { // Left arrow key
+            } else if (event.keyCode === 37) {
+                // Left arrow key
                 handlePreviousSong();
                 triggerButtonHoverEffect(".prev-btn");
             }

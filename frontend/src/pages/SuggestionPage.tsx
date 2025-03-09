@@ -486,10 +486,7 @@ function SuggestionPage() {
                                             onClick={() => handleSongItemClick(index)}
                                         >
                                             <div className="track-thumbnail">
-                                                <img 
-                                                    src={song.thumbnail || song.backgroundUrl } 
-                                                    alt={song.title} 
-                                                />
+                                                <img src={song.thumbnail || song.backgroundUrl} alt={song.title} />
                                             </div>
                                             <div className="track-info">
                                                 <div className="track-title">{song.title || `Song ${index + 1}`}</div>
