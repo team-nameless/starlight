@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "./assets/stylesheets/Global.css";
+import GamePlay from "./game/GameApp";
 // Import global styles first
 import "./modalstyle/PopUpModals";
 import HistoryPage from "./pages/HistoryPage";
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/SongPage" element={<SongPage />} />
                     <Route path="/HistoryPage/:songId/:songIndex" element={<HistoryPage />} />
                     <Route path="/ProfilePage" element={<ProfilePage />} />
+                    <Route path="/GamePlay" element={<GamePlay />} />
                 </Routes>
             </Suspense>
         </HashRouter>

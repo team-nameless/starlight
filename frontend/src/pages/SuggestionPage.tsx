@@ -412,7 +412,6 @@ function SuggestionPage() {
                                 <i className="search-icon">🔍</i>
                             </div>
                             <div className="filter-selects">
-                                {/* Custom Genre Dropdown */}
                                 <div className="dropdown-container">
                                     <button
                                         className="dropdown-button genre-dropdown-button"
@@ -445,7 +444,6 @@ function SuggestionPage() {
                                     )}
                                 </div>
 
-                                {/* Custom Mood Dropdown */}
                                 <div className="dropdown-container">
                                     <button
                                         className="dropdown-button mood-dropdown-button"

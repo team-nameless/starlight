@@ -111,7 +111,7 @@
     color: white;
     padding-left: 50px;
     padding-right: 50px;
-    margin: 40px 150px 0px 150px;
+    margin: 10px 150px 0px 150px; /* Reduced top margin from 40px to 10px */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -125,6 +125,8 @@
     font-size: 40px;
     text-align: center;
     width: 100%;
+    margin: 0px 0px 0px 0px;
+    margin-top: 5px;
 }
 
 .overall-score {
@@ -147,7 +149,7 @@
 
 #heatmap-container-1,
 #heatmap-container-2 {
-    margin: -100px 300px 0px 300px;
+    margin: 0px 300px 0px 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -182,4 +184,8 @@
 
 .best-score-title {
     color: #dd2e44;
+}
+
+.historypage .content-layer {
+    padding-top: 5px;
 }
