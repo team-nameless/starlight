@@ -15,7 +15,7 @@ import {
  */
 class Game extends Phaser.Scene {
     // note groups, to cook with Physics
-    private notes: Phaser.Physics.Arcade.Group;
+    private notes!: Phaser.Physics.Arcade.Group;
 
     // timing window in ms
     private criticalWindow = 60;
@@ -327,7 +327,8 @@ class Game extends Phaser.Scene {
                 color: "#ffffff",
                 fontSize: "100px"
             })
-            .setOrigin(0, 0);
+            .setOrigin(0, 0)
+            .setDepth(15); // Set the depth to ensure it appears above the pause background
 
         this.pauseHint = this.add
             .text(730, 318, "", {
@@ -335,7 +336,8 @@ class Game extends Phaser.Scene {
                 color: "#ffffff",
                 fontSize: "50px"
             })
-            .setOrigin(0, 0);
+            .setOrigin(0, 0)
+            .setDepth(15); // Set the depth for consistent layering
 
         this.add
             .text(200, 110, `${this.trackTitle}\n${this.trackAuthor}`, {
@@ -461,18 +463,15 @@ class Game extends Phaser.Scene {
         this.replayKey?.on("down", () => this.restartScene());
         this.pauseKey?.on("down", () => this.togglePause());
     }
-
     /*
      * Get the corresponding Phaser key.
      */
     getKeyName(key: Phaser.Input.Keyboard.Key) {
-        for (const keyName in Object.values(Phaser.Input.Keyboard.KeyCodes)) {
-            if (keyName === key.toString()) {
-                return keyName;
-            }
-        }
-
-        return "Unknown";
+        const keyCodeMap = Phaser.Input.Keyboard.KeyCodes as Record<string, number>;
+        return (
+            Object.keys(keyCodeMap).find((keyName) => keyCodeMap[keyName] === key.keyCode) ||
+            "Unknown"
+        );
     }
 
     /*
@@ -823,9 +822,7 @@ class Game extends Phaser.Scene {
             this.bgMusic?.pause();
             this.pauseDimBg?.setAlpha(0.5);
             this.pauseText?.setText("PAUSED");
-            this.pauseText?.setDepth(15);
             this.pauseHint?.setText("Press ESC to resume.");
-            this.pauseHint?.setDepth(15);
         } else {
             this.time.paused = false;
             this.physics.resume();
@@ -908,7 +905,9 @@ class Game extends Phaser.Scene {
         });
 
         this.comboText?.setText(`${this.combo}x`);
-        this.scoreText?.setText(`${this.calculateScore()}`.padStart(7, "0"));
+        this.scoreText?.setText(
+            `${Math.min(1000000, Math.round(this.calculateScore()))}`.padStart(7, "0")
+        );
         this.accuracyText?.setText(`${this.accuracy.toFixed(2)}%`.padStart(7, " "));
 
         this.criticalText?.setText(`C ${this.totalCritical}`);
