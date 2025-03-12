@@ -13,11 +13,16 @@ import GameFinalizer from "./scenes/GameFinalizer";
 function GameApp() {
     const gameRef = useRef(null);
     const location = useLocation();
-    const { songId, songIndex } = location.state || {
-        songId: 586954,
-        songIndex: 0
-    };
     const navigate = useNavigate();
+
+    // Add logging to verify the data is received correctly
+    console.log("GameApp received location state:", location.state);
+
+    const { songId, songIndex, song } = location.state || {
+        songId: 586954,
+        songIndex: 0,
+        song: null
+    };
 
     useEffect(() => {
         const game = new Phaser.Game({
@@ -39,13 +44,24 @@ function GameApp() {
             antialias: true
         });
 
-        game.scene.add("DataLoader", DataLoader, true, {
-            songId: songId,
-            songIndex: songIndex
-        });
-        game.scene.add("AssetLoader", AssetLoader);
-        game.scene.add("Game", Game);
-        game.scene.add("GameFinalizer", GameFinalizer);
+        // Debug game creation
+        console.log("Phaser game instance created:", game);
+
+        try {
+            // Add scenes with more complete data
+            game.scene.add("DataLoader", DataLoader, true, {
+                songId: songId,
+                songIndex: songIndex,
+                songData: song // Pass complete song data
+            });
+            game.scene.add("AssetLoader", AssetLoader);
+            game.scene.add("Game", Game);
+            game.scene.add("GameFinalizer", GameFinalizer);
+
+            console.log("Game scenes added successfully");
+        } catch (error) {
+            console.error("Error setting up game scenes:", error);
+        }
 
         EventEmitter.on("game-finished", () => {
             const url = `${apiHost}/api/track/${songId}`;
@@ -68,7 +84,7 @@ function GameApp() {
             game.destroy(true);
             EventEmitter.removeListener("game-finished");
         };
-    }, [songId, songIndex, navigate]);
+    }, [songId, songIndex, song, navigate]);
 
     return (
         <div

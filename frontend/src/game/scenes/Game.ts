@@ -15,7 +15,7 @@ import {
  */
 class Game extends Phaser.Scene {
     // note groups, to cook with Physics
-    private notes: Phaser.Physics.Arcade.Group = this.physics.add.group();
+    private notes: Phaser.Physics.Arcade.Group;
 
     // timing window in ms
     private criticalWindow = 60;
@@ -115,9 +115,14 @@ class Game extends Phaser.Scene {
 
     constructor() {
         super("Game");
+        // We'll initialize notes in init() or create() instead
     }
 
     init(data: { gameData: StarlightMap; songId: number; songIndex: number }) {
+        // Initialize the notes group here when physics is ready
+        this.notes = this.physics.add.group();
+
+        // Rest of your init code...
         this.combo = 0;
         this.score = 0;
         this.totalCritical = 0;
@@ -230,11 +235,19 @@ class Game extends Phaser.Scene {
     create() {
         this.bgMusic = this.sound.get("music");
         this.scene.resume();
-        // this.gameStartTime = new Date(Date.now());
+
+        // Check if the music was found before trying to play it
+        if (this.bgMusic) {
+            this.bgMusic.play();
+        } else {
+            console.warn(
+                "Background music 'music' could not be found. Make sure it's properly loaded."
+            );
+        }
+
         this.time.paused = false;
         this.dataCollectionEvent!.paused = false;
         this.endGameEvent!.paused = false;
-        this.bgMusic.play();
         this.inGameTimeInMs = 0;
     }
 
