@@ -4,13 +4,17 @@
     "private": true,
     "main": "dist-electron/main.js",
     "version": "7.2.7",
+    "workspaces": [
+        "src/recsystem"
+    ],
     "scripts": {
         "dev": "vite",
         "build:electron": "tsc -b && vite build",
         "build:win": "npm run build:electron && npx electron-builder --win",
         "build:linux": "npm run build:electron && npx electron-builder --linux",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "start:recsys": "npm run start --workspace recsystem"
     },
     "dependencies": {
         "@atlaskit/textfield": "^8.0.1",
