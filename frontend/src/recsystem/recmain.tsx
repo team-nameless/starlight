@@ -1,4 +1,4 @@
-import { SongRecommendationModel } from "./ModelLogic";
+import { SongRecommendationModel } from "./modellogic";
 import { idealRanges, sampleData, trackList } from "./sampledata";
 
 // Initialize the song recommendation model
