@@ -5,11 +5,5 @@
     "type": "module",
     "scripts": {
         "start": "tsx recmain.tsx"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "ts-node": "^10.9.1",
-        "tsx": "^4.6.2",
-        "typescript": "^5.2.2"
     }
 }
