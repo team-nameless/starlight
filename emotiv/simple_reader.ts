@@ -20,6 +20,7 @@ async function main(): Promise<void> {
     await c.epoch();
     await c.requestAccess();
     const headsetId = await c.queryFirstHeadsetID();
+    console.log(headsetId);
     await c.initiateConnectionToHeadset(headsetId);
 
     const token = await c.authorize();
