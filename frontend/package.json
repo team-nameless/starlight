@@ -14,7 +14,8 @@
         "build:linux": "npm run build:electron && npx electron-builder --linux",
         "lint": "eslint .",
         "preview": "vite preview",
-        "start:recsys": "npm run start --workspace recsystem"
+        "start:recsys": "npm run start --workspace recsystem",
+        "start:recsys-with-server": "cd .. && npm run start:recsys-with-server"
     },
     "dependencies": {
         "@atlaskit/textfield": "^8.0.1",

@@ -1,10 +1,15 @@
 {
-    "name": "starlight",
+    "name": "starlight-main",
     "version": "7.2.7",
     "private": true,
     "description": "4-button VSRG on the web?",
     "scripts": {
-        "clean": "npx eslint --fix . && npx prettier --write ."
+        "clean": "npx eslint --fix . && npx prettier --write .",
+        "start:emotiv-server": "tsx emotiv/cortex_server.ts",
+        "start:emotiv-simple": "tsx emotiv/simple_reader.ts",
+        "start:recsys": "tsx frontend/src/recsystem/recmain.tsx",
+        "start:recsys-with-server": "concurrently --kill-others \"npm run start:emotiv-server\" \"wait-on tcp:8686 && npm run start:recsys\"",
+        "start:recsys-with-simple": "concurrently --kill-others \"npm run start:emotiv-server\" \"wait-on tcp:8686 && npm run start:recsys\""
     },
     "repository": {
         "type": "git",
@@ -28,13 +33,16 @@
     "homepage": "https://github.com/team-nameless/starlight#readme",
     "workspaces": [
         "frontend",
+        "frontend/src/recsystem",
         "server",
         "emotiv"
     ],
     "devDependencies": {
         "@eslint/js": "^9.22.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "@types/mathjs": "^9.4.1",
         "@types/node": "^22.13.10",
+        "@types/ws": "^8.18.0",
         "@typescript-eslint/parser": "^8.26.0",
         "eslint": "^9.22.0",
         "eslint-import-resolver-typescript": "^3.8.3",
@@ -43,8 +51,16 @@
         "globals": "^16.0.0",
         "npm-check-updates": "^17.1.15",
         "prettier": "3.5.3",
+        "ts-node": "^10.9.2",
         "tsx": "^4.19.3",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.26.0"
+    },
+    "dependencies": {
+        "concurrently": "^8.2.2",
+        "dotenv": "^16.4.7",
+        "mathjs": "^14.3.1",
+        "wait-on": "^7.2.0",
+        "ws": "^8.18.1"
     }
 }

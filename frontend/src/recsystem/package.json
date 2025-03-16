@@ -4,6 +4,13 @@
     "description": "Song recommendation system",
     "type": "module",
     "scripts": {
-        "start": "tsx recmain.tsx"
+        "start": "tsx recmain.tsx",
+        "start:with-server": "cd ../../../.. && npm run start:recsys-with-server"
+    },
+    "dependencies": {
+        "ws": "^8.18.1"
+    },
+    "devDependencies": {
+        "@types/ws": "^8.5.10"
     }
 }

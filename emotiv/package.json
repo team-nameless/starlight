@@ -1,17 +1,19 @@
 {
-    "name": "starlight-emotiv",
-    "version": "7.2.7",
+    "name": "emotiv",
+    "version": "1.0.0",
     "private": true,
-    "description": "The Emotiv portion of Starlight",
+    "description": "Emotiv data collection utilities",
+    "main": "index.js",
     "scripts": {
-        "start:cortex": "npx tsx ./cortex_server.ts",
-        "start:simple": "npx tsx ./simple_reader.ts"
+        "start:simple": "tsx simple_reader.ts",
+        "start:server": "tsx cortex_server.ts",
+        "test:server": "tsx test-server.ts"
     },
     "dependencies": {
         "dotenv": "^16.4.7",
         "ws": "^8.18.1"
     },
     "devDependencies": {
-        "@types/ws": "^8.18.0"
+        "@types/ws": "^8.5.10"
     }
 }

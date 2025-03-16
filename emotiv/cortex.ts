@@ -6,6 +6,7 @@ import WebSocket from "ws";
 class Cortex {
     private socket: WebSocket;
     private user: CortexUser;
+    private metricCallback?: (metData: any) => void;
 
     constructor(user: CortexUser, socketUrl: string = "wss://localhost:6868") {
         this.socket = new WebSocket(socketUrl, { rejectUnauthorized: false });
@@ -163,7 +164,7 @@ class Cortex {
     /**
      * Subscribe to data stream.
      */
-    subscribe(token: string, sessionId: string): void {
+    subscribe(token: string, sessionId: string, callback?: (metData: any) => void): void {
         const subRequest = {
             id: 1,
             jsonrpc: "2.0",
@@ -175,14 +176,25 @@ class Cortex {
             }
         };
 
+        // Store the callback if provided
+        this.metricCallback = callback;
+
         this.socket.send(JSON.stringify(subRequest));
 
         this.socket.on("message", (data) => {
             const parsedData = JSON.parse(data.toString());
-            if (parsedData["met"]) console.log(parsedData["met"]);
+            if (parsedData["met"]) {
+                // Call the callback with the metric data if provided
+                if (this.metricCallback) {
+                    this.metricCallback(parsedData["met"]);
+                }
+            }
         });
     }
 
+    /**
+     * Unsubscribe from data stream.
+     */
     unsubscribe(token: string, sessionId: string): void {
         const unsubRequest = {
             id: 1,
@@ -196,6 +208,9 @@ class Cortex {
         };
 
         this.socket.send(JSON.stringify(unsubRequest));
+
+        // Remove the callback reference
+        this.metricCallback = undefined;
     }
 }
 

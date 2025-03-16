@@ -1,1 +1,0 @@
-This implementation is now deprecated.
