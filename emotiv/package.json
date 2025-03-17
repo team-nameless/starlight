@@ -6,8 +6,7 @@
     "main": "index.js",
     "scripts": {
         "start:simple": "tsx simple_reader.ts",
-        "start:server": "tsx cortex_server.ts",
-        "test:server": "tsx test-server.ts"
+        "start:server": "tsx cortex_server.ts"
     },
     "dependencies": {
         "dotenv": "^16.4.7",

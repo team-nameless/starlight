@@ -1,5 +1,6 @@
-import { MetricData, SongProperties } from "./met";
+import { MetricData } from "./met";
 
+/*
 export const trackList: SongProperties[] = [
     { id: 1, danceability: 0.585, energy: 0.842, valence: 0.428, tempo: 118.211, loudness: -5.883 },
     { id: 2, danceability: 0.592, energy: 0.741, valence: 0.441, tempo: 90.578, loudness: -8.019 },
@@ -56,7 +57,7 @@ export const trackList: SongProperties[] = [
     },
     { id: 12, danceability: 0.485, energy: 0.13, valence: 0.721, tempo: 64.678, loudness: -21.508 }
 ];
-
+*/
 export const idealRanges = {
     focus: { low: 0.75, upper: 1 },
     engage: { low: 0.75, upper: 1 },

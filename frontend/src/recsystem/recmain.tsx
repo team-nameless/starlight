@@ -1,10 +1,10 @@
 import type { MetricData } from "./met";
 import { SongRecommendationModel } from "./modellogic";
-import { idealRanges, sampleData, trackList } from "./sampledata";
+import { idealRanges, sampleData } from "./sampledata";
 
 console.log("Starting Song Recommendation System with real-time Emotiv data");
 
-function processMetrics(metrics: MetricData[][]) {
+async function processMetrics(metrics: MetricData[][]) {
     console.log(`\nProcessing ${metrics.length} metric data points`);
 
     if (metrics.length === 0) {
@@ -12,34 +12,51 @@ function processMetrics(metrics: MetricData[][]) {
         return;
     }
 
-    // Step 1: Compute EMA
-    console.log("\nStep 1: Compute EMA");
-    const ema = model.calculateEWMA(metrics);
-    console.log("EMA Values:", ema);
+    try {
+        // Load song data from CSV
+        console.log("Loading song data from CSV...");
+        const trackList = await model.getSongData();
 
-    // Step 2: Compute Target Mental State
-    console.log("\nStep 2: Compute Target Mental State");
-    const target = model.calculateTargetMentalState();
-    console.log("Target State:", target);
+        // Check if we have song data
+        if (!trackList || trackList.length === 0) {
+            console.error("No song data available. Cannot process metrics.");
+            return;
+        }
 
-    // Step 3: Compute Weight Matrix
-    console.log("\nStep 3: Compute Weight Matrix");
-    const deltaT = target.map((t, i) => t - ema[i]);
-    console.log("ΔT (Difference between Target and EMA):", deltaT);
+        console.log(`Successfully loaded ${trackList.length} songs for recommendation`);
 
-    const weightMatrix = model.computeWeightMatrix(deltaT, trackList[0]);
-    console.log("Weight Matrix (W):", weightMatrix);
+        // Step 1: Compute EMA
+        console.log("\nStep 1: Compute EMA");
+        const ema = model.calculateEWMA(metrics);
+        console.log("EMA Values:", ema);
 
-    // Step 4: Compute Ideal Song Properties
-    console.log("\nStep 4: Compute Ideal Song Properties");
-    const idealProps = model.computeIdealSongProps(weightMatrix, deltaT, ema);
-    console.log("Ideal Song Properties (V_target):", idealProps);
+        // Step 2: Compute Target Mental State
+        console.log("\nStep 2: Compute Target Mental State");
+        const target = model.calculateTargetMentalState();
+        console.log("Target State:", target);
 
-    // Step 5: Find Best Matching Song
-    console.log("\nStep 5: Find Best Matching Song");
-    const { bestSong, sortedSongIds } = model.findBestMatchingSong(idealProps, trackList);
-    console.log("\nBest Recommended Song:", bestSong);
-    console.log("\nSorted Song IDs by Distance:", sortedSongIds);
+        // Step 3: Compute Weight Matrix
+        console.log("\nStep 3: Compute Weight Matrix");
+        const deltaT = target.map((t, i) => t - ema[i]);
+        console.log("ΔT (Difference between Target and EMA):", deltaT);
+
+        const weightMatrix = model.computeWeightMatrix(deltaT, trackList[0]);
+        console.log("Weight Matrix (W):", weightMatrix);
+
+        // Step 4: Compute Ideal Song Properties
+        console.log("\nStep 4: Compute Ideal Song Properties");
+        const idealProps = model.computeIdealSongProps(weightMatrix, deltaT, ema);
+        console.log("Ideal Song Properties (V_target):", idealProps);
+
+        // Step 5: Find Best Matching Song (now returns top 6 matches)
+        console.log("\nStep 5: Find Best Matching Song (Top 6)");
+        const { bestSong, sortedSongIds } = model.findBestMatchingSong(idealProps, trackList);
+        console.log("\nBest Recommended Song:", bestSong.title, "(ID:", bestSong.id, ")");
+        console.log("\nTop 6 Song IDs by Distance:", sortedSongIds);
+    } catch (error) {
+        console.error("Error processing metrics:", error);
+        console.warn("An error occurred during processing. Check the logs for details.");
+    }
 }
 
 // Initialize the model and connection variables

@@ -1,14 +1,76 @@
 import * as math from "mathjs";
 
+import { loadSongData, loadStaticSongData } from "./csvLoader";
 import type { IdealRanges, MetricData, SongProperties } from "./met";
 
 export class SongRecommendationModel {
     private alpha: number;
     private idealRanges: IdealRanges;
+    private songData: SongProperties[] = [];
+    private isDataLoaded: boolean = false;
+    private loadingPromise: Promise<SongProperties[]> | null = null;
 
     constructor(idealRanges: IdealRanges) {
         this.idealRanges = idealRanges;
         this.alpha = 2 / (40 + 1); // EWMA smoothing factor, As the PM why N=40
+
+        // Load song data when the model is initialized
+        this.loadSongData();
+    }
+
+    /**
+     * Load song data from CSV with improved error handling
+     */
+    private async loadSongData(): Promise<SongProperties[]> {
+        if (this.loadingPromise) {
+            return this.loadingPromise;
+        }
+
+        this.loadingPromise = new Promise<SongProperties[]>(async (resolve) => {
+            try {
+                console.log("Loading song data from CSV...");
+
+                // Try to load using primary method
+                let songData = await loadSongData();
+
+                // If that fails, try the alternative method
+                if (songData.length === 0) {
+                    console.log("Primary loading failed, trying alternative method...");
+                    songData = await loadStaticSongData();
+                }
+
+                if (songData.length === 0) {
+                    console.error("Failed to load any song data");
+                    this.songData = [];
+                    this.isDataLoaded = false;
+                    resolve([]);
+                    return;
+                }
+
+                this.songData = songData;
+                this.isDataLoaded = true;
+                console.log(`Successfully loaded ${songData.length} songs`);
+                resolve(songData);
+            } catch (error) {
+                console.error("Error loading song data:", error);
+                this.isDataLoaded = false;
+                resolve([]);
+            }
+        });
+
+        return this.loadingPromise;
+    }
+
+    /**
+     * Get the song data, wait for it to load if necessary
+     */
+    public async getSongData(): Promise<SongProperties[]> {
+        if (this.isDataLoaded) {
+            return this.songData;
+        }
+
+        const data = await this.loadSongData();
+        return data;
     }
 
     /**
@@ -118,11 +180,18 @@ export class SongRecommendationModel {
 
     /**
      * Step 5: Find the Best Matching Song in Track List using Euclidean Distance
+     * Now returns only the top 6 best matching songs
      */
     public findBestMatchingSong(
         idealProps: number[],
         trackList: SongProperties[]
     ): { bestSong: SongProperties; sortedSongIds: string[] } {
+        if (!trackList || trackList.length === 0) {
+            console.error("No track list available for song matching");
+            throw new Error("Empty track list");
+        }
+
+        // Calculate distance for each song
         const distances = trackList.map((song) => ({
             id: song.id,
             distance: Math.sqrt(
@@ -131,12 +200,27 @@ export class SongRecommendationModel {
                     Math.pow(idealProps[2] - song.valence, 2) +
                     Math.pow(idealProps[3] - song.tempo, 2) +
                     Math.pow(idealProps[4] - song.loudness, 2)
-            )
+            ),
+            song: song
         }));
 
+        // Sort by distance (closest match first)
         distances.sort((a, b) => a.distance - b.distance);
-        const bestSong = trackList.find((song) => song.id === distances[0].id)!;
 
-        return { bestSong, sortedSongIds: distances.map((d) => String(d.id)) };
+        // Get the best song
+        const bestSong = distances[0].song;
+
+        // Return only the top 6 song IDs
+        const sortedSongIds = distances.slice(0, 6).map((d) => d.id);
+
+        // Log the top 6 songs with their distances
+        console.log("Top 6 recommended songs:");
+        distances.slice(0, 6).forEach((d, index) => {
+            console.log(
+                `${index + 1}. ID: ${d.id}, Distance: ${d.distance.toFixed(4)}, Title: ${d.song.title}`
+            );
+        });
+
+        return { bestSong, sortedSongIds };
     }
 }

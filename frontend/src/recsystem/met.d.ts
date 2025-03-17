@@ -4,7 +4,11 @@ export interface MetricData {
 }
 
 export interface SongProperties {
-    id: number;
+    title: string;
+    id: string; // Changed to string to match CSV format
+    trackUrl: string;
+    imgUrl: string;
+    artists: string;
     danceability: number;
     energy: number;
     valence: number;

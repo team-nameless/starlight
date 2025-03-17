@@ -70,6 +70,18 @@ function HistoryPage() {
                     },
                     withCredentials: true
                 });
+
+                // Reset the rendering flags when fetching new song data
+                hasRenderedHeatmap1.current = false;
+                hasRenderedHeatmap2.current = false;
+
+                // Clear any cached heatmap data for the previous song
+                const prevSongId = currentSong?.id;
+                if (prevSongId && prevSongId !== Number(songId)) {
+                    heatmapCache.delete(`${prevSongId}-recent`);
+                    heatmapCache.delete(`${prevSongId}-best`);
+                }
+
                 setCurrentSong(response.data);
                 setCurrentSongIndex(parseInt(songIndex!));
             } catch (error) {
@@ -80,7 +92,7 @@ function HistoryPage() {
         };
 
         fetchSongData();
-    }, [songId, songIndex, currentSong]);
+    }, [songId, songIndex]);
 
     useEffect(() => {
         const fetchBestScore = async () => {
@@ -483,7 +495,7 @@ function HistoryPage() {
             hasRenderedHeatmap2.current = false;
         }
         // Only render if we haven't already rendered for this song
-        if (!hasRenderedHeatmap1.current && currentSong) {
+        if (!hasRenderedHeatmap1.current && currentSong && currentSong.id === Number(songId)) {
             hasRenderedHeatmap1.current = true;
             setIsLoading(true);
             // Delay the second heatmap to prevent concurrent rendering
@@ -498,7 +510,12 @@ function HistoryPage() {
 
     useEffect(() => {
         // Only render if first heatmap is complete and second hasn't been rendered
-        if (hasRenderedHeatmap1.current && !hasRenderedHeatmap2.current && currentSong) {
+        if (
+            hasRenderedHeatmap1.current &&
+            !hasRenderedHeatmap2.current &&
+            currentSong &&
+            currentSong.id === Number(songId)
+        ) {
             hasRenderedHeatmap2.current = true;
             // Small delay to not compete with first heatmap rendering
             setTimeout(() => {
@@ -510,7 +527,7 @@ function HistoryPage() {
                 );
             }, 100);
         }
-    }, [currentSong, renderHeatmap, hasRenderedHeatmap1.current]);
+    }, [currentSong, renderHeatmap, hasRenderedHeatmap1.current, songId]);
 
     const handleSongClick = (song: StarlightSong) => () => {
         const index = songs.findIndex((s) => s.id === song.id);
@@ -518,6 +535,12 @@ function HistoryPage() {
             setIsLoading(true);
             hasRenderedHeatmap1.current = false;
             hasRenderedHeatmap2.current = false;
+
+            // Clear cached data for the new song
+            if (currentSong && currentSong.id !== song.id) {
+                heatmapCache.delete(`${song.id}-recent`);
+                heatmapCache.delete(`${song.id}-best`);
+            }
 
             const imgElement = document.querySelector(".background-image img") as HTMLImageElement;
             if (imgElement && song.backgroundUrl) {
