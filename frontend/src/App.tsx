@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from "react";
-import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import "./assets/stylesheets/Global.css";
 import GamePlay from "./game/GameApp";
@@ -16,22 +16,22 @@ import SpotifyService from "./services/SpotifyService";
 function App() {
     // Check for Spotify access token in URL when app loads
     useEffect(() => {
-        if (window.location.hash && window.location.hash.includes('access_token=')) {
-            console.log('Found access_token in URL, processing...');
+        if (window.location.hash && window.location.hash.includes("access_token=")) {
+            console.log("Found access_token in URL, processing...");
             try {
                 const success = SpotifyService.processCallback();
-                
+
                 if (success) {
-                    console.log('Successfully processed Spotify callback, redirecting...');
+                    console.log("Successfully processed Spotify callback, redirecting...");
                     // Redirect to main app with a slight delay to ensure token is saved
                     setTimeout(() => {
                         window.location.href = "/#/SuggestionPage";
                     }, 100);
                 } else {
-                    console.error('Failed to process Spotify callback');
+                    console.error("Failed to process Spotify callback");
                 }
             } catch (error) {
-                console.error('Error processing Spotify callback:', error);
+                console.error("Error processing Spotify callback:", error);
             }
         }
     }, []);
@@ -47,7 +47,7 @@ function App() {
                     <Route path="/HistoryPage/:songId/:songIndex" element={<HistoryPage />} />
                     <Route path="/ProfilePage" element={<ProfilePage />} />
                     <Route path="/GamePlay" element={<GamePlay />} />
-                    
+
                     {/* Handle Spotify callback in hash router */}
                     <Route path="/callback" element={<Navigate to="/SuggestionPage" replace />} />
                 </Routes>

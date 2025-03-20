@@ -5,7 +5,7 @@ export interface MetricData {
 
 export interface SongProperties {
     title: string;
-    id: string; 
+    id: string;
     trackUrl: string;
     imgUrl: string;
     artists: string;

@@ -10,7 +10,10 @@ dotenv.config();
 const { CORTEX_CLIENT_ID, CORTEX_CLIENT_SECRET } = process.env;
 const collectedMetrics: MetricData[][] = [];
 
-export async function startEmotivReader(notifyCallback?: (message: string) => void): Promise<void> {
+export async function startEmotivReader(
+    notifyCallback?: (message: string) => void,
+    durationMs?: number
+): Promise<void> {
     try {
         assert(CORTEX_CLIENT_ID !== undefined, "CORTEX_CLIENT_ID must be defined in .env");
         assert(CORTEX_CLIENT_SECRET !== undefined, "CORTEX_CLIENT_SECRET must be defined in .env");
@@ -21,7 +24,7 @@ export async function startEmotivReader(notifyCallback?: (message: string) => vo
         };
 
         const log = (message: string) => {
-            console.log(message);
+            console.log(`[SimpleReader] ${message}`);
             if (notifyCallback) notifyCallback(message);
         };
 
@@ -87,7 +90,7 @@ export async function startEmotivReader(notifyCallback?: (message: string) => vo
                 }
 
                 // Only log collection milestones instead of every 10 metrics
-                if (collectedMetrics.length === 1 || collectedMetrics.length % 100 === 0) {
+                if (collectedMetrics.length === 1 || collectedMetrics.length % 50 === 0) {
                     log(`Metrics collected: ${collectedMetrics.length}`);
                 }
             } catch (error) {
@@ -95,11 +98,16 @@ export async function startEmotivReader(notifyCallback?: (message: string) => vo
             }
         });
 
-        // Set timeout to stop collection after 2 minutes
-        log("Data collection will continue for 2 minutes");
+        // Use provided duration or default to 2 minutes
+        const collectionDuration = durationMs || 120000;
+
+        log(`Data collection will continue for ${Math.round(collectionDuration / 1000)} seconds`);
         setTimeout(() => {
-            log("3 minutes elapsed, stopping data collection");
+            log(
+                `${Math.round(collectionDuration / 1000)} seconds elapsed, stopping data collection`
+            );
             c.unsubscribe(token, sessionId);
+            log("Unsubscribed from Cortex data stream");
 
             if (wsClient && wsClient.readyState === WebSocket.OPEN) {
                 log(`Sending ${collectedMetrics.length} metrics to processing system`);
@@ -111,9 +119,16 @@ export async function startEmotivReader(notifyCallback?: (message: string) => vo
                     })
                 );
 
-                setTimeout(() => wsClient?.close(), 2000);
+                // Give some time for the end message to be processed before closing
+                log("Closing connection in 2 seconds");
+                setTimeout(() => {
+                    if (wsClient) {
+                        wsClient.close();
+                        log("WebSocket connection closed");
+                    }
+                }, 2000);
             }
-        }, 120000); // 2 minutes
+        }, collectionDuration);
     } catch (error) {
         console.error("Error in Emotiv reader:", error);
     }

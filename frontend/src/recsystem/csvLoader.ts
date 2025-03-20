@@ -10,8 +10,8 @@ let fs: any = null;
 let path: any = null;
 if (!isBrowser) {
     try {
-        fs = require('fs');
-        path = require('path');
+        fs = require("fs");
+        path = require("path");
     } catch (e) {
         console.warn("Node.js modules not available.");
     }
@@ -76,7 +76,7 @@ export const loadSongData = async (): Promise<SongProperties[]> => {
     try {
         // Try MANY possible paths
         const possiblePaths = [
-            "/dataset_filled.csv",  // From the public directory root
+            "/dataset_filled.csv", // From the public directory root
             "./dataset_filled.csv",
             "../dataset_filled.csv",
             "/public/dataset_filled.csv",
@@ -86,10 +86,10 @@ export const loadSongData = async (): Promise<SongProperties[]> => {
             "/assets/dataset_filled.csv",
             "./assets/dataset_filled.csv"
         ];
-        
+
         if (isBrowser) {
             console.log("Browser environment detected, trying fetch...");
-            
+
             // First try the base URL with no path
             try {
                 const baseURL = window.location.origin;
@@ -103,7 +103,7 @@ export const loadSongData = async (): Promise<SongProperties[]> => {
             } catch (error) {
                 console.log(`Failed to load from base URL: ${error}`);
             }
-            
+
             // Try each path in sequence
             for (const path of possiblePaths) {
                 try {
@@ -118,24 +118,24 @@ export const loadSongData = async (): Promise<SongProperties[]> => {
                     console.log(`Failed to load from ${path}: ${error}`);
                 }
             }
-            
+
             console.warn("All path attempts failed to load CSV, using fallback data");
             return useFallbackData();
         } else if (fs && path) {
             // Node.js environment, use fs
             console.log("Node.js environment detected, trying fs.readFileSync...");
-            
+
             const appRoot = process.env.APP_ROOT || process.cwd();
             console.log(`APP_ROOT is: ${appRoot}`);
-            
+
             // Try various paths
             const nodePaths = [
-                path.join(appRoot, 'public', 'dataset_filled.csv'),
-                path.join(appRoot, 'dist', 'dataset_filled.csv'),
-                path.join(appRoot, 'src', 'dataset', 'dataset_filled.csv'),
-                path.join(appRoot, 'dataset_filled.csv')
+                path.join(appRoot, "public", "dataset_filled.csv"),
+                path.join(appRoot, "dist", "dataset_filled.csv"),
+                path.join(appRoot, "src", "dataset", "dataset_filled.csv"),
+                path.join(appRoot, "dataset_filled.csv")
             ];
-            
+
             for (const filePath of nodePaths) {
                 if (fs.existsSync(filePath)) {
                     console.log(`Found dataset at: ${filePath}`);
@@ -145,16 +145,16 @@ export const loadSongData = async (): Promise<SongProperties[]> => {
                     return songs;
                 }
             }
-            
+
             console.warn("No dataset file found in Node.js environment");
             return useFallbackData();
         }
-        
+
         console.warn("Couldn't determine environment, using fallback data");
         return useFallbackData();
     } catch (error) {
         console.error("Error in loadSongData:", error);
-        return useFallbackData(); 
+        return useFallbackData();
     }
 };
 

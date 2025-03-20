@@ -1,0 +1,40 @@
+.cortex-server-status {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    width: 100%;
+    color: white;
+    font-size: 14px;
+}
+
+.server-status.running {
+    color: #4ecca3;
+}
+
+.server-status.not-running {
+    color: #ff6b6b;
+}
+
+.server-status.not-running details {
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+.server-status.not-running summary {
+    cursor: pointer;
+    padding: 4px 0;
+    color: #ffbe76;
+}
+
+.server-status.not-running pre {
+    margin-top: 8px;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    font-size: 12px;
+    overflow-x: auto;
+}

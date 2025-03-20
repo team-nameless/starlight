@@ -1,7 +1,7 @@
 import assert from "assert";
 import dotenv from "dotenv";
+import http from "http";
 import { WebSocket, WebSocketServer } from "ws";
-import http from 'http';
 
 import type { MetricData } from "../frontend/src/recsystem/met";
 import Cortex from "./cortex";
@@ -38,14 +38,16 @@ wss.on("error", (error) => {
 wss.on("connection", async (ws) => {
     console.log("Client connected to WebSocket server");
     clients.add(ws);
-    
+
     // Send initial status message
-    ws.send(JSON.stringify({
-        op: "status",
-        status: "connected",
-        message: "Connected to Emotiv server"
-    }));
-    
+    ws.send(
+        JSON.stringify({
+            op: "status",
+            status: "connected",
+            message: "Connected to Emotiv server"
+        })
+    );
+
     // Set up ping-pong for connection health check
     const pingInterval = setInterval(() => {
         if (ws.readyState === WebSocket.OPEN) {
@@ -71,25 +73,30 @@ wss.on("connection", async (ws) => {
                 const parsedMessage = JSON.parse(message.toString());
                 const opcode = parsedMessage.op;
 
+                console.log(`Received "${opcode}" command from client`);
+
                 switch (opcode) {
                     case "ping":
                         // Respond to ping requests immediately
                         ws.send(JSON.stringify({ op: "pong", timestamp: Date.now() }));
                         break;
-                        
+
                     case "healthCheck":
                         // Respond with server status
-                        ws.send(JSON.stringify({
-                            op: "healthStatus",
-                            isCollecting,
-                            clientCount: clients.size,
-                            metricsCount: allMetrics.length,
-                            cortexConnected: !!cortexInstance
-                        }));
+                        ws.send(
+                            JSON.stringify({
+                                op: "healthStatus",
+                                isCollecting,
+                                clientCount: clients.size,
+                                metricsCount: allMetrics.length,
+                                cortexConnected: !!cortexInstance
+                            })
+                        );
                         break;
-                        
+
                     case "start":
                         if (isCollecting) {
+                            console.log("Already collecting data, ignoring start command");
                             ws.send(
                                 JSON.stringify({
                                     op: "status",
@@ -103,10 +110,26 @@ wss.on("connection", async (ws) => {
                         isCollecting = true;
                         allMetrics.length = 0; // Clear previous metrics
 
+                        // Extract track duration if provided
+                        const trackDuration = parsedMessage.duration
+                            ? Math.floor(Number(parsedMessage.duration) * 1000)
+                            : undefined;
+
+                        if (trackDuration) {
+                            console.log(`Track duration provided: ${trackDuration / 1000} seconds`);
+                            ws.send(
+                                JSON.stringify({
+                                    op: "status",
+                                    message: `Using track duration: ${trackDuration / 1000} seconds`
+                                })
+                            );
+                        }
+
                         // Initialize Cortex API if not already initialized
                         if (!cortexInstance) {
+                            console.log("Initializing new Cortex instance");
                             cortexInstance = new Cortex(user);
-                            
+
                             ws.send(
                                 JSON.stringify({
                                     op: "status",
@@ -118,6 +141,7 @@ wss.on("connection", async (ws) => {
                                 await cortexInstance.epoch();
                                 await cortexInstance.requestAccess();
 
+                                console.log("Searching for headset...");
                                 ws.send(
                                     JSON.stringify({
                                         op: "status",
@@ -126,6 +150,7 @@ wss.on("connection", async (ws) => {
                                 );
 
                                 const headsetId = await cortexInstance.queryFirstHeadsetID();
+                                console.log("Found headset:", headsetId);
                                 await cortexInstance.initiateConnectionToHeadset(headsetId);
 
                                 ws.send(
@@ -136,7 +161,11 @@ wss.on("connection", async (ws) => {
                                 );
 
                                 sessionToken = await cortexInstance.authorize();
-                                sessionId = await cortexInstance.createSession(sessionToken, headsetId);
+                                sessionId = await cortexInstance.createSession(
+                                    sessionToken,
+                                    headsetId
+                                );
+                                console.log("Session created with ID:", sessionId);
                             } catch (error) {
                                 console.error("Error setting up Emotiv:", error);
                                 ws.send(
@@ -152,6 +181,7 @@ wss.on("connection", async (ws) => {
                         }
 
                         if (cortexInstance && sessionToken && sessionId) {
+                            console.log("Starting metric subscription");
                             ws.send(
                                 JSON.stringify({
                                     op: "status",
@@ -176,7 +206,7 @@ wss.on("connection", async (ws) => {
                                     });
 
                                     // Only log collection milestones
-                                    if (allMetrics.length === 1 || allMetrics.length % 100 === 0) {
+                                    if (allMetrics.length === 1 || allMetrics.length % 50 === 0) {
                                         console.log(`Metrics collected: ${allMetrics.length}`);
                                     }
                                 } catch (error) {
@@ -184,19 +214,54 @@ wss.on("connection", async (ws) => {
                                 }
                             });
                         }
+
+                        // Set timeout based on track duration or default (120 seconds)
+                        const disconnectTimeout = trackDuration || 120000;
+                        console.log(
+                            `Setting collection timeout for ${disconnectTimeout / 1000} seconds`
+                        );
+
+                        setTimeout(() => {
+                            if (isCollecting) {
+                                console.log(
+                                    `Collection timeout after ${disconnectTimeout / 1000}s`
+                                );
+                                if (cortexInstance && sessionToken && sessionId) {
+                                    cortexInstance.unsubscribe(sessionToken, sessionId);
+                                    console.log("Unsubscribed from Cortex metrics");
+                                }
+                                isCollecting = false;
+
+                                // Send the collected data to all clients
+                                console.log(
+                                    `Broadcasting end message with ${allMetrics.length} metrics`
+                                );
+                                broadcast({
+                                    op: "end",
+                                    totalMetrics: allMetrics.length,
+                                    allData: allMetrics
+                                });
+                            }
+                        }, disconnectTimeout);
+
                         break;
 
                     case "stop":
-                        if (!isCollecting) return;
+                        if (!isCollecting) {
+                            console.log("Not collecting, ignoring stop command");
+                            return;
+                        }
 
                         console.log("Stopping data collection by client request");
                         isCollecting = false;
 
                         if (cortexInstance && sessionToken && sessionId) {
                             cortexInstance.unsubscribe(sessionToken, sessionId);
+                            console.log("Unsubscribed from Cortex metrics");
                         }
 
-                        // Send the metrics collected so far to the client that sent the stop command
+                        // Send the metrics collected so far
+                        console.log(`Sending ${allMetrics.length} metrics to client`);
                         ws.send(
                             JSON.stringify({
                                 op: "end",
@@ -206,11 +271,14 @@ wss.on("connection", async (ws) => {
                         );
 
                         // Also broadcast to all other clients
-                        broadcast({
-                            op: "end",
-                            totalMetrics: allMetrics.length,
-                            allData: allMetrics
-                        }, ws);
+                        broadcast(
+                            {
+                                op: "end",
+                                totalMetrics: allMetrics.length,
+                                allData: allMetrics
+                            },
+                            ws
+                        );
                         break;
 
                     case "data":
@@ -239,7 +307,7 @@ wss.on("connection", async (ws) => {
             console.log("Client disconnected");
             clients.delete(ws);
             clearInterval(pingInterval);
-            
+
             // If all clients disconnect, stop collecting data
             if (clients.size === 0 && isCollecting && cortexInstance && sessionToken && sessionId) {
                 console.log("All clients disconnected, stopping data collection");
@@ -247,13 +315,12 @@ wss.on("connection", async (ws) => {
                 isCollecting = false;
             }
         });
-        
+
         ws.on("error", (error) => {
             console.error("WebSocket client error:", error);
             clients.delete(ws);
             clearInterval(pingInterval);
         });
-        
     } catch (error) {
         console.error("Error in server setup:", error);
         ws.send(
@@ -267,16 +334,18 @@ wss.on("connection", async (ws) => {
 
 // Create a simple HTTP server to check if the WebSocket server is running
 const healthServer = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ 
-        status: 'running',
-        clients: clients.size,
-        isCollecting
-    }));
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+        JSON.stringify({
+            status: "running",
+            clients: clients.size,
+            isCollecting
+        })
+    );
 });
 
-healthServer.listen(8687, 'localhost', () => {
-    console.log('Health check server running on port 8687');
+healthServer.listen(8687, "localhost", () => {
+    console.log("Health check server running on port 8687");
 });
 
 // Format the metric data from Emotiv format to our MetricData format

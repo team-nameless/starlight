@@ -1,6 +1,6 @@
+import { spawn } from "child_process";
 import { BrowserWindow, app, ipcMain } from "electron";
 import path from "path";
-import { spawn } from "child_process";
 
 process.env.APP_ROOT = path.join(__dirname, "..");
 
@@ -14,7 +14,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 // Only allow one instance of the app
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
-    console.log('Another instance is already running. Quitting.');
+    console.log("Another instance is already running. Quitting.");
     app.quit();
     process.exit(0);
 }
@@ -28,7 +28,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            webSecurity: false,
+            webSecurity: false
         }
     });
 
@@ -39,7 +39,7 @@ function createWindow() {
     }
 
     // Handle second instance
-    app.on('second-instance', () => {
+    app.on("second-instance", () => {
         if (win) {
             if (win.isMinimized()) win.restore();
             win.focus();
@@ -47,15 +47,15 @@ function createWindow() {
     });
 
     // Register IPC handler for emotiv server
-    ipcMain.handle('start-emotiv-server', async () => {
+    ipcMain.handle("start-emotiv-server", async () => {
         try {
-            const rootPath = path.resolve(process.env.APP_ROOT as string, '..');
-            const emotivProcess = spawn('npm', ['run', 'start:emotiv-server'], {
+            const rootPath = path.resolve(process.env.APP_ROOT as string, "..");
+            const emotivProcess = spawn("npm", ["run", "start:emotiv-server"], {
                 cwd: rootPath,
                 detached: true,
-                stdio: 'ignore'
+                stdio: "ignore"
             });
-            
+
             emotivProcess.unref();
             return true;
         } catch (error) {

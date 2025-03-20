@@ -6,11 +6,11 @@ import electron from "vite-plugin-electron";
 
 // Clean directories before build
 try {
-  fs.rmSync("dist", { recursive: true, force: true });
-  fs.rmSync("dist-electron", { recursive: true, force: true });
-  fs.rmSync("release", { recursive: true, force: true });
+    fs.rmSync("dist", { recursive: true, force: true });
+    fs.rmSync("dist-electron", { recursive: true, force: true });
+    fs.rmSync("release", { recursive: true, force: true });
 } catch (error) {
-  // Ignore errors during cleanup
+    // Ignore errors during cleanup
 }
 
 export default defineConfig({

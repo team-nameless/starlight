@@ -72,7 +72,7 @@ function SuggestionHeaderBar() {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
-    
+
     // Simple navigation functions without passing StarlightSong data
     const navigateToSongs = () => {
         navigate("/SongPage");

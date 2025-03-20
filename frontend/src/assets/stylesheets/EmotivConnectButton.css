@@ -1,0 +1,91 @@
+.emotiv-connect-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.emotiv-connect-button {
+    background: linear-gradient(135deg, #6e48aa, #9d50bb);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.emotiv-connect-button:hover {
+    background: linear-gradient(135deg, #7e58ba, #ad60cb);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.emotiv-connect-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.emotiv-connect-button:disabled {
+    background: #888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.emotiv-connect-button.server-offline {
+    background: #d32f2f;
+    cursor: not-allowed;
+}
+
+.emotiv-collecting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    animation: pulse 2s infinite;
+}
+
+.emotiv-collecting-status {
+    color: #4ecca3;
+    font-weight: bold;
+    text-align: center;
+}
+
+.emotiv-countdown {
+    font-weight: normal;
+    color: white;
+}
+
+.emotiv-stop-button {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s ease;
+}
+
+.emotiv-stop-button:hover {
+    background: #f44336;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+    }
+}
