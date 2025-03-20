@@ -295,63 +295,11 @@
     font-size: 0.8rem;
 }
 
-.stats-indicators {
-    visibility: hidden;
-    position: absolute;
-    background: rgba(16, 16, 24, 0.95);
-    color: #fff;
-    text-align: left;
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 100;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 120px;
-    opacity: 0;
-    transition:
-        opacity 0.3s,
-        visibility 0.3s;
-}
-
-.stats-indicators div {
-    white-space: nowrap;
-    padding: 3px 6px;
-    font-size: 0.6rem;
-    margin-bottom: 2px;
-    text-align: left;
-}
-
-.stats-indicators div:last-child {
-    margin-bottom: 0;
-}
-
-.suggestion-rate-container {
-    position: relative;
-    cursor: help;
-}
-
-.suggestion-rate-container:hover .stats-indicators {
-    visibility: visible;
-    opacity: 1;
-}
-
-.stats-indicators::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(16, 16, 24, 0.95) transparent transparent transparent;
-}
-
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2px;
     margin-bottom: 2px;
 }
 
@@ -421,11 +369,6 @@
 
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grade-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
     }
 
     .grade-grid div:nth-child(4),

@@ -361,9 +361,6 @@ function SuggestionPage() {
     // Function for handling playback stop/pause
     const handlePlaybackStop = useCallback(() => {
         setIsPlaying(false);
-
-        // Don't stop data collection on pause, only on track end
-        // This allows data to continue collecting even if user pauses
     }, []);
 
     // Function to update UI when track plays/pauses
@@ -373,8 +370,6 @@ function SuggestionPage() {
                 handlePlaybackStart();
             } else {
                 setIsPlaying(false);
-                // We don't stop data collection on pause
-                // Data collection continues until the track finishes playing
             }
         },
         [handlePlaybackStart, handlePlaybackStop]
@@ -400,8 +395,6 @@ function SuggestionPage() {
                 message.includes("Could not play audio")
             ) {
                 if (!SpotifyService.isAuthenticated()) {
-                    // Show authenticate button in error message
-                    // (Button is already in the error display)
                 }
             }
         },
@@ -447,20 +440,6 @@ function SuggestionPage() {
     const getDifficultyColor = (difficulty: number) => {
         const hue = Math.max(0, 120 - difficulty * 12);
         return `hsl(${hue}, 70%, 50%)`;
-    };
-
-    // Calculate mental state description based on EMA values
-    const getMentalStateDescription = () => {
-        const [focus, engagement, excitement, interest, relaxation, stress] = emaMetrics;
-
-        if (relaxation > 0.7) return "Deep Relax";
-        if (focus > 0.7) return "Highly Focused";
-        if (excitement > 0.7) return "Excited";
-        if (engagement > 0.7) return "Engaged";
-        if (interest > 0.7) return "Interested";
-        if (stress > 0.7) return "Stressed";
-
-        return "Balanced";
     };
 
     // Add cleanup for audio element and WebSocket
@@ -637,7 +616,7 @@ function SuggestionPage() {
                                         trackUrl={currentSong.trackUrl}
                                         onPlaybackChange={handlePlaybackChange}
                                         onError={handlePlaybackError}
-                                        duration={currentSong.duration} // This should be in seconds from your CSV
+                                        duration={currentSong.duration}
                                     />
                                 )}
                             </div>
@@ -645,11 +624,6 @@ function SuggestionPage() {
 
                         <div className="score-panel">
                             <h2 className="score-panel-header">Current Mental State</h2>
-
-                            <div className="score-rank">{getMentalStateDescription()}</div>
-                            <div className="score-value">
-                                <span>★</span> Emotiv EEG Analysis <span>★</span>
-                            </div>
 
                             <div className="stats-grid">
                                 <div>
@@ -661,23 +635,20 @@ function SuggestionPage() {
                                     <strong>{(emaMetrics[1] * 100).toFixed(2)}%</strong>
                                 </div>
                                 <div>
-                                    <span>MENTAL TENDENCY</span>
-                                    <strong className="mental-tendency">
-                                        {getMentalStateDescription()}
-                                    </strong>
-                                </div>
-                                <div className="suggestion-rate-container">
                                     <span>EXCITEMENT</span>
                                     <strong>{(emaMetrics[2] * 100).toFixed(2)}%</strong>
-
-                                    <div className="stats-indicators">
-                                        <div>Focus: {(emaMetrics[0] * 10).toFixed(2)}</div>
-                                        <div>Engagement: {(emaMetrics[1] * 10).toFixed(2)}</div>
-                                        <div>Excitement: {(emaMetrics[2] * 10).toFixed(2)}</div>
-                                        <div>Interest: {(emaMetrics[3] * 10).toFixed(2)}</div>
-                                        <div>Relaxation: {(emaMetrics[4] * 10).toFixed(2)}</div>
-                                        <div>Stress: {(emaMetrics[5] * 10).toFixed(2)}</div>
-                                    </div>
+                                </div>
+                                <div>
+                                    <span>INTEREST</span>
+                                    <strong>{(emaMetrics[3] * 100).toFixed(2)}%</strong>
+                                </div>
+                                <div>
+                                    <span>RELAXATION</span>
+                                    <strong>{(emaMetrics[4] * 100).toFixed(2)}%</strong>
+                                </div>
+                                <div>
+                                    <span>STRESS</span>
+                                    <strong>{(emaMetrics[5] * 100).toFixed(2)}%</strong>
                                 </div>
                             </div>
 

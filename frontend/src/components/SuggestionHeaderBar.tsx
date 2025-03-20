@@ -121,7 +121,7 @@ function SuggestionHeaderBar() {
                 <NavLinksContainer className="right">
                     <div className="nav-link active">
                         <NavIcon src={eventsIcon} alt="Events" />
-                        <span>Events</span>
+                        <span>MainStream</span>
                     </div>
 
                     <div onClick={navigateToStore} className="nav-link">

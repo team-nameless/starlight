@@ -158,7 +158,7 @@ function HeaderBar({
                         active={isActive("/SuggestionPage")}
                     >
                         <NavIcon src={eventsIcon} alt="Events" />
-                        <span>Events</span>
+                        <span>MainStream</span>
                     </StyledLink>
 
                     <StyledLink
