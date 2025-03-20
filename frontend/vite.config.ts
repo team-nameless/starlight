@@ -4,9 +4,14 @@ import path from "node:path";
 import { defineConfig } from "vite";
 import electron from "vite-plugin-electron";
 
-fs.rmSync("dist", { recursive: true, force: true });
-fs.rmSync("dist-electron", { recursive: true, force: true });
-fs.rmSync("release", { recursive: true, force: true });
+// Clean directories before build
+try {
+  fs.rmSync("dist", { recursive: true, force: true });
+  fs.rmSync("dist-electron", { recursive: true, force: true });
+  fs.rmSync("release", { recursive: true, force: true });
+} catch (error) {
+  // Ignore errors during cleanup
+}
 
 export default defineConfig({
     resolve: {

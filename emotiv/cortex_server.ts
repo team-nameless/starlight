@@ -1,6 +1,7 @@
 import assert from "assert";
 import dotenv from "dotenv";
 import { WebSocket, WebSocketServer } from "ws";
+import http from 'http';
 
 import type { MetricData } from "../frontend/src/recsystem/met";
 import Cortex from "./cortex";
@@ -10,6 +11,8 @@ dotenv.config();
 const { CORTEX_CLIENT_ID, CORTEX_CLIENT_SECRET } = process.env;
 
 console.log("Starting Emotiv WebSocket server on port 8686");
+console.log("This server will handle both SuggestionPage and RecSystem connections");
+
 const wss = new WebSocketServer({
     port: 8686,
     host: "localhost"
@@ -19,6 +22,9 @@ const wss = new WebSocketServer({
 const clients = new Set<WebSocket>();
 let isCollecting = false;
 const allMetrics: MetricData[][] = [];
+let cortexInstance: Cortex | null = null;
+let sessionToken: string | null = null;
+let sessionId: string | null = null;
 
 wss.on("listening", () => {
     console.log("WebSocket server is listening on port 8686");
@@ -32,6 +38,20 @@ wss.on("error", (error) => {
 wss.on("connection", async (ws) => {
     console.log("Client connected to WebSocket server");
     clients.add(ws);
+    
+    // Send initial status message
+    ws.send(JSON.stringify({
+        op: "status",
+        status: "connected",
+        message: "Connected to Emotiv server"
+    }));
+    
+    // Set up ping-pong for connection health check
+    const pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.ping();
+        }
+    }, 30000);
 
     try {
         assert(CORTEX_CLIENT_ID !== undefined, "CORTEX_CLIENT_ID is not defined in environment");
@@ -52,6 +72,22 @@ wss.on("connection", async (ws) => {
                 const opcode = parsedMessage.op;
 
                 switch (opcode) {
+                    case "ping":
+                        // Respond to ping requests immediately
+                        ws.send(JSON.stringify({ op: "pong", timestamp: Date.now() }));
+                        break;
+                        
+                    case "healthCheck":
+                        // Respond with server status
+                        ws.send(JSON.stringify({
+                            op: "healthStatus",
+                            isCollecting,
+                            clientCount: clients.size,
+                            metricsCount: allMetrics.length,
+                            cortexConnected: !!cortexInstance
+                        }));
+                        break;
+                        
                     case "start":
                         if (isCollecting) {
                             ws.send(
@@ -67,93 +103,87 @@ wss.on("connection", async (ws) => {
                         isCollecting = true;
                         allMetrics.length = 0; // Clear previous metrics
 
-                        // Initialize Cortex API
-                        const c = new Cortex(user);
+                        // Initialize Cortex API if not already initialized
+                        if (!cortexInstance) {
+                            cortexInstance = new Cortex(user);
+                            
+                            ws.send(
+                                JSON.stringify({
+                                    op: "status",
+                                    message: "Initializing Emotiv connection..."
+                                })
+                            );
 
-                        ws.send(
-                            JSON.stringify({
-                                op: "status",
-                                message: "Initializing Emotiv connection..."
-                            })
-                        );
-
-                        await c.epoch();
-                        await c.requestAccess();
-
-                        ws.send(
-                            JSON.stringify({
-                                op: "status",
-                                message: "Finding Emotiv headset..."
-                            })
-                        );
-
-                        const headsetId = await c.queryFirstHeadsetID();
-                        await c.initiateConnectionToHeadset(headsetId);
-
-                        ws.send(
-                            JSON.stringify({
-                                op: "status",
-                                message: `Connected to headset: ${headsetId}`
-                            })
-                        );
-
-                        const token = await c.authorize();
-                        const sessionId = await c.createSession(token, headsetId);
-
-                        ws.send(
-                            JSON.stringify({
-                                op: "status",
-                                message: "Session created, collecting data..."
-                            })
-                        );
-
-                        // Subscribe to the metrics stream
-                        c.subscribe(token, sessionId, (metricData) => {
                             try {
-                                // Format raw data for passing to client, but don't print it here
-                                const rawDataStr = printRawMetricData(metricData);
+                                await cortexInstance.epoch();
+                                await cortexInstance.requestAccess();
 
-                                const formattedMetric = formatMetric(metricData);
-                                allMetrics.push(formattedMetric);
+                                ws.send(
+                                    JSON.stringify({
+                                        op: "status",
+                                        message: "Finding Emotiv headset..."
+                                    })
+                                );
 
-                                // Send to all connected clients
-                                broadcast({
-                                    op: "data",
-                                    metrics: formattedMetric,
-                                    rawData: rawDataStr
-                                });
+                                const headsetId = await cortexInstance.queryFirstHeadsetID();
+                                await cortexInstance.initiateConnectionToHeadset(headsetId);
 
-                                // Only log collection milestones instead of every 10 metrics
-                                if (allMetrics.length === 1 || allMetrics.length % 100 === 0) {
-                                    console.log(`Metrics collected: ${allMetrics.length}`);
-                                }
+                                ws.send(
+                                    JSON.stringify({
+                                        op: "status",
+                                        message: `Connected to headset: ${headsetId}`
+                                    })
+                                );
+
+                                sessionToken = await cortexInstance.authorize();
+                                sessionId = await cortexInstance.createSession(sessionToken, headsetId);
                             } catch (error) {
-                                console.error("Error processing metric data:", error);
+                                console.error("Error setting up Emotiv:", error);
+                                ws.send(
+                                    JSON.stringify({
+                                        op: "error",
+                                        error: "Failed to connect to Emotiv headset"
+                                    })
+                                );
+                                cortexInstance = null;
+                                isCollecting = false;
+                                return;
                             }
-                        });
+                        }
 
-                        // Set timeout to stop collection after 2 minutes
-                        ws.send(
-                            JSON.stringify({
-                                op: "status",
-                                message: "Data collection will run for 2 minutes"
-                            })
-                        );
+                        if (cortexInstance && sessionToken && sessionId) {
+                            ws.send(
+                                JSON.stringify({
+                                    op: "status",
+                                    message: "Session created, collecting data..."
+                                })
+                            );
 
-                        setTimeout(() => {
-                            if (!isCollecting) return;
+                            // Subscribe to the metrics stream
+                            cortexInstance.subscribe(sessionToken, sessionId, (metricData) => {
+                                try {
+                                    // Format raw data for passing to client
+                                    const rawDataStr = printRawMetricData(metricData);
 
-                            console.log("Timeout reached, stopping data collection");
-                            c.unsubscribe(token, sessionId);
-                            isCollecting = false;
+                                    const formattedMetric = formatMetric(metricData);
+                                    allMetrics.push(formattedMetric);
 
-                            // Send the complete metrics data to all clients
-                            broadcast({
-                                op: "end",
-                                totalMetrics: allMetrics.length,
-                                allData: allMetrics
+                                    // Send to all connected clients
+                                    broadcast({
+                                        op: "data",
+                                        metrics: formattedMetric,
+                                        rawData: rawDataStr
+                                    });
+
+                                    // Only log collection milestones
+                                    if (allMetrics.length === 1 || allMetrics.length % 100 === 0) {
+                                        console.log(`Metrics collected: ${allMetrics.length}`);
+                                    }
+                                } catch (error) {
+                                    console.error("Error processing metric data:", error);
+                                }
                             });
-                        }, 120000); // 2 minutes
+                        }
                         break;
 
                     case "stop":
@@ -162,7 +192,11 @@ wss.on("connection", async (ws) => {
                         console.log("Stopping data collection by client request");
                         isCollecting = false;
 
-                        // Send the metrics collected so far
+                        if (cortexInstance && sessionToken && sessionId) {
+                            cortexInstance.unsubscribe(sessionToken, sessionId);
+                        }
+
+                        // Send the metrics collected so far to the client that sent the stop command
                         ws.send(
                             JSON.stringify({
                                 op: "end",
@@ -170,6 +204,13 @@ wss.on("connection", async (ws) => {
                                 allData: allMetrics
                             })
                         );
+
+                        // Also broadcast to all other clients
+                        broadcast({
+                            op: "end",
+                            totalMetrics: allMetrics.length,
+                            allData: allMetrics
+                        }, ws);
                         break;
 
                     case "data":
@@ -197,7 +238,22 @@ wss.on("connection", async (ws) => {
         ws.on("close", () => {
             console.log("Client disconnected");
             clients.delete(ws);
+            clearInterval(pingInterval);
+            
+            // If all clients disconnect, stop collecting data
+            if (clients.size === 0 && isCollecting && cortexInstance && sessionToken && sessionId) {
+                console.log("All clients disconnected, stopping data collection");
+                cortexInstance.unsubscribe(sessionToken, sessionId);
+                isCollecting = false;
+            }
         });
+        
+        ws.on("error", (error) => {
+            console.error("WebSocket client error:", error);
+            clients.delete(ws);
+            clearInterval(pingInterval);
+        });
+        
     } catch (error) {
         console.error("Error in server setup:", error);
         ws.send(
@@ -207,6 +263,20 @@ wss.on("connection", async (ws) => {
             })
         );
     }
+});
+
+// Create a simple HTTP server to check if the WebSocket server is running
+const healthServer = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+        status: 'running',
+        clients: clients.size,
+        isCollecting
+    }));
+});
+
+healthServer.listen(8687, 'localhost', () => {
+    console.log('Health check server running on port 8687');
 });
 
 // Format the metric data from Emotiv format to our MetricData format
@@ -294,18 +364,17 @@ function getDefaultMetrics(): MetricData[] {
     ];
 }
 
-// Broadcast a message to all connected clients
-function broadcast(message: any): void {
+// Broadcast a message to all connected clients except the sender (if provided)
+function broadcast(message: any, excludeClient?: WebSocket): void {
     const jsonMessage = typeof message === "string" ? message : JSON.stringify(message);
 
     for (const client of clients) {
-        try {
-            if (client.readyState === 1) {
-                // WebSocket.OPEN
+        if (client !== excludeClient && client.readyState === WebSocket.OPEN) {
+            try {
                 client.send(jsonMessage);
+            } catch (error) {
+                console.error("Error sending message to client:", error);
             }
-        } catch (error) {
-            console.error("Error sending message to client:", error);
         }
     }
 }

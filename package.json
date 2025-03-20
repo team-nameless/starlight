@@ -9,7 +9,9 @@
         "start:emotiv-simple": "tsx emotiv/simple_reader.ts",
         "start:recsys": "tsx frontend/src/recsystem/recmain.tsx",
         "start:recsys-with-server": "concurrently --kill-others \"npm run start:emotiv-server\" \"wait-on tcp:8686 && npm run start:recsys\"",
-        "start:recsys-with-simple": "concurrently --kill-others \"npm run start:emotiv-server\" \"wait-on tcp:8686 && npm run start:recsys\""
+        "start:recsys-with-simple": "concurrently --kill-others \"npm run start:emotiv-server\" \"wait-on tcp:8686 && npm run start:recsys\"",
+        "start:app-with-emotiv": "concurrently --kill-others \"npm run start:emotiv-server\" \"npm run dev --workspace frontend\"",
+        "debug:electron": "cd frontend && npm run build:electron && cd .. && electron frontend/dist-electron/main.js"
     },
     "repository": {
         "type": "git",

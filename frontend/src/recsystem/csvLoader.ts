@@ -1,26 +1,29 @@
-import * as fs from "fs";
-import * as path from "path";
-import { fileURLToPath } from "url";
-
 import { SongProperties } from "./met";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/**
+ * Check if code is running in browser environment
+ */
+const isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";
+
+// For Node.js environment only
+let fs: any = null;
+let path: any = null;
+if (!isBrowser) {
+    try {
+        fs = require('fs');
+        path = require('path');
+    } catch (e) {
+        console.warn("Node.js modules not available.");
+    }
+}
 
 /**
  * Parses a CSV string and returns an array of song properties
- * @param csvString The CSV content as a string
- * @returns Array of SongProperties objects
  */
 export const parseCSV = (csvString: string): SongProperties[] => {
     try {
         const lines = csvString.split("\n");
-
-        //const headers = lines[0].split(',');
-
-        // Process each data line
         const songData: SongProperties[] = [];
-
         const dataLines = lines.slice(1).filter((line) => line.trim().length > 0);
 
         for (const line of dataLines) {
@@ -44,17 +47,17 @@ export const parseCSV = (csvString: string): SongProperties[] => {
             values.push(currentValue);
 
             const song: Partial<SongProperties> = {};
-
             song.title = values[0];
             song.id = values[1];
             song.trackUrl = values[2];
             song.imgUrl = values[3];
             song.artists = values[4];
-            song.danceability = parseFloat(values[5]);
-            song.energy = parseFloat(values[6]);
-            song.valence = parseFloat(values[7]);
-            song.tempo = parseFloat(values[8]);
-            song.loudness = parseFloat(values[9]);
+            song.danceability = parseFloat(values[5]) || 0.5;
+            song.energy = parseFloat(values[6]) || 0.5;
+            song.valence = parseFloat(values[7]) || 0.5;
+            song.tempo = parseFloat(values[8]) || 120;
+            song.loudness = parseFloat(values[9]) || -8;
+            song.duration = parseFloat(values[10]) || 180;
 
             songData.push(song as SongProperties);
         }
@@ -67,91 +70,145 @@ export const parseCSV = (csvString: string): SongProperties[] => {
 };
 
 /**
- * Check if code is running in browser environment
- */
-const isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";
-
-/**
  * Loads song data from the dataset CSV file
- * @returns Promise that resolves to an array of SongProperties
  */
 export const loadSongData = async (): Promise<SongProperties[]> => {
     try {
-        const csvPath = "../dataset/dataset_filled.csv";
-        console.log(`Loading CSV from: ${csvPath}`);
-
+        // Try MANY possible paths
+        const possiblePaths = [
+            "/dataset_filled.csv",  // From the public directory root
+            "./dataset_filled.csv",
+            "../dataset_filled.csv",
+            "/public/dataset_filled.csv",
+            "public/dataset_filled.csv",
+            "../public/dataset_filled.csv",
+            "./public/dataset_filled.csv",
+            "/assets/dataset_filled.csv",
+            "./assets/dataset_filled.csv"
+        ];
+        
         if (isBrowser) {
-            const response = await fetch(csvPath);
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to load CSV file: ${response.statusText} (status: ${response.status})`
-                );
-            }
-
-            console.log(`Successfully loaded CSV from: ${csvPath}`);
-            const csvText = await response.text();
-            return parseCSV(csvText);
-        } else {
+            console.log("Browser environment detected, trying fetch...");
+            
+            // First try the base URL with no path
             try {
-                const nodeFilePath = path.resolve(__dirname, csvPath);
-                console.log(`Resolved file path: ${nodeFilePath}`);
-
-                if (fs.existsSync(nodeFilePath)) {
-                    const csvData = fs.readFileSync(nodeFilePath, "utf8");
-                    const songs = parseCSV(csvData);
-                    console.log(`Successfully loaded ${songs.length} songs from: ${nodeFilePath}`);
-                    return songs;
-                } else {
-                    throw new Error(`CSV file not found at: ${nodeFilePath}`);
+                const baseURL = window.location.origin;
+                console.log(`Attempting to load from base URL: ${baseURL}/dataset_filled.csv`);
+                const response = await fetch(`${baseURL}/dataset_filled.csv`);
+                if (response.ok) {
+                    console.log(`Successfully loaded CSV from base URL`);
+                    const csvText = await response.text();
+                    return parseCSV(csvText);
                 }
-            } catch (fsError) {
-                console.error("Error reading file:", fsError);
-                throw fsError;
+            } catch (error) {
+                console.log(`Failed to load from base URL: ${error}`);
             }
+            
+            // Try each path in sequence
+            for (const path of possiblePaths) {
+                try {
+                    console.log(`Trying to load CSV from: ${path}`);
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        console.log(`Successfully loaded CSV from: ${path}`);
+                        const csvText = await response.text();
+                        return parseCSV(csvText);
+                    }
+                } catch (error) {
+                    console.log(`Failed to load from ${path}: ${error}`);
+                }
+            }
+            
+            console.warn("All path attempts failed to load CSV, using fallback data");
+            return useFallbackData();
+        } else if (fs && path) {
+            // Node.js environment, use fs
+            console.log("Node.js environment detected, trying fs.readFileSync...");
+            
+            const appRoot = process.env.APP_ROOT || process.cwd();
+            console.log(`APP_ROOT is: ${appRoot}`);
+            
+            // Try various paths
+            const nodePaths = [
+                path.join(appRoot, 'public', 'dataset_filled.csv'),
+                path.join(appRoot, 'dist', 'dataset_filled.csv'),
+                path.join(appRoot, 'src', 'dataset', 'dataset_filled.csv'),
+                path.join(appRoot, 'dataset_filled.csv')
+            ];
+            
+            for (const filePath of nodePaths) {
+                if (fs.existsSync(filePath)) {
+                    console.log(`Found dataset at: ${filePath}`);
+                    const csvData = fs.readFileSync(filePath, "utf8");
+                    const songs = parseCSV(csvData);
+                    console.log(`Successfully loaded ${songs.length} songs from: ${filePath}`);
+                    return songs;
+                }
+            }
+            
+            console.warn("No dataset file found in Node.js environment");
+            return useFallbackData();
         }
+        
+        console.warn("Couldn't determine environment, using fallback data");
+        return useFallbackData();
     } catch (error) {
-        console.error("Error loading song data:", error);
-        return [];
+        console.error("Error in loadSongData:", error);
+        return useFallbackData(); 
     }
 };
 
 /**
- * Alternative loader method as a backup
- */
-export const loadStaticSongData = async (): Promise<SongProperties[]> => {
-    try {
-        console.log("Attempting to load using alternative method");
-
-        if (isBrowser) {
-            const response = await fetch(`/src/dataset/dataset_filled.csv`);
-            if (response.ok) {
-                const csvText = await response.text();
-                return parseCSV(csvText);
-            }
-        } else {
-            const absolutePath = path.resolve(
-                process.cwd(),
-                "frontend/src/dataset/dataset_filled.csv"
-            );
-            console.log(`Trying alternative absolute path: ${absolutePath}`);
-
-            if (fs.existsSync(absolutePath)) {
-                const csvData = fs.readFileSync(absolutePath, "utf8");
-                return parseCSV(csvData);
-            }
-        }
-
-        throw new Error("Could not load CSV file using alternative method");
-    } catch (error) {
-        console.error("Alternative loading failed:", error);
-        return [];
-    }
-};
-
-/**
- * Required function to maintain API compatibility, but returns empty array
+ * Create a sample dataset with enough songs as a fallback
  */
 export const useFallbackData = (): SongProperties[] => {
-    console.error("Warning: useFallbackData() called but no fallback data is available");
-    return [];
+    console.warn("Using fallback sample data");
+    return [
+        {
+            title: "Sample Song 1",
+            id: "sample1",
+            trackUrl: "https://example.com/track1.mp3",
+            imgUrl: "https://example.com/image1.jpg",
+            artists: "Sample Artist",
+            danceability: 0.65,
+            energy: 0.73,
+            valence: 0.52,
+            tempo: 128,
+            loudness: -6.5,
+            duration: 180
+        },
+        {
+            title: "Sample Song 2",
+            id: "sample2",
+            trackUrl: "https://example.com/track2.mp3",
+            imgUrl: "https://example.com/image2.jpg",
+            artists: "Another Artist",
+            danceability: 0.75,
+            energy: 0.68,
+            valence: 0.42,
+            tempo: 120,
+            loudness: -7.2,
+            duration: 210
+        },
+        {
+            title: "Sample Song 3",
+            id: "sample3",
+            trackUrl: "https://example.com/track3.mp3",
+            imgUrl: "https://example.com/image3.jpg",
+            artists: "Third Artist",
+            danceability: 0.55,
+            energy: 0.85,
+            valence: 0.62,
+            tempo: 130,
+            loudness: -5.5,
+            duration: 195
+        }
+    ];
 };
+
+/**
+ * Alternative loader method (just returns fallback data now)
+ */
+export async function loadStaticSongData(): Promise<SongProperties[]> {
+    return useFallbackData();
+}

@@ -15,7 +15,8 @@
         "lint": "eslint .",
         "preview": "vite preview",
         "start:recsys": "npm run start --workspace recsystem",
-        "start:recsys-with-server": "cd .. && npm run start:recsys-with-server"
+        "start:recsys-with-server": "cd .. && npm run start:recsys-with-server",
+        "start:with-emotiv": "cd .. && npm run start:app-with-emotiv"
     },
     "dependencies": {
         "@atlaskit/textfield": "^8.0.1",

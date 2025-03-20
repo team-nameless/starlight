@@ -1,20 +1,4 @@
 /* Background Image */
-.page-background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh; /* Ensure it covers the full viewport height */
-    z-index: -1;
-}
-
-.page-background-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: opacity 0.5s ease-in-out;
-}
 
 .overlay-30 {
     position: absolute;
@@ -175,10 +159,11 @@
 .play-card-button-container {
     position: absolute;
     width: 80px;
-    height: 130px;
-    bottom: 20px;
+    height: 80px;
+    bottom: 80px;
     right: 20px;
-    z-index: 2;
+    z-index: 10;
+    pointer-events: auto;
 }
 
 .play-card-button {
@@ -192,6 +177,7 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .play-card-icon-container {
@@ -226,6 +212,31 @@
 
 .play-card-button:hover .play-card-icon {
     color: black;
+}
+
+/* Disabled state for play button */
+.play-card-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.play-card-button:disabled .play-card-icon-container {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
 }
 
 /* Score Panel */
@@ -617,6 +628,7 @@
     border-radius: 3px;
     overflow: hidden;
     margin-right: 15px;
+    position: relative;
 }
 
 .track-thumbnail img {
@@ -720,6 +732,8 @@
     flex-direction: column;
     gap: 8px;
     margin-left: 50px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 .track-list-item {
@@ -751,6 +765,7 @@
     border-radius: 3px;
     overflow: hidden;
     margin-right: 15px;
+    position: relative;
 }
 
 .track-list-item .track-thumbnail img {
@@ -785,4 +800,103 @@
     display: flex;
     width: 75%;
     align-items: center;
+}
+
+.spotify-error-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(33, 33, 33, 0.95);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    border-left: 5px solid rgba(255, 59, 48, 0.9);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.spotify-error-message p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.spotify-error-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.spotify-error-message button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.spotify-error-message button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+.spotify-retry-button {
+    background: rgba(29, 185, 84, 0.3) !important;
+    border-color: rgba(29, 185, 84, 0.7) !important;
+}
+
+.spotify-retry-button:hover {
+    background: rgba(29, 185, 84, 0.5) !important;
+}
+
+.spotify-connect-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(29, 185, 84, 0.9);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.spotify-connect-button button {
+    background: white;
+    color: #1DB954;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.spotify-connect-button button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spotify-connect-button p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.9;
 }

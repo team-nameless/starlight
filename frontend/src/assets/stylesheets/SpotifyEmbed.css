@@ -1,0 +1,141 @@
+/* Spotify Embed Modal Styling */
+.spotify-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.spotify-modal-content {
+  width: 90%;
+  max-width: 500px;
+  height: 480px; 
+  background-color: #121212;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: slideUp 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.spotify-modal-content iframe {
+  flex: 1;
+  border: none;
+}
+
+.spotify-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.spotify-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* New controls section */
+.spotify-modal-controls {
+  padding: 15px;
+  background-color: #121212;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.spotify-connect-btn, 
+.spotify-open-btn {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.spotify-connect-btn {
+  background-color: #1DB954;
+  color: white;
+}
+
+.spotify-connect-btn:hover {
+  background-color: #1ed760;
+}
+
+.spotify-open-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.spotify-open-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+.spotify-premium-notice {
+  text-align: center;
+  color: #ccc;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.spotify-timer-notice {
+  text-align: center;
+  font-size: 14px;
+  color: #1DB954;
+  background: rgba(29, 185, 84, 0.1);
+  padding: 6px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .spotify-modal-content {
+    width: 95%;
+    max-width: none;
+    height: 80vh;
+  }
+}
+
+/* Mobile support for smaller screens */
+@media (max-height: 500px) {
+  .spotify-modal-content {
+    height: 85vh;
+  }
+}

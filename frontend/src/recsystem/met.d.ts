@@ -5,7 +5,7 @@ export interface MetricData {
 
 export interface SongProperties {
     title: string;
-    id: string; // Changed to string to match CSV format
+    id: string; 
     trackUrl: string;
     imgUrl: string;
     artists: string;
@@ -14,6 +14,7 @@ export interface SongProperties {
     valence: number;
     tempo: number;
     loudness: number;
+    duration: number;
 }
 
 export interface IdealRange {
