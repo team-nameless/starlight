@@ -36,7 +36,6 @@
     "workspaces": [
         "frontend",
         "frontend/src/recsystem",
-        "server",
         "emotiv"
     ],
     "devDependencies": {

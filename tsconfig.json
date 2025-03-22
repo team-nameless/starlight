@@ -20,5 +20,5 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": false
     },
-    "include": ["server", "emotiv", "frontend/src/recsystem"]
+    "include": ["emotiv", "frontend/src/recsystem"]
 }
