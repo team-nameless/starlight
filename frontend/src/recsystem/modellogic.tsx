@@ -82,10 +82,12 @@ export class SongRecommendationModel {
         data.forEach((metrics, t) => {
             metrics.forEach((metric, index) => {
                 if (metric.isActive) {
+                    // If metric value is 0, replace with random value between 0.1 and 1.0
+                    // This prevents issues in subsequent calculations when EEG quality is low
+                    const value = metric.value === 0 ? Math.random() * 0.9 + 0.1 : metric.value;
+
                     ema[index] =
-                        t === 0
-                            ? metric.value
-                            : this.alpha * metric.value + (1 - this.alpha) * ema[index];
+                        t === 0 ? value : this.alpha * value + (1 - this.alpha) * ema[index];
                 }
             });
         });

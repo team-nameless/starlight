@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import leaveIcon from "../assets/images/Header_Items/Leave-icon.png";
 import eventsIcon from "../assets/images/Header_Items/events-icon.png";
@@ -13,10 +13,12 @@ import {
     LogoContainer,
     LogoIconImage,
     LogoText,
+    LogoWrapper,
     NavIcon,
     NavIconToggle,
     NavLinksContainer,
-    NavbarContainer
+    NavbarContainer,
+    StyledLink
 } from "../modalstyle/HeaderBarStyles";
 import {
     LeaveButton,
@@ -32,7 +34,8 @@ import {
 function SuggestionHeaderBar() {
     const [showPopup, setShowPopup] = useState(false);
     const [isToggleOpen, setIsToggleOpen] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLeaveClick = () => {
         setShowPopup(true);
@@ -73,19 +76,6 @@ function SuggestionHeaderBar() {
         };
     }, []);
 
-    // Simple navigation functions without passing StarlightSong data
-    const navigateToSongs = () => {
-        navigate("/SongPage");
-    };
-
-    const navigateToHistory = () => {
-        navigate("/HistoryPage/586954/0");
-    };
-
-    const navigateToStore = () => {
-        navigate("/StorePage");
-    };
-
     return (
         <>
             <NavbarContainer>
@@ -97,37 +87,43 @@ function SuggestionHeaderBar() {
                 </NavIconToggle>
 
                 <NavLinksContainer className="left">
-                    <div onClick={navigateToSongs} className="nav-link">
+                    <StyledLink to="/SongPage" active={location.pathname === "/SongPage"}>
                         <NavIcon src={songsIcon} alt="Songs" />
                         <span>Songs</span>
-                    </div>
+                    </StyledLink>
 
-                    <div onClick={navigateToHistory} className="nav-link">
+                    <StyledLink
+                        to="/HistoryPage/586954/0"
+                        active={location.pathname.includes("/HistoryPage")}
+                    >
                         <NavIcon src={historyIcon} alt="History" />
                         <span>History</span>
-                    </div>
+                    </StyledLink>
                 </NavLinksContainer>
 
                 <LogoContainer>
-                    <div onClick={navigateToSongs} className="nav-link">
+                    <LogoWrapper to="/SongPage">
                         <LogoText>
                             <span>STAR</span>
                             <LogoIconImage src={logoIcon} alt="Logo" />
                             <span className="light">LIGHT</span>
                         </LogoText>
-                    </div>
+                    </LogoWrapper>
                 </LogoContainer>
 
                 <NavLinksContainer className="right">
-                    <div className="nav-link active">
+                    <StyledLink
+                        to="/SuggestionPage"
+                        active={location.pathname === "/SuggestionPage"}
+                    >
                         <NavIcon src={eventsIcon} alt="Events" />
                         <span>MainStream</span>
-                    </div>
+                    </StyledLink>
 
-                    <div onClick={navigateToStore} className="nav-link">
+                    <StyledLink to="/StorePage" active={location.pathname === "/StorePage"}>
                         <NavIcon src={storeIcon} alt="Store" />
                         <span>Store</span>
-                    </div>
+                    </StyledLink>
                 </NavLinksContainer>
 
                 <LeaveButtonStyled>

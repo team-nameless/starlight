@@ -524,7 +524,7 @@ function ProfilePage() {
                             }}
                         >
                             <img src={eventsIcon} alt="Events" className="nav-iconh" />
-                            <span>Events</span>
+                            <span>MainStream</span>
                         </Link>
                         <Link
                             to="/StorePage"

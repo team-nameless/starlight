@@ -27,9 +27,7 @@ function SuggestionPage() {
     // State for UI interaction
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredSongs, setFilteredSongs] = useState<SongProperties[]>([]);
-    const [selectedGenre, setSelectedGenre] = useState("");
     const [selectedMood, setSelectedMood] = useState("");
-    const [genreDropdownOpen, setGenreDropdownOpen] = useState(false);
     const [moodDropdownOpen, setMoodDropdownOpen] = useState(false);
 
     // State for metrics data
@@ -49,31 +47,21 @@ function SuggestionPage() {
     const socketRef = useRef<WebSocket | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // Genre and mood options for filtering
-    const genreOptions = [
-        { value: "", label: "-- GENRE --" },
-        { value: "Electrical Dance", label: "Electrical Dance" },
-        { value: "Pop", label: "Pop" },
-        { value: "Rock", label: "Rock" },
-        { value: "Hip Hop", label: "Hip Hop" },
-        { value: "Jazz", label: "Jazz" }
-    ];
-
+    // Mood options for filtering based on valence ranges
     const moodOptions = [
         { value: "", label: "-- MOOD --" },
-        { value: "Relaxation", label: "Relaxation" },
-        { value: "Focus", label: "Focus" },
-        { value: "Excitement", label: "Excitement" },
-        { value: "Engagement", label: "Engagement" },
-        { value: "Interest", label: "Interest" }
+        { value: "0.00-0.15", label: "Deeply Melancholic" },
+        { value: "0.16-0.30", label: "Sad & Somber" },
+        { value: "0.31-0.45", label: "Melancholic & Emotional" },
+        { value: "0.46-0.60", label: "Neutral & Chill" },
+        { value: "0.61-0.75", label: "Uplifting & Warm" },
+        { value: "0.76-0.90", label: "Cheerful & Energetic" },
+        { value: "0.91-1.00", label: "Euphoric & Exuberant" }
     ];
 
     // Initialize recommendation model
     useEffect(() => {
         modelRef.current = new SongRecommendationModel(idealRanges);
-
-        // No automatic WebSocket connection on component mount
-        // We'll connect only when play button is clicked
 
         return () => {
             // Clean up any existing connection when component unmounts
@@ -133,7 +121,7 @@ function SuggestionPage() {
         }
     }, []);
 
-    // Process metrics data to get recommendations - Convert to async function to handle promises
+    // Process metrics data to get recommendations
     const processMetrics = async (metrics: MetricData[][]): Promise<void> => {
         if (!modelRef.current || songs.length === 0) {
             throw new Error("Model or songs not loaded");
@@ -427,11 +415,6 @@ function SuggestionPage() {
     };
 
     // Utility functions needed by the component
-    const handleGenreSelect = (value: string, _label: string) => {
-        setSelectedGenre(value);
-        setGenreDropdownOpen(false);
-    };
-
     const handleMoodSelect = (value: string, _label: string) => {
         setSelectedMood(value);
         setMoodDropdownOpen(false);
@@ -486,15 +469,12 @@ function SuggestionPage() {
 
         let filtered = [...songs];
 
-        // Apply filters if selected
-        if (selectedGenre) {
-            // This is a mock filter since our data doesn't have genre
-            filtered = filtered.filter(() => Math.random() > 0.5); // Mock filter based on selected genre
-        }
-
+        // Apply mood filter if selected
         if (selectedMood) {
-            // Another mock filter
-            filtered = filtered.filter(() => Math.random() > 0.5); // Mock filter based on selected mood
+            const [minValence, maxValence] = selectedMood.split("-").map(Number);
+            filtered = filtered.filter(
+                (song) => song.valence >= minValence && song.valence <= maxValence
+            );
         }
 
         // Apply search
@@ -524,7 +504,7 @@ function SuggestionPage() {
         }
 
         setFilteredSongs(filtered);
-    }, [songs, searchQuery, selectedGenre, selectedMood, recommendedSongIds]);
+    }, [songs, searchQuery, selectedMood, recommendedSongIds]);
 
     // Handle Cortex server started event
     const handleCortexServerStarted = useCallback(() => {
@@ -710,48 +690,18 @@ function SuggestionPage() {
                                 <i className="search-icon">🔍</i>
                             </div>
                             <div className="filter-selects">
-                                <div className="dropdown-container">
-                                    <button
-                                        className="dropdown-button genre-dropdown-button"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setGenreDropdownOpen(!genreDropdownOpen);
-                                            setMoodDropdownOpen(false);
-                                        }}
-                                    >
-                                        {selectedGenre || "-- GENRE --"}
-                                        <span className="dropdown-arrow">▼</span>
-                                    </button>
-                                    {genreDropdownOpen && (
-                                        <div className="dropdown-menu genre-dropdown">
-                                            {genreOptions.map((option) => (
-                                                <div
-                                                    key={option.value}
-                                                    className="dropdown-item"
-                                                    onClick={() =>
-                                                        handleGenreSelect(
-                                                            option.value,
-                                                            option.label
-                                                        )
-                                                    }
-                                                >
-                                                    {option.label}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="dropdown-container">
+                                <div className="dropdown-container" style={{ width: "100%" }}>
                                     <button
                                         className="dropdown-button mood-dropdown-button"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setMoodDropdownOpen(!moodDropdownOpen);
-                                            setGenreDropdownOpen(false);
                                         }}
                                     >
-                                        {selectedMood || "-- MOOD --"}
+                                        {selectedMood
+                                            ? moodOptions.find((o) => o.value === selectedMood)
+                                                  ?.label || "-- MOOD --"
+                                            : "-- MOOD --"}
                                         <span className="dropdown-arrow">▼</span>
                                     </button>
                                     {moodDropdownOpen && (

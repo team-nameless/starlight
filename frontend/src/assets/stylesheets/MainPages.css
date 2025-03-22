@@ -75,6 +75,7 @@ body {
     right: 20px;
     flex-direction: column;
     align-items: flex-end;
+    z-index: 10;
 }
 
 .user-name {
@@ -83,7 +84,7 @@ body {
     color: #8095ff;
     font-size: 20px;
     text-align: right;
-    margin-bottom: 2px; /* Add some space between user-name and user-id */
+    margin-bottom: 2px;
 }
 .user-id {
     font-family: "Inter", sans-serif;
